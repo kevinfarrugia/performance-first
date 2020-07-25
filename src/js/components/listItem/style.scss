@@ -1,0 +1,63 @@
+.list-item {
+  position: relative;
+  display: block;
+  padding: 1em;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+  &:hover .remove {
+    opacity: 1;
+  }
+}
+
+.toggle {
+  z-index: 1;
+  width: 1.2em;
+  height: 1.2em;
+  opacity: 0;
+
+  ~ .label::before {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 1em;
+    width: 1em;
+    height: 1em;
+    border: 1px solid rgba(0, 0, 0, 0.3);
+    margin: auto;
+    border-radius: 50%;
+    content: "";
+    cursor: pointer;
+  }
+
+  &:checked ~ .label {
+    color: rgba(0, 0, 0, 0.3);
+    text-decoration: line-through;
+
+    &::before {
+      background: url("./check.svg") no-repeat center center $color-primary;
+      background-size: 75%;
+    }
+  }
+}
+
+.label {
+  padding-left: 1em;
+  transition: opacity 0.2s;
+  word-break: break-all;
+}
+
+.remove {
+  position: absolute;
+  top: 0;
+  right: 1em;
+  bottom: 0;
+  width: 1em;
+  height: 1em;
+  border: none;
+  margin: auto;
+  background: url("./remove.svg") no-repeat center center;
+  background-size: contain;
+  cursor: pointer;
+  opacity: 0;
+  text-indent: -9999em;
+}

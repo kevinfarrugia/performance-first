@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+  <head>
+		{{> shared/meta }}
+
+		<% for (let index in htmlWebpackPlugin.files.css) { %>
+			<% if (/critical/.test(htmlWebpackPlugin.files.css[index])) { %>
+				<style>
+						<%= compilation.assets[htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length)].source() %>
+				</style>
+			<% } else { %>
+				<link rel="stylesheet" href=<%= htmlWebpackPlugin.files.css[index] %> media="print" onload="this.media='all'">
+			<% } %>
+		<% } %>
+
+	</head>
+
+  <body>
+
+    <div id="root">
+      <h1>Error</h1>
+    </div>
+
+  </body>
+</html>

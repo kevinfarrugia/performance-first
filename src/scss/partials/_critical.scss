@@ -1,0 +1,71 @@
+html {
+  position: relative;
+  background-color: $background-color;
+  font-family: $font-family;
+  font-size: $font-size;
+  font-weight: $font-weight;
+}
+
+body,
+select,
+input,
+textarea {
+  color: $font-color;
+  font-family: $font-family;
+  font-size: $font-size;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-weight: $font-weight;
+  line-height: $line-height;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+a {
+  color: $color-primary-dark;
+  text-decoration: none;
+
+  &:visited {
+    color: inherit;
+  }
+
+  &:hover,
+  &:active {
+    color: $color-primary;
+  }
+
+  &.disabled {
+    color: $color-disabled;
+    pointer-events: none;
+  }
+}
+
+p {
+  margin-top: 0;
+  margin-bottom: 1.75em;
+}
+
+ul {
+  list-style: none;
+}
+
+h1,
+h2,
+h3 {
+  font-family: $font-family-alternate;
+  line-height: 1.125;
+}
+
+h2 {
+  font-size: 1.75em;
+}
+
+h3 {
+  font-size: 1.5em;
+}
+
+strong {
+  font-weight: 700;
+}

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html {{{ htmlAttributes }}}>
+	<head>
+		{{{ head }}}
+
+		<% if (process.env.CDN_URL) { %>
+			<link rel="preconnect" href="<%= process.env.CDN_URL %>" crossorigin />
+		<% } %>
+
+		<% if (!process.env.IS_DEVELOPMENT) { %>
+			<% for (let index in htmlWebpackPlugin.files.css) { %>
+				<% if (/critical\.(.+)\.css$/.test(htmlWebpackPlugin.files.css[index])) { %>
+					<style>
+							<%= compilation.assets[htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length)].source() %>
+					</style>
+				<% } else { %>
+					<link rel="stylesheet" href=<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.css[index]}` %> media="print" onload="this.media='all'">
+				<% } %>
+			<% } %>
+		<% } %>
+		
+		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Regular.woff2` %> as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Bold.woff2` %> as="font" type="font/woff2" crossorigin />
+	</head>
+
+	<body {{{ bodyAttributes }}}>
+		<div id="root">{{{ html }}}</div>
+		
+		<% for (let index in htmlWebpackPlugin.files.js) { %>
+			<% if (/runtime/.test(htmlWebpackPlugin.files.js[index])) { %>
+				<script src="<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>"></script>
+			<% } else { %>
+			<script async src="<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>"></script>
+			<% } %>
+		<% } %>
+	</body>
+</html>

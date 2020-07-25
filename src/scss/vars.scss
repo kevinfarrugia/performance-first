@@ -1,0 +1,25 @@
+$base-font-family: unquote("sans-serif");
+$background-color: #f8f8f8;
+
+$font-family: "Montserrat", sans-serif;
+$font-family-alternate: "Bebas Neue", $font-family;
+
+$color-primary: #f06292;
+$color-primary-light: lighten($color-primary, 10%);
+$color-primary-dark: #be252f;
+$color-secondary: #a9288d;
+$color-secondary-light: lighten($color-secondary, 10%);
+$color-secondary-dark: darken($color-secondary, 10%);
+$color-white: #fff;
+$color-black: #000;
+$color-disabled: #666;
+$color-label: #666;
+
+$line-height: 1.5;
+$font-size: 16px;
+$font-color: #000;
+$font-weight: 400;
+$font-weight-semibold: 600;
+$font-weight-bold: 700;
+
+$max-width: 78em;

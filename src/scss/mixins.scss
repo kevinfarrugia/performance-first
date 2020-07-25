@@ -1,0 +1,22 @@
+@mixin breakpoint($point: desktop) {
+  @if $point == desktop-xxl {
+    @media only screen and (min-width: 90em) {
+      @content;
+    }
+  } @else if $point == desktop-l {
+    @media only screen and (min-width: 78em) {
+      @content;
+    }
+  } @else {
+    @media only screen and (min-width: 54em) {
+      @content;
+    }
+  }
+}
+
+// https://stackoverflow.com/questions/11173106/apply-style-only-on-ie
+@mixin ie() {
+  @media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+    @content;
+  }
+}

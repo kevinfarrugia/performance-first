@@ -1,0 +1,72 @@
+{
+  "extends": [
+    "airbnb",
+    "plugin:css-modules/recommended",
+    "prettier",
+    "prettier/react"
+  ],
+  "env": {
+    "browser": true,
+    "node": true
+  },
+  "globals": {
+    "document": true,
+    "window": true,
+    "module": true
+  },
+  "parser": "babel-eslint",
+  "parserOptions": {
+    "ecmaVersion": 6,
+    "sourceType": "module",
+    "ecmaFeatures": {
+      "jsx": true
+    }
+  },
+  "plugins": ["css-modules", "prettier"],
+  "rules": {
+    "react/prop-types": [0],
+    "css-modules/no-unused-class": [2, { "camelCase": true }],
+    "css-modules/no-undef-class": [2, { "camelCase": true }],
+    // https://github.com/benmosher/eslint-plugin-import/blob/master/docs/rules/no-extraneous-dependencies.md
+    "import/no-extraneous-dependencies": ["error", { "packageDir": "." }],
+    // https://eslint.org/docs/rules/no-console
+    "no-console": [
+      "error",
+      {
+        "allow": ["warn", "error", "info"]
+      }
+    ],
+    // http://eslint.org/docs/rules/prefer-destructuring
+    "prefer-destructuring": [
+      "error",
+      {
+        "VariableDeclarator": {
+          "array": false,
+          "object": true
+        },
+        "AssignmentExpression": {
+          "array": false,
+          "object": false
+        }
+      },
+      {
+        "enforceForRenamedProperties": false
+      }
+    ],
+    // https://github.com/evcohen/eslint-plugin-jsx-a11y/blob/master/docs/rules/anchor-is-valid.md
+    "jsx-a11y/anchor-is-valid": [
+      "error",
+      {
+        "components": ["Link"],
+        "specialLink": ["to"],
+        "aspects": ["noHref", "invalidHref", "preferButton"]
+      }
+    ],
+    // https://github.com/yannickcr/eslint-plugin-react/blob/master/docs/rules/jsx-filename-extension.md
+    "react/jsx-filename-extension": [
+      "error",
+      { "extensions": [".js", ".jsx"] }
+    ],
+    "prettier/prettier": "error"
+  }
+}
