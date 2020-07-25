@@ -9,7 +9,7 @@
 
 		<% if (!process.env.IS_DEVELOPMENT) { %>
 			<% for (let index in htmlWebpackPlugin.files.css) { %>
-				<% if (/critical\.(.+)\.css$/.test(htmlWebpackPlugin.files.css[index])) { %>
+				<% if (/critical(\..*)?\.css$/.test(htmlWebpackPlugin.files.css[index])) { %>
 					<style>
 							<%= compilation.assets[htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length)].source() %>
 					</style>
