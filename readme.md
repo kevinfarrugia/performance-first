@@ -76,15 +76,15 @@ _I will try to create a branch including Redux, React Router and other commonly 
 The project allows for Hot Module Reloading using `webpack-hot-middleware` and a helper library included in React Starter Kit. This enables HMR for JSX, S/CSS and Express. However, it causes a FOUC since `style-loader` styles are injected through JavaScript. If you wish to remove the FOUC and do not require HMR for CSS, you may replace `style-loader` with `MiniCssExtractPlugin.loader` inside the Webpack configuration.
 
 ## Inspiration
-The project is heavily inspired by the fantastic [React Starter Kit](https://github.com/kriasoft/react-starter-kit/) 👏, although I have altered many bits to better suit my personal preferences which usually. As a result, the code is opinionated and attempts to follow the best/standard practices.
+The project is heavily inspired by the fantastic [React Starter Kit](https://github.com/kriasoft/react-starter-kit/) 👏, although I have altered many bits to better suit my personal preferences which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
 
 ## Contributing
 
-Anyone and everyone is welcome to contribute to this project and leave feedback. Please take a moment to review the [guidelines for contributing](CONTRIBUTING.md).
+Anyone and everyone is welcome to contribute to this project and leave feedback. Please take a moment to review the [guidelines for contributing](contributing.md).
 
 ## License 
 
-Copyright © 2020 Spiffing Ltd. This source code is licensed under the MIT license found in the [LICENSE.txt](LICENSE.txt) file.
+Copyright © 2020 Spiffing Ltd. This source code is licensed under the MIT license found in the [LICENSE](LICENSE) file.
 
 ---
 
