@@ -1,5 +1,0 @@
-{
-  "watch": ["app.js"],
-  "ext": "js",
-  "signal": "SIGINT"
-}
