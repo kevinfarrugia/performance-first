@@ -37,7 +37,7 @@ async function copy() {
         2
       )
     ),
-    copyFile("LICENSE.txt", "build/LICENSE.txt"),
+    copyFile("LICENSE", "build/LICENSE"),
     copyFile("package-lock.json", "build/package-lock.json"),
     copyDir("public", "build/public"),
   ]);
