@@ -22,5 +22,8 @@ USER node
 # Set NODE_ENV env variable to "production"
 ENV NODE_ENV production
 
-CMD [ "npm", "start" ]
+EXPOSE 3000
+
+CMD [ "node", "server" ]
+
 
