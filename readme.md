@@ -1,7 +1,10 @@
 # Performance-First React Template
 
 PFRT is a boilerplate for universal React web development with performance treated as a first-class citizen. Built using [Node.js](https://nodejs.org/), [Express](http://expressjs.com/) and
-[React](https://facebook.github.io/react/) and bundled using [Webpack](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development.
+[React](https://facebook.github.io/react/) and bundled using [Webpack](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development. The boilerplate includes critical CSS, service worker using Workbox, server-side rendering, async CSS using `media=print` technique, code-splitting & more.
+
+## Scope
+The goal of this project is to create a reference for a fast performing website configuration. Of course there may be many variations (some performing better than PFRF) and you would want to mix and match with your own configurations; however I will try to keep this updated with the latest findings and research and your input would be very valuable.
 
 ## Getting Started
 If you don't already have Node.js, download and install [Node.js](https://nodejs.org/en/) >= 12.18.1
