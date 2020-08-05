@@ -30,7 +30,7 @@ const isAnalyze =
 
 const staticAssetName = isDevelopment
   ? "[path][name].[ext]?[hash:8]"
-  : "[hash:8].[ext]";
+  : "[contenthash:8].[ext]";
 
 const config = {
   context: ROOT_DIR,
@@ -38,7 +38,7 @@ const config = {
   output: {
     path: path.resolve(ROOT_DIR, OUTPUT_DIR, "public"),
     publicPath: "/",
-    filename: isDevelopment ? "[name].js" : "[name].[contentHash].js",
+    filename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
     chunkFilename: isDevelopment
       ? "[name].chunk.js"
       : "[name].[chunkhash:8].chunk.js",
@@ -450,10 +450,39 @@ const serverConfig = {
             ],
           },
           {
-            loader: "file-loader",
-            options: {
-              emitFile: false,
-            },
+            loaders: [
+              {
+                loader: "file-loader",
+                options: {
+                  name: staticAssetName,
+                  emitFile: false,
+                },
+              },
+              {
+                loader: "image-webpack-loader",
+                options: {
+                  bypassOnDebug: true,
+                  mozjpeg: {
+                    progressive: true,
+                    quality: 65,
+                  },
+                  optipng: {
+                    enabled: false,
+                  },
+                  pngquant: {
+                    quality: [0.65, 0.9],
+                    speed: 4,
+                  },
+                  svgo: {},
+                  gifsicle: {
+                    interlaced: false,
+                  },
+                  webp: {
+                    quality: 75,
+                  },
+                },
+              },
+            ],
           },
         ],
       },
