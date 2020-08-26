@@ -317,7 +317,7 @@ const clientConfig = {
           new WorkboxPlugin.InjectManifest({
             swSrc: `${ROOT_DIR}/src/sw.js`,
             swDest: "sw.js",
-            include: [/\.js$/, /\.css$/, /\.woff2$/],
+            include: [/\.js$/, /\.css$/],
           }),
           ...(isAnalyze ? [new BundleAnalyzerPlugin()] : []),
         ]),
@@ -492,6 +492,7 @@ const serverConfig = {
           {
             loader: "file-loader",
             options: {
+              name: staticAssetName,
               emitFile: false,
             },
           },
