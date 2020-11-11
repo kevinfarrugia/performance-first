@@ -319,8 +319,8 @@ const clientConfig = {
             swDest: "sw.js",
             include: [/\.js$/, /\.css$/],
           }),
-          ...(isAnalyze ? [new BundleAnalyzerPlugin()] : []),
         ]),
+    ...(isAnalyze ? [new BundleAnalyzerPlugin()] : []),
   ],
   optimization: {
     runtimeChunk: "single",
