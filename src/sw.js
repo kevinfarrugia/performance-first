@@ -1,14 +1,14 @@
-/* eslint-disable import/no-extraneous-dependencies */
 /* eslint-disable no-restricted-globals */
 
-import { CacheableResponsePlugin } from "workbox-cacheable-response";
-import { ExpirationPlugin } from "workbox-expiration";
-import { precacheAndRoute } from "workbox-precaching";
-import { registerRoute } from "workbox-routing";
-import { CacheFirst, StaleWhileRevalidate } from "workbox-strategies";
+import { CacheableResponsePlugin } from "workbox-cacheable-response/CacheableResponsePlugin";
+import { ExpirationPlugin } from "workbox-expiration/ExpirationPlugin";
+import { precacheAndRoute } from "workbox-precaching/precacheAndRoute";
+import { registerRoute } from "workbox-routing/registerRoute";
+import { CacheFirst } from "workbox-strategies/CacheFirst";
+import { StaleWhileRevalidate } from "workbox-strategies/StaleWhileRevalidate";
 
 // eslint-disable-next-line no-underscore-dangle
-precacheAndRoute(self.__WB_MANIFEST);
+precacheAndRoute(self.__WB_MANIFEST || []);
 
 // Cache the Google Fonts stylesheets with a stale-while-revalidate strategy.
 registerRoute(
@@ -57,3 +57,5 @@ registerRoute(
 );
 
 registerRoute(/\.json$/, new StaleWhileRevalidate());
+
+self.skipWaiting();

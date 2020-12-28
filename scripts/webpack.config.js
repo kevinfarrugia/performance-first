@@ -338,7 +338,6 @@ const clientConfig = {
         commons: {
           name: "vendors",
           test: /[\\/]node_modules[\\/]/,
-          chunks: "initial",
         },
       },
     },
