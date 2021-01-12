@@ -2,6 +2,7 @@
  * Webpack Configuration inspired by React Starter Kit (https://www.reactstarterkit.com/)
  */
 
+import crypto from "crypto";
 import path from "path";
 
 import CompressionPlugin from "compression-webpack-plugin";
@@ -24,6 +25,98 @@ const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
 // configure env variable if assets are served from different domain
 const CDN_URL = process.env.CDN_URL || "";
 
+// the total number of routes which are loaded async using dynamic-import
+const NUMBER_OF_ASYNC_ROUTES = 1;
+
+// returns true if module is CSS
+const isModuleCSS = (module) => {
+  return (
+    // mini-css-extract-plugin
+    module.type === `css/mini-extract` ||
+    // extract-css-chunks-webpack-plugin (old)
+    module.type === `css/extract-chunks` ||
+    // extract-css-chunks-webpack-plugin (new)
+    module.type === `css/extract-css-chunks`
+  );
+};
+
+const splitChunksConfig = {
+  dev: {
+    cacheGroups: {
+      vendor: false,
+      default: false,
+    },
+  },
+  prod: {
+    chunks: "all",
+    maxInitialRequests: 25,
+    minSize: 20000,
+    cacheGroups: {
+      default: false,
+      vendors: false,
+      framework: {
+        chunks: "all",
+        name: "framework",
+        // https://github.com/vercel/next.js/pull/9012
+        test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+        priority: 40,
+        enforce: true,
+      },
+      lib: {
+        test(module) {
+          return (
+            module.size() > 80000 &&
+            /node_modules[/\\]/.test(module.identifier())
+          );
+        },
+        name(module) {
+          const hash = crypto.createHash("sha1");
+          if (isModuleCSS(module)) {
+            module.updateHash(hash);
+          } else {
+            if (!module.libIdent) {
+              throw new Error(
+                `Encountered unknown module type: ${module.type}.`
+              );
+            }
+
+            hash.update(module.libIdent({ context: OUTPUT_DIR }));
+          }
+
+          return hash.digest("hex").substring(0, 8);
+        },
+        priority: 30,
+        minChunks: 1,
+        reuseExistingChunk: true,
+      },
+      commons: {
+        chunks: "all",
+        // if a chunk is used more than half the routes it may be assumed common
+        minChunks:
+          NUMBER_OF_ASYNC_ROUTES > 2 ? NUMBER_OF_ASYNC_ROUTES * 0.5 : 2,
+        priority: 20,
+      },
+      shared: {
+        name(module, chunks) {
+          return (
+            crypto
+              .createHash("sha1")
+              .update(
+                chunks.reduce((acc, chunk) => {
+                  return acc + chunk.name;
+                }, "")
+              )
+              .digest("hex") + (isModuleCSS(module) ? "_CSS" : "")
+          );
+        },
+        priority: 10,
+        minChunks: 2,
+        reuseExistingChunk: true,
+      },
+    },
+  },
+};
+
 const isDevelopment = !process.argv.includes("--release");
 const isAnalyze =
   process.argv.includes("--analyze") || process.argv.includes("--analyse");
@@ -39,9 +132,7 @@ const config = {
     path: path.resolve(ROOT_DIR, OUTPUT_DIR, "public"),
     publicPath: "/",
     filename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
-    chunkFilename: isDevelopment
-      ? "[name].chunk.js"
-      : "[name].[chunkhash:8].chunk.js",
+    chunkFilename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
   },
   resolve: {
     extensions: [".js", ".jsx"],
@@ -323,24 +414,8 @@ const clientConfig = {
     ...(isAnalyze ? [new BundleAnalyzerPlugin()] : []),
   ],
   optimization: {
-    runtimeChunk: "single",
-    splitChunks: {
-      chunks: "all",
-      minSize: 0,
-      maxInitialRequests: Infinity,
-      cacheGroups: {
-        criticalStyles: {
-          name: "critical",
-          test: /critical\.(sa|sc|c)ss$/,
-          chunks: "initial",
-          enforce: true,
-        },
-        commons: {
-          name: "vendors",
-          test: /[\\/]node_modules[\\/]/,
-        },
-      },
-    },
+    runtimeChunk: { name: "webpack" },
+    splitChunks: isDevelopment ? splitChunksConfig.dev : splitChunksConfig.prod,
     minimizer: [
       new TerserJSPlugin({
         cache: true,
