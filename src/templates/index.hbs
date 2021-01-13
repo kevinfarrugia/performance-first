@@ -46,13 +46,15 @@
 			}
 
 			if (!isModernBrowser) {
-				scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>"); 
+				const polyfillScriptEl = document.createElement('script');
+				polyfillScriptEl.src = <%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>;
+				document.head.appendChild(polyfillScriptEl);
 			}
 
 			scripts.forEach((n) => {
 				const scriptEl = document.createElement('script');
 				scriptEl.src = n;
-				scriptEl.defer = "defer";
+				scriptEl.async = "async";
 				document.head.appendChild(scriptEl);
 			});
 		</script>		
