@@ -46,9 +46,9 @@
 			}
 
 			if (!isModernBrowser) {
-				const polyfillScriptEl = document.createElement('script');
-				polyfillScriptEl.src = <%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>;
-				document.head.appendChild(polyfillScriptEl);
+				const scriptEl = document.createElement('script');
+				scriptEl.src = "<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>";
+				document.head.appendChild(scriptEl);
 			}
 
 			scripts.forEach((n) => {
