@@ -26,12 +26,33 @@
 	<body {{{ bodyAttributes }}}>
 		<div id="root">{{{ html }}}</div>
 		
-		<% for (let index in htmlWebpackPlugin.files.js) { %>
-			<% if (/runtime/.test(htmlWebpackPlugin.files.js[index])) { %>
-				<script src="<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>"></script>
-			<% } else { %>
-			<script async src="<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>"></script>
+
+		<script>
+			const scripts = [];
+
+			<% for (let index in htmlWebpackPlugin.files.js) { %>
+				<% if (!/polyfill/.test(htmlWebpackPlugin.files.js[index])) { %>
+					scripts.push("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>");
+				<% } %>
 			<% } %>
-		<% } %>
+
+			function isModernBrowser() {
+				  'fetch' in window &&
+					'Promise' in window &&
+					'assign' in Object &&
+					'keys' in Object
+			}
+
+			if (!isModernBrowser) {
+				scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>"); 
+			}
+
+			scripts.forEach((n) => {
+				const scriptEl = document.createElement('script');
+				scriptEl.src = n;
+				scriptEl.defer = "defer";
+				document.head.appendChild(scriptEl);
+			});
+		</script>		
 	</body>
 </html>

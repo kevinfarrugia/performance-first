@@ -62,6 +62,13 @@ const splitChunksConfig = {
         priority: 40,
         enforce: true,
       },
+      polyfill: {
+        chunks: "all",
+        name: "polyfill",
+        test: /[\\/]node_modules[\\/](core-js)[\\/]/,
+        priority: 40,
+        enforce: true,
+      },
       lib: {
         test(module) {
           return (
@@ -254,7 +261,7 @@ const clientConfig = {
   name: "client",
   target: "web",
   entry: {
-    client: ["@babel/polyfill", "./src/client.js"],
+    client: ["./src/client.js"],
   },
   resolve: {
     ...config.resolve,
@@ -288,9 +295,11 @@ const clientConfig = {
                 targets: {
                   browsers: pkg.browserslist,
                 },
+                bugfixes: true,
                 forceAllTransforms: !isDevelopment,
                 modules: false,
-                useBuiltIns: false,
+                useBuiltIns: "usage",
+                corejs: 3,
                 debug: false,
               },
             ],
@@ -444,7 +453,7 @@ const serverConfig = {
   name: "server",
   target: "node",
   entry: {
-    server: ["@babel/polyfill", "./src/server.js"],
+    server: ["./src/server.js"],
   },
   output: {
     ...config.output,
@@ -483,6 +492,7 @@ const serverConfig = {
                 targets: {
                   node: pkg.engines.node.match(/(\d+\.?)+/)[0],
                 },
+                bugfixes: true,
                 modules: false,
                 useBuiltIns: false,
                 debug: false,
