@@ -37,10 +37,12 @@
 			<% } %>
 
 			function isModernBrowser() {
-				  'fetch' in window &&
-					'Promise' in window &&
-					'assign' in Object &&
-					'keys' in Object
+				  return (
+						"fetch" in window &&
+						"Promise" in window &&
+						"assign" in Object &&
+						"keys" in Object
+					);
 			}
 
 			if (!isModernBrowser) {
