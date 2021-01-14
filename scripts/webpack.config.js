@@ -87,7 +87,7 @@ const splitChunksConfig = {
         },
         priority: 30,
         minChunks: 1,
-        reuseExistingChunk: false,
+        reuseExistingChunk: true,
       },
       commons: {
         chunks: "all",
@@ -111,7 +111,7 @@ const splitChunksConfig = {
         },
         priority: 10,
         minChunks: 2,
-        reuseExistingChunk: false,
+        reuseExistingChunk: true,
       },
     },
   },

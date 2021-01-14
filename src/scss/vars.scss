@@ -2,7 +2,7 @@ $base-font-family: unquote("sans-serif");
 $background-color: #f8f8f8;
 
 $font-family: "Montserrat", sans-serif;
-$font-family-alternate: "Bebas Neue", $font-family;
+$font-family-alternate: $font-family;
 
 $color-primary: #f06292;
 $color-primary-light: lighten($color-primary, 10%);
