@@ -45,16 +45,14 @@
 					);
 			}
 
-			if (!isModernBrowser) {
-				const scriptEl = document.createElement('script');
-				scriptEl.src = "<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>";
-				document.head.appendChild(scriptEl);
+			if (!isModernBrowser()) {
+				scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>"); 
 			}
 
 			scripts.forEach((n) => {
 				const scriptEl = document.createElement('script');
 				scriptEl.src = n;
-				scriptEl.async = "async";
+				scriptEl.defer = "defer";
 				document.head.appendChild(scriptEl);
 			});
 		</script>		
