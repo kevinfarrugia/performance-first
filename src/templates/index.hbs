@@ -22,39 +22,38 @@
 		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Regular.woff2` %> as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Bold.woff2` %> as="font" type="font/woff2" crossorigin />
 	</head>
-
 	<body {{{ bodyAttributes }}}>
-		<div id="root">{{{ html }}}</div>
-		
-
+		<div id="root">{{{ html }}}</div>			
 		<script>
 			const scripts = [];
 
 			<% for (let index in htmlWebpackPlugin.files.js) { %>
-				<% if (!/polyfill/.test(htmlWebpackPlugin.files.js[index])) { %>
+				<% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
 					scripts.push("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>");
 				<% } %>
 			<% } %>
 
 			function isModernBrowser() {
 				  return (
-						"fetch" in window &&
 						"Promise" in window &&
-						"assign" in Object &&
-						"keys" in Object
+						"startsWith" in String.prototype &&
+            "endsWith" in String.prototype &&
+            "includes" in Array.prototype &&
+            "assign" in Object &&
+            "keys" in Object
 					);
 			}
 
 			if (!isModernBrowser()) {
-				scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfill/.test(n))}` %>"); 
+				scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>"); 
 			}
 
 			scripts.forEach((n) => {
 				const scriptEl = document.createElement('script');
 				scriptEl.src = n;
-				scriptEl.defer = "defer";
+				scriptEl.async = !/polyfills/.test(n);
 				document.head.appendChild(scriptEl);
 			});
-		</script>		
+		</script>	
 	</body>
 </html>

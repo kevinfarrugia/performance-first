@@ -62,13 +62,6 @@ const splitChunksConfig = {
         priority: 40,
         enforce: true,
       },
-      polyfill: {
-        chunks: "all",
-        name: "polyfill",
-        test: /[\\/]node_modules[\\/](core-js)[\\/]/,
-        priority: 40,
-        enforce: true,
-      },
       lib: {
         test(module) {
           return (
@@ -94,7 +87,7 @@ const splitChunksConfig = {
         },
         priority: 30,
         minChunks: 1,
-        reuseExistingChunk: true,
+        reuseExistingChunk: false,
       },
       commons: {
         chunks: "all",
@@ -118,7 +111,7 @@ const splitChunksConfig = {
         },
         priority: 10,
         minChunks: 2,
-        reuseExistingChunk: true,
+        reuseExistingChunk: false,
       },
     },
   },
@@ -262,6 +255,7 @@ const clientConfig = {
   target: "web",
   entry: {
     client: ["./src/client.js"],
+    polyfills: ["./src/polyfills.js"],
   },
   resolve: {
     ...config.resolve,
@@ -298,7 +292,7 @@ const clientConfig = {
                 bugfixes: true,
                 forceAllTransforms: !isDevelopment,
                 modules: false,
-                useBuiltIns: "usage",
+                useBuiltIns: "entry",
                 corejs: 3,
                 debug: false,
               },
