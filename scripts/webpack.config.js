@@ -43,7 +43,7 @@ const isModuleCSS = (module) => {
 const splitChunksConfig = {
   dev: {
     cacheGroups: {
-      vendor: false,
+      vendors: false,
       default: false,
     },
   },
@@ -54,6 +54,12 @@ const splitChunksConfig = {
     cacheGroups: {
       default: false,
       vendors: false,
+      criticalStyles: {
+        name: "critical",
+        test: /critical\.(sa|sc|c)ss$/,
+        chunks: "initial",
+        enforce: true,
+      },
       framework: {
         chunks: "all",
         name: "framework",
