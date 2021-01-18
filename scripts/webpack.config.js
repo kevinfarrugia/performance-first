@@ -55,10 +55,10 @@ const splitChunksConfig = {
       default: false,
       vendors: false,
       criticalStyles: {
+        enforce: true,
         name: "critical",
         test: /critical\.(sa|sc|c)ss$/,
         chunks: "initial",
-        enforce: true,
       },
       framework: {
         chunks: "all",
