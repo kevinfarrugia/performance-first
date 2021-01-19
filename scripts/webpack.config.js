@@ -299,7 +299,7 @@ const clientConfig = {
                 forceAllTransforms: !isDevelopment,
                 modules: false,
                 useBuiltIns: "entry",
-                corejs: 3,
+                corejs: "3.8",
                 debug: false,
               },
             ],
