@@ -296,7 +296,6 @@ const clientConfig = {
                   browsers: pkg.browserslist,
                 },
                 bugfixes: true,
-                forceAllTransforms: !isDevelopment,
                 modules: false,
                 useBuiltIns: "entry",
                 corejs: "3.8",
