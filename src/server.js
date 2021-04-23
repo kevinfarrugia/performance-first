@@ -1,6 +1,5 @@
 import path from "path";
 
-import bodyParser from "body-parser";
 import compression from "compression";
 import cookieParser from "cookie-parser";
 import express from "express";
@@ -13,6 +12,7 @@ import handleRender from "./render";
 import Router from "./service/router";
 
 const app = express();
+app.disable("x-powered-by");
 
 // setup express to use handlebars as the templating engine
 const hbs = exphbs.create({
@@ -33,15 +33,20 @@ app.use(
     index: false,
     enableBrotli: true,
     orderPreference: ["br", "gz"],
-    serveStatic: { maxAge: 2592000000 },
+    serveStatic: {
+      maxAge: 31536000000, // in milliseconds
+    },
   })
 );
+
+app.use("/", (req, res, next) => {
+  res.set("Cache-Control", "must-revalidate, max-age=31536000");
+  next();
+});
 
 app.use(compression());
 
 app.use(cookieParser());
-app.use(bodyParser.urlencoded({ extended: true }));
-app.use(bodyParser.json());
 
 const router = new Router();
 
