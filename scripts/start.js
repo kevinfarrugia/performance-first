@@ -67,7 +67,6 @@ let server;
 async function start() {
   if (server) return server;
   server = express();
-  server.disable("x-powered-by");
   server.use(errorOverlayMiddleware());
   server.use(express.static(path.resolve(__dirname, "../public")));
 
