@@ -40,7 +40,7 @@ app.use(
 );
 
 app.use("/", (req, res, next) => {
-  res.set("Cache-Control", "must-revalidate, max-age=31536000");
+  res.set("Cache-Control", "no-cache");
   next();
 });
 
