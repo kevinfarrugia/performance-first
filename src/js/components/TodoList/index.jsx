@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 
-import Header from "../header";
-import ListItem from "../listItem";
+import Header from "../Header";
+import ListItem from "../ListItem";
 import styles from "./critical.scss";
 
 const TodoList = () => {

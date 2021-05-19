@@ -1,8 +1,8 @@
 import React from "react";
 
-import Footer from "../footer";
-import Layout from "../layout";
-import TodoList from "../todoList";
+import Footer from "../Footer";
+import Layout from "../Layout";
+import TodoList from "../TodoList";
 import styles from "./critical.scss";
 
 const App = () => {

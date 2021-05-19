@@ -1,7 +1,7 @@
 import React from "react";
 import ReactDOM from "react-dom";
 
-import App from "./js/components/app";
+import App from "./js/components/App";
 
 ReactDOM.hydrate(<App />, document.getElementById("root"));
 

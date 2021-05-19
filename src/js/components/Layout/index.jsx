@@ -1,6 +1,6 @@
 import React from "react";
 
-import Meta from "../meta";
+import Meta from "../Meta";
 
 const Layout = ({ meta, children }) => {
   return (
