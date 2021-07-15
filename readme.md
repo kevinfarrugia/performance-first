@@ -1,10 +1,10 @@
 # Performance-First React Template
 
 PFRT is a boilerplate for universal React web development with performance treated as a first-class citizen. Built using [Node.js](https://nodejs.org/), [Express](http://expressjs.com/) and
-[React](https://facebook.github.io/react/) and bundled using [Webpack](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development. The boilerplate includes critical CSS, service worker using Workbox, server-side rendering, async CSS using `media=print` technique, code-splitting & more.
+[React](https://facebook.github.io/react/) and bundled using [Webpack](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development. The boilerplate includes critical CSS, service worker using Workbox, server-side rendering, granular chunking, resource hints, async CSS using `media=print` technique, code-splitting & more.
 
 ## Scope
-The goal of this project is to create a reference for a fast performing website configuration. Of course there may be many variations (some performing better than PFRF) and you would want to mix and match with your own configurations; however I will try to keep this updated with the latest findings and research and your input would be very valuable.
+The goal of this project is to create a reference for a fast performing website configuration using ReactJS. There are many variations & techniques and you may want to mix and match PFRT with your own configurations; however I will try to keep this updated with the latest findings and research. All feedback is welcome.
 
 ## Getting Started
 If you don't already have Node.js, download and install [Node.js](https://nodejs.org/en/) >= 12.18.1
@@ -78,8 +78,66 @@ _I will try to create a branch including Redux, React Router and other commonly 
 ## Hot Module Reloading
 The project allows for Hot Module Reloading using `webpack-hot-middleware` and a helper library included in React Starter Kit. This enables HMR for JSX, S/CSS and Express. However, it causes a FOUC since `style-loader` styles are injected through JavaScript. If you wish to remove the FOUC and do not require HMR for CSS, you may replace `style-loader` with `MiniCssExtractPlugin.loader` inside the Webpack configuration.
 
+## Static Site
+If you want to generate a static site without any client-side JavaScript, you are able to do so by applying the following changes.
+- Replace `renderToString` with `renderToStaticMarkup` in [src/server.js](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/src/server.js).
+- Remove `ReactDOM.hydrate` from [src/client.js](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/src/client.js).
+- Update [src/templates/index.hbs](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/src/templates/index.hbs) to only add scripts while in development:
+
+**Replace**
+```
+<script>
+  const scripts = [];
+
+  <% for (let index in htmlWebpackPlugin.files.js) { %>
+    <% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
+      scripts.push("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>");
+    <% } %>
+  <% } %>
+
+  function isModernBrowser() {
+      return (
+        "Promise" in window &&
+        "startsWith" in String.prototype &&
+        "endsWith" in String.prototype &&
+        "includes" in Array.prototype &&
+        "assign" in Object &&
+        "keys" in Object
+      );
+  }
+
+  if (!isModernBrowser()) {
+    scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>"); 
+  }
+
+  scripts.forEach((n) => {
+    const scriptEl = document.createElement('script');
+    scriptEl.src = n;
+    scriptEl.defer = true;
+    document.head.appendChild(scriptEl);
+  });
+</script>
+```
+
+with:
+```
+<% if (process.env.IS_DEVELOPMENT) { %>
+  <% for (let index in htmlWebpackPlugin.files.js) { %>
+    <script src="<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>"></script>
+  <% } %>
+<% } %>
+```
+
+- Remove `sideEffects` from [package.json](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/package.json).
+```
+"sideEffects": [
+  "**/*.css",
+  "**/*.scss"
+]
+```
+
 ## Inspiration
-The project is heavily inspired by the fantastic [React Starter Kit](https://github.com/kriasoft/react-starter-kit/) 👏, although I have altered many bits to better suit my personal preferences which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
+The project is heavily inspired by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/master) 👏, although I have altered many bits to better suit my personal preferences which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
 
 ## Contributing
 
@@ -87,7 +145,7 @@ Anyone and everyone is welcome to contribute to this project and leave feedback.
 
 ## License 
 
-Copyright © 2020 Spiffing Ltd. This source code is licensed under the MIT license found in the [LICENSE](LICENSE) file.
+Copyright © 2020-present Spiffing Ltd. This source code is licensed under the MIT license found in the [LICENSE](LICENSE) file.
 
 ---
 
