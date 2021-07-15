@@ -147,5 +147,9 @@
     "hooks": {
       "pre-commit": "lint-staged"
     }
-  }
+  },
+  "sideEffects": [
+    "**/*.css",
+    "**/*.scss"
+  ]
 }
