@@ -14,8 +14,8 @@ const handleRender = (req, res) => {
 
   // Send the rendered page back to the client using the server's view engine
   res.render("index", {
-    htmlAttributes: helmet.htmlAttributes,
-    bodyAttributes: helmet.bodyAttributes,
+    htmlattributes: helmet.htmlAttributes.toString() || "",
+    bodyattributes: helmet.bodyAttributes.toString() || "",
     head: `${helmet.title} ${helmet.meta} ${helmet.link}`,
     html,
   });
