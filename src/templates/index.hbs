@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html {{{ htmlAttributes }}}>
+<html {{{ htmlattributes }}}>
 	<head>
 		{{{ head }}}
 
@@ -15,14 +15,21 @@
 					</style>
 				<% } else { %>
 					<link rel="stylesheet" href=<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.css[index]}` %> media="print" onload="this.media='all'">
+					<noscript><link rel="stylesheet" href=<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.css[index]}` %> media="all"></noscript>
 				<% } %>
 			<% } %>
 		<% } %>
 		
 		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Regular.woff2` %> as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Bold.woff2` %> as="font" type="font/woff2" crossorigin />
+
+		<% for (let index in htmlWebpackPlugin.files.js) { %>
+			<% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
+				<link rel="preload" href=<%= `${htmlWebpackPlugin.files.js[index]}` %> as="script" />
+			<% } %>
+		<% } %>
 	</head>
-	<body {{{ bodyAttributes }}}>
+	<body {{{ bodyattributes }}}>
 		<div id="root">{{{ html }}}</div>			
 		<script>
 			const scripts = [];
@@ -51,9 +58,9 @@
 			scripts.forEach((n) => {
 				const scriptEl = document.createElement('script');
 				scriptEl.src = n;
-				scriptEl.async = !/polyfills/.test(n);
+				scriptEl.defer = true;
 				document.head.appendChild(scriptEl);
 			});
-		</script>	
+		</script>
 	</body>
 </html>

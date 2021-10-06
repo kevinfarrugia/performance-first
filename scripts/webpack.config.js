@@ -25,8 +25,10 @@ const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
 // configure env variable if assets are served from different domain
 const CDN_URL = process.env.CDN_URL || "";
 
-// the total number of routes which are loaded async using dynamic-import
-const NUMBER_OF_ASYNC_ROUTES = 1;
+// the total number of entrypoints (including async chunks)
+const ENTRYPOINTS_COUNT = 1;
+
+const FRAMEWORK_BUNDLES = ["react", "react-dom", "scheduler", "prop-types"];
 
 // returns true if module is CSS
 const isModuleCSS = (module) => {
@@ -52,26 +54,27 @@ const splitChunksConfig = {
     maxInitialRequests: 25,
     minSize: 20000,
     cacheGroups: {
+      // disable Webpack's default cacheGroup
       default: false,
+      // disable Webpack's default vendor cacheGroup
       vendors: false,
-      criticalStyles: {
-        enforce: true,
-        name: "critical",
-        test: /critical\.(sa|sc|c)ss$/,
-        chunks: "initial",
-      },
+      // create a framework bundle that contains libraries that hardly change
       framework: {
-        chunks: "all",
         name: "framework",
         // https://github.com/vercel/next.js/pull/9012
-        test: /(?<!node_modules.*)[\\/]node_modules[\\/](react|react-dom|scheduler|prop-types|use-subscription)[\\/]/,
+        test: new RegExp(
+          `(?<!node_modules.*)[\\\\/]node_modules[\\\\/](${FRAMEWORK_BUNDLES.join(
+            `|`
+          )})[\\\\/]`
+        ),
         priority: 40,
         enforce: true,
       },
+      // big modules that are over 160kb are moved to their own file
       lib: {
         test(module) {
           return (
-            module.size() > 80000 &&
+            module.size() > 160000 &&
             /node_modules[/\\]/.test(module.identifier())
           );
         },
@@ -95,13 +98,13 @@ const splitChunksConfig = {
         minChunks: 1,
         reuseExistingChunk: true,
       },
+      // if a chunk is used on all components we put it in commons (we need at least 2 components)
       commons: {
-        chunks: "all",
-        // if a chunk is used more than half the routes it may be assumed common
-        minChunks:
-          NUMBER_OF_ASYNC_ROUTES > 2 ? NUMBER_OF_ASYNC_ROUTES * 0.5 : 2,
+        name: "commons",
+        minChunks: Math.max(ENTRYPOINTS_COUNT, 2),
         priority: 20,
       },
+      // if a chunk is used in at least 2 components we create a separate chunk
       shared: {
         name(module, chunks) {
           return (
@@ -118,6 +121,14 @@ const splitChunksConfig = {
         priority: 10,
         minChunks: 2,
         reuseExistingChunk: true,
+      },
+      // bundle all critical into one stylesheet to inline in the HTML
+      criticalStyles: {
+        name: "critical",
+        test: /critical\.(sa|sc|c)ss$/,
+        chunks: "initial",
+        priority: 40,
+        enforce: true,
       },
     },
   },
