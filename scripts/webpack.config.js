@@ -234,7 +234,7 @@ const config = {
         exclude: [
           /\.(js|jsx)$/,
           /\.(sa|sc|c)ss$/,
-          /\.(jpe?g|png|gif|svg|webp)$/,
+          /\.(jpe?g|png|gif|svg|webp|avif)$/,
           /\.(woff2?|[ot]tf|eot)$/,
           /\.json$/,
           /\.hbs$/,
@@ -328,7 +328,7 @@ const clientConfig = {
         },
       },
       {
-        test: /\.(jpe?g|png|gif|svg|webp)$/i,
+        test: /\.(jpe?g|png|gif|svg|webp|avif)$/i,
         oneOf: [
           {
             issuer: /\.(sa|sc|c)ss$/,
@@ -356,6 +356,13 @@ const clientConfig = {
                 loader: "file-loader",
                 options: {
                   name: staticAssetName,
+                },
+              },
+              {
+                loader: "image-webpack-loader",
+                options: {
+                  bypassOnDebug: true,
+                  svgo: {},
                 },
               },
             ],
@@ -499,7 +506,7 @@ const serverConfig = {
         },
       },
       {
-        test: /\.(jpe?g|png|gif|svg|webp)$/i,
+        test: /\.(jpe?g|png|gif|svg|webp|avif)$/i,
         oneOf: [
           {
             issuer: /\.(sa|sc|c)ss$/,
@@ -526,6 +533,13 @@ const serverConfig = {
                 options: {
                   name: staticAssetName,
                   emitFile: false,
+                },
+              },
+              {
+                loader: "image-webpack-loader",
+                options: {
+                  bypassOnDebug: true,
+                  svgo: {},
                 },
               },
             ],
