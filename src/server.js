@@ -20,7 +20,7 @@ const hbs = exphbs.create({
   extname: ".hbs",
 });
 
-app.set("views", path.join(process.env.OUTPUT_DIR, "/public"));
+app.set("views", path.join(__dirname, "/public"));
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 
@@ -29,7 +29,7 @@ app.use(helmet());
 
 app.use(
   "/",
-  expressStaticGzip(path.join(process.env.OUTPUT_DIR, "/public"), {
+  expressStaticGzip(path.join(__dirname, "/public"), {
     index: false,
     enableBrotli: true,
     orderPreference: ["br", "gz"],

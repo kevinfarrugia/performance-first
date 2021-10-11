@@ -237,7 +237,6 @@ const config = {
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.OUTPUT_DIR": JSON.stringify(OUTPUT_DIR),
       "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
       "process.env.IS_DEVELOPMENT": isDevelopment,
       "process.env.NAME": JSON.stringify(pkg.name),
