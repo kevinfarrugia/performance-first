@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./style.scss";
 
-const ListItem = ({ id, title, handleRemove }) => {
+function ListItem({ id, title, handleRemove }) {
   return (
     <li className={styles.listItem}>
       <input id={`i_${id}`} type="checkbox" className={styles.toggle} />
@@ -20,6 +20,6 @@ const ListItem = ({ id, title, handleRemove }) => {
       </button>
     </li>
   );
-};
+}
 
 export default ListItem;

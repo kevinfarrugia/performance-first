@@ -2,7 +2,7 @@ import React from "react";
 
 import Meta from "../Meta";
 
-const Layout = ({ meta, children }) => {
+function Layout({ meta, children }) {
   return (
     <>
       <Meta
@@ -13,6 +13,6 @@ const Layout = ({ meta, children }) => {
       <main>{React.Children.only(children)}</main>
     </>
   );
-};
+}
 
 export default Layout;

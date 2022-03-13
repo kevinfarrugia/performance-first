@@ -1,7 +1,7 @@
 import React from "react";
 import { Helmet } from "react-helmet";
 
-const Meta = ({ title, description, keywords }) => {
+function Meta({ title, description, keywords }) {
   return (
     <Helmet htmlAttributes={{ lang: "en" }}>
       <title>{title}</title>
@@ -17,9 +17,9 @@ const Meta = ({ title, description, keywords }) => {
       <link rel="apple-touch-icon" href="/icon.png" />
       <link rel="manifest" href="/site.webmanifest" />
       <meta property="og:image" content="/img/logo.jpg" />
-      <link rel="image_src" href="/img/logo.jpg" />
+      <link href="/img/logo.jpg" />
     </Helmet>
   );
-};
+}
 
 export default Meta;

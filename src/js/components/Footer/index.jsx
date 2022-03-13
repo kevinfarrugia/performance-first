@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./critical.scss";
 
-const Footer = () => {
+function Footer() {
   return (
     <footer className={styles.footer}>
       Created by{" "}
@@ -11,6 +11,6 @@ const Footer = () => {
       </a>
     </footer>
   );
-};
+}
 
 export default Footer;

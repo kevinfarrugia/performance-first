@@ -122,11 +122,7 @@ async function start() {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      logLevel: "silent",
-      watchOptions,
-      writeToDisk: (filePath) => {
-        return /\.hbs$/.test(filePath);
-      },
+      writeToDisk: (filePath) => /\.hbs$/.test(filePath),
     })
   );
 
@@ -140,7 +136,9 @@ async function start() {
     if (!appPromiseIsResolved) return;
     appPromiseIsResolved = false;
     // eslint-disable-next-line no-return-assign
-    appPromise = new Promise((resolve) => (appPromiseResolve = resolve));
+    appPromise = new Promise((resolve) => {
+      appPromiseResolve = resolve;
+    });
   });
 
   let app;
@@ -217,7 +215,7 @@ async function start() {
   const port = process.env.PORT ? Number(process.env.PORT) : undefined;
 
   // Launch the development server with Browsersync and HMR
-  await new Promise((resolve, reject) =>
+  await new Promise((resolve, reject) => {
     browserSync.create().init(
       {
         // https://www.browsersync.io/docs/options
@@ -228,8 +226,8 @@ async function start() {
         ...(port ? { port } : null),
       },
       (error, bs) => (error ? reject(error) : resolve(bs))
-    )
-  );
+    );
+  });
 
   const timeEnd = new Date();
   const time = timeEnd.getTime() - timeStart.getTime();

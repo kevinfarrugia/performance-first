@@ -3,7 +3,6 @@
     "airbnb",
     "plugin:css-modules/recommended",
     "prettier",
-    "prettier/react",
     "plugin:react-hooks/recommended"
   ],
   "env": {
@@ -15,7 +14,7 @@
     "window": true,
     "module": true
   },
-  "parser": "babel-eslint",
+  "parser": "@babel/eslint-parser",
   "parserOptions": {
     "ecmaVersion": 6,
     "sourceType": "module",

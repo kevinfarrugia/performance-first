@@ -6,7 +6,7 @@
 		<% for (let index in htmlWebpackPlugin.files.css) { %>
 			<% if (/critical/.test(htmlWebpackPlugin.files.css[index])) { %>
 				<style>
-						<%= compilation.assets[htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length)].source() %>
+						<%= compilation.getAsset(htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length))?.source?._value %>
 				</style>
 			<% } else { %>
 				<link rel="stylesheet" href=<%= htmlWebpackPlugin.files.css[index] %> media="print" onload="this.media='all'">

@@ -5,10 +5,11 @@
 import crypto from "crypto";
 import path from "path";
 
-import CompressionPlugin from "compression-webpack-plugin";
+import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
+import ESLintPlugin from "eslint-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
+import svgToMiniDataURI from "mini-svg-data-uri";
 import StyleLintPlugin from "stylelint-webpack-plugin";
 import TerserJSPlugin from "terser-webpack-plugin";
 import webpack from "webpack";
@@ -22,30 +23,24 @@ const ROOT_DIR = path.resolve(__dirname, "..");
 const SRC_DIR = path.resolve(ROOT_DIR, "src");
 const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
 
-// configure env variable if assets are served from different domain
-const CDN_URL = process.env.CDN_URL || "";
-
 // the total number of entrypoints (including async chunks)
 const ENTRYPOINTS_COUNT = 1;
 
 const FRAMEWORK_BUNDLES = ["react", "react-dom", "scheduler", "prop-types"];
 
 // returns true if module is CSS
-const isModuleCSS = (module) => {
-  return (
-    // mini-css-extract-plugin
-    module.type === `css/mini-extract` ||
-    // extract-css-chunks-webpack-plugin (old)
-    module.type === `css/extract-chunks` ||
-    // extract-css-chunks-webpack-plugin (new)
-    module.type === `css/extract-css-chunks`
-  );
-};
+const isModuleCSS = (module) =>
+  // mini-css-extract-plugin
+  module.type === `css/mini-extract` ||
+  // extract-css-chunks-webpack-plugin (old)
+  module.type === `css/extract-chunks` ||
+  // extract-css-chunks-webpack-plugin (new)
+  module.type === `css/extract-css-chunks`;
 
 const splitChunksConfig = {
   dev: {
     cacheGroups: {
-      vendors: false,
+      defaultVendors: false,
       default: false,
     },
   },
@@ -110,11 +105,7 @@ const splitChunksConfig = {
           return (
             crypto
               .createHash("sha1")
-              .update(
-                chunks.reduce((acc, chunk) => {
-                  return acc + chunk.name;
-                }, "")
-              )
+              .update(chunks.reduce((acc, chunk) => acc + chunk.name, ""))
               .digest("hex") + (isModuleCSS(module) ? "_CSS" : "")
           );
         },
@@ -135,14 +126,18 @@ const splitChunksConfig = {
 };
 
 const isDevelopment = !process.argv.includes("--release");
+
 const isAnalyze =
   process.argv.includes("--analyze") || process.argv.includes("--analyse");
 
 const staticAssetName = isDevelopment
-  ? "[path][name].[ext]?[hash:8]"
-  : "[contenthash:8].[ext]";
+  ? "[hash:8][ext][query]"
+  : "[contenthash:8][ext]";
 
 const config = {
+  stats: {
+    errorDetails: true,
+  },
   context: ROOT_DIR,
   mode: isDevelopment ? "development" : "production",
   output: {
@@ -158,16 +153,6 @@ const config = {
   devtool: isDevelopment ? "eval-source-map" : "source-map",
   module: {
     rules: [
-      {
-        enforce: "pre",
-        test: /\.(js|jsx)$/,
-        loader: "eslint-loader",
-        exclude: /node_modules/,
-        options: {
-          fix: true,
-          emitWarning: true,
-        },
-      },
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [
@@ -189,7 +174,6 @@ const config = {
               },
               importLoaders: 1,
               sourceMap: isDevelopment,
-              localsConvention: "camelCaseOnly",
             },
           },
           {
@@ -220,15 +204,10 @@ const config = {
       },
       {
         test: /\.(woff2?|[ot]tf|eot)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: "[name].[ext]",
-              outputPath: "fonts",
-            },
-          },
-        ],
+        type: "asset/resource",
+        generator: {
+          filename: "fonts/[name][ext]",
+        },
       },
       {
         exclude: [
@@ -239,27 +218,31 @@ const config = {
           /\.json$/,
           /\.hbs$/,
         ],
-        loader: "file-loader",
-        options: {
-          name: staticAssetName,
+        type: "asset/resource",
+        generator: {
+          filename: staticAssetName,
         },
       },
     ],
   },
   plugins: [
     new webpack.DefinePlugin({
-      "process.env.NODE_ENV": JSON.stringify(process.env.NODE_ENV),
       "process.env.IS_DEVELOPMENT": isDevelopment,
       "process.env.NAME": JSON.stringify(pkg.name),
       "process.env.DESCRIPTION": JSON.stringify(pkg.description),
       "process.env.VERSION": JSON.stringify(pkg.version),
-      "process.env.CDN_URL": JSON.stringify(CDN_URL),
     }),
-    new StyleLintPlugin({ fix: true }),
+    new ESLintPlugin({
+      extensions: ["js", "jsx"],
+      exclude: "node_modules/",
+      fix: true,
+      emitWarning: true,
+    }),
+    new StyleLintPlugin({ customSyntax: "postcss-scss", fix: true }),
     new MiniCssExtractPlugin({
-      filename: `${isDevelopment ? "[name].css" : "[name].[contentHash].css"}`,
+      filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
       chunkFilename: `${
-        isDevelopment ? "[name].css" : "[name].[contentHash].css"
+        isDevelopment ? "[name].css" : "[name].[contenthash].css"
       }`,
     }),
   ],
@@ -308,7 +291,7 @@ const clientConfig = {
                 bugfixes: true,
                 modules: false,
                 useBuiltIns: "entry",
-                corejs: "3.8",
+                corejs: "3.21",
                 debug: false,
               },
             ],
@@ -334,37 +317,42 @@ const clientConfig = {
             oneOf: [
               {
                 test: /\.svg$/,
-                loader: "svg-url-loader",
-                options: {
-                  name: staticAssetName,
-                  limit: 4096,
+                type: "asset",
+                generator: {
+                  filename: staticAssetName,
+                  dataUrl: (content) => svgToMiniDataURI(content.toString()),
+                },
+                parser: {
+                  dataUrlCondition: {
+                    maxSize: 4 * 1024, // 4kb
+                  },
                 },
               },
               {
-                loader: "url-loader",
-                options: {
-                  name: staticAssetName,
-                  limit: 4096,
+                type: "asset",
+                generator: {
+                  filename: staticAssetName,
+                },
+                parser: {
+                  dataUrlCondition: {
+                    maxSize: 4 * 1024, // 4kb
+                  },
                 },
               },
             ],
           },
           {
-            loaders: [
-              {
-                loader: "file-loader",
-                options: {
-                  name: staticAssetName,
-                },
-              },
-              {
-                loader: "image-webpack-loader",
-                options: {
-                  bypassOnDebug: true,
-                  svgo: {},
-                },
-              },
-            ],
+            type: "asset/resource",
+            generator: {
+              filename: staticAssetName,
+            },
+          },
+          {
+            loader: "image-webpack-loader",
+            options: {
+              bypassOnDebug: true,
+              svgo: {},
+            },
           },
         ],
       },
@@ -373,7 +361,10 @@ const clientConfig = {
   },
   plugins: [
     ...config.plugins,
-    new webpack.IgnorePlugin(/^\.\/locale$/, /moment$/),
+    new webpack.IgnorePlugin({
+      resourceRegExp: /^\.\/locale$/,
+      contextRegExp: /moment$/,
+    }),
     new HtmlWebpackPlugin({
       filename: "index.hbs",
       showErrors: isDevelopment,
@@ -389,23 +380,6 @@ const clientConfig = {
     ...(isDevelopment
       ? []
       : [
-          new CompressionPlugin({
-            filename: "[path].br[query]",
-            algorithm: "brotliCompress",
-            test: /\.(js|css|html|svg)$/,
-            compressionOptions: { level: 11 },
-            threshold: 8192,
-            minRatio: 0.8,
-            deleteOriginalAssets: false,
-          }),
-          new CompressionPlugin({
-            filename: "[path].gz[query]",
-            algorithm: "gzip",
-            test: /\.(js$|css$|html)$/,
-            threshold: 8192,
-            minRatio: 0.8,
-            deleteOriginalAssets: false,
-          }),
           new WorkboxPlugin.InjectManifest({
             swSrc: `${ROOT_DIR}/src/sw.js`,
             swDest: "sw.js",
@@ -419,24 +393,13 @@ const clientConfig = {
     splitChunks: isDevelopment ? splitChunksConfig.dev : splitChunksConfig.prod,
     minimizer: [
       new TerserJSPlugin({
-        cache: true,
-        sourceMap: true,
         terserOptions: {
           compress: !isDevelopment,
           mangle: true,
         },
       }),
-      new OptimizeCssAssetsPlugin({
-        cssProcessorOptions: {
-          zindex: false,
-        },
-      }),
+      new CssMinimizerPlugin(),
     ],
-  },
-  node: {
-    fs: "empty",
-    net: "empty",
-    tls: "empty",
   },
 };
 
@@ -512,50 +475,51 @@ const serverConfig = {
             oneOf: [
               {
                 test: /\.svg$/,
-                loader: "svg-url-loader",
-                options: {
-                  emitFile: false,
+                type: "asset",
+                generator: {
+                  filename: staticAssetName,
+                  dataUrl: (content) => svgToMiniDataURI(content.toString()),
+                },
+                parser: {
+                  dataUrlCondition: {
+                    maxSize: 4 * 1024, // 4kb
+                  },
                 },
               },
               {
-                loader: "url-loader",
-                options: {
-                  emitFile: false,
+                type: "asset",
+                generator: {
+                  filename: staticAssetName,
+                },
+                parser: {
+                  dataUrlCondition: {
+                    maxSize: 4 * 1024, // 4kb
+                  },
                 },
               },
             ],
           },
           {
-            loaders: [
-              {
-                loader: "file-loader",
-                options: {
-                  name: staticAssetName,
-                  emitFile: false,
-                },
-              },
-              {
-                loader: "image-webpack-loader",
-                options: {
-                  bypassOnDebug: true,
-                  svgo: {},
-                },
-              },
-            ],
+            type: "asset/resource",
+            generator: {
+              filename: staticAssetName,
+            },
+          },
+          {
+            loader: "image-webpack-loader",
+            options: {
+              bypassOnDebug: true,
+              svgo: {},
+            },
           },
         ],
       },
       {
         test: /\.(woff2?|[ot]tf|eot)$/,
-        use: [
-          {
-            loader: "file-loader",
-            options: {
-              name: staticAssetName,
-              emitFile: false,
-            },
-          },
-        ],
+        type: "asset/resource",
+        generator: {
+          filename: "fonts/[name][ext]",
+        },
       },
       ...config.module.rules,
     ],
@@ -563,10 +527,7 @@ const serverConfig = {
   externals: [nodeExternals()],
   plugins: [...config.plugins],
   node: {
-    console: false,
     global: false,
-    process: false,
-    Buffer: false,
     __filename: false,
     __dirname: false,
   },
