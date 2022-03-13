@@ -4,9 +4,15 @@ PFRT is a boilerplate for universal React web development with performance treat
 [React](https://facebook.github.io/react/) and bundled using [Webpack v5](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development. The boilerplate includes critical CSS, service worker using Workbox, server-side rendering, granular chunking, resource hints, async CSS using `media=print` technique, code-splitting & more.
 
 ## Scope
+
 The goal of this project is to create a reference for a fast performing website configuration using ReactJS. There are many variations & techniques and you may want to mix and match PFRT with your own configurations; however I will try to keep this updated with the latest findings and research. All feedback is welcome.
 
+## Webpack v4
+
+If you are looking for a Webpack v4 compatible verion, please see branch [`webpack-4`](https://github.com/kevinfarrugia/performance-first-react-template/tree/webpack-4).
+
 ## Getting Started
+
 If you don't already have Node.js, download and install [Node.js](https://nodejs.org/en/) >= 12.18.1
 
 ### Folder Structure
@@ -40,51 +46,65 @@ If you don't already have Node.js, download and install [Node.js](https://nodejs
 ```
 
 ### Quick Start
+
 1. Install all dependencies and developer tools as listed in package.json:
+
 ```
 npm install
 ```
+
 2. Bundle & run the application in development mode
+
 ```
 npm start
 ```
 
 ## Scripts
- Flag           | Description                                                                         |
-| ------------- | ----------------------------------------------------------------------------------- |
-| `build`       | Builds the project. Accepts `--release`, `--analyze`, `--docker` flags              |
-| `build-stats` | Build the project with production configuration and launches [Webpack Bundle Analyzer](https://github.com/th0r/webpack-bundle-analyzer)                                                     |
-| `serve`       | Runs the Express server and serves the output from the build folder                                                                                                |
-| `start`       | Launches Webpack compiler in watch mode (via [webpack-middleware](https://github.com/kriasoft/webpack-middleware)) and runs the development server, including HMR and BrowserSync. Accepts `--release`, `--hot` flags                                                                                               |
+
+| Flag          | Description                                                                                                                                                                                                           |
+| ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `build`       | Builds the project. Accepts `--release`, `--analyze`, `--docker` flags                                                                                                                                                |
+| `build-stats` | Build the project with production configuration and launches [Webpack Bundle Analyzer](https://github.com/th0r/webpack-bundle-analyzer)                                                                               |
+| `serve`       | Runs the Express server and serves the output from the build folder                                                                                                                                                   |
+| `start`       | Launches Webpack compiler in watch mode (via [webpack-middleware](https://github.com/kriasoft/webpack-middleware)) and runs the development server, including HMR and BrowserSync. Accepts `--release`, `--hot` flags |
 
 ### Production
+
 For the production environment, you are expected to run the following scripts
+
 ```
 npm run build -- --release --verbose     # build the app in production mode
 npm run serve                            # launch the server using the output of the previous step
 ```
 
 ### Arguments
+
 To pass arguments to the NPM script, you are required to use double dashes, ex:
+
 ```
 npm run build -- --release
 ```
 
 ## Redux
-[Redux](https://redux.js.org/) is a state container often used together with React. The template does not require Redux, however it works perfectly well with Redux, [Redux Toolkit](https://redux-toolkit.js.org/)  and also [reselect](https://github.com/reduxjs/reselect). When implementing a Redux solution, if data is fetched from the server-side it is recommended to follow this [recipe](https://redux.js.org/recipes/server-rendering).
+
+[Redux](https://redux.js.org/) is a state container often used together with React. The template does not require Redux, however it works perfectly well with Redux, [Redux Toolkit](https://redux-toolkit.js.org/) and also [reselect](https://github.com/reduxjs/reselect). When implementing a Redux solution, if data is fetched from the server-side it is recommended to follow this [recipe](https://redux.js.org/recipes/server-rendering).
 
 _I will try to create a branch including Redux, React Router and other commonly used frameworks._
 
 ## Hot Module Reloading
+
 The project allows for Hot Module Reloading using `webpack-hot-middleware` and a helper library included in React Starter Kit. This enables HMR for JSX, S/CSS and Express. However, it causes a FOUC since `style-loader` styles are injected through JavaScript. If you wish to remove the FOUC and do not require HMR for CSS, you may replace `style-loader` with `MiniCssExtractPlugin.loader` inside the Webpack configuration.
 
 ## Static Site
+
 If you want to generate a static site without any client-side JavaScript, you are able to do so by applying the following changes.
+
 - Replace `renderToString` with `renderToStaticMarkup` in [src/server.js](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/src/server.js).
 - Remove `ReactDOM.hydrate` from [src/client.js](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/src/client.js).
 - Update [src/templates/index.hbs](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/src/templates/index.hbs) to only add scripts while in development:
 
 **Replace**
+
 ```
 <script>
   const scripts = [];
@@ -107,7 +127,7 @@ If you want to generate a static site without any client-side JavaScript, you ar
   }
 
   if (!isModernBrowser()) {
-    scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>"); 
+    scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>");
   }
 
   scripts.forEach((n) => {
@@ -120,6 +140,7 @@ If you want to generate a static site without any client-side JavaScript, you ar
 ```
 
 with:
+
 ```
 <% if (process.env.IS_DEVELOPMENT) { %>
   <% for (let index in htmlWebpackPlugin.files.js) { %>
@@ -129,6 +150,7 @@ with:
 ```
 
 - Remove `sideEffects` from [package.json](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/package.json).
+
 ```
 "sideEffects": [
   "**/*.css",
@@ -137,13 +159,14 @@ with:
 ```
 
 ## Inspiration
+
 The project is heavily inspired by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/master) and [Create React App](https://github.com/facebook/create-react-app), although I have altered many bits to better suit my personal preferences which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
 
 ## Contributing
 
 Anyone and everyone is welcome to contribute to this project and leave feedback. Please take a moment to review the [guidelines for contributing](contributing.md).
 
-## License 
+## License
 
 Copyright © 2020-present Spiffing Ltd. This source code is licensed under the MIT license found in the [LICENSE](LICENSE) file.
 
