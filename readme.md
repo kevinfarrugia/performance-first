@@ -1,7 +1,7 @@
 # Performance-First React Template
 
 PFRT is a boilerplate for universal React web development with performance treated as a first-class citizen. Built using [Node.js](https://nodejs.org/), [Express](http://expressjs.com/) and
-[React](https://facebook.github.io/react/) and bundled using [Webpack](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development. The boilerplate includes critical CSS, service worker using Workbox, server-side rendering, granular chunking, resource hints, async CSS using `media=print` technique, code-splitting & more.
+[React](https://facebook.github.io/react/) and bundled using [Webpack v5](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development. The boilerplate includes critical CSS, service worker using Workbox, server-side rendering, granular chunking, resource hints, async CSS using `media=print` technique, code-splitting & more.
 
 ## Scope
 The goal of this project is to create a reference for a fast performing website configuration using ReactJS. There are many variations & techniques and you may want to mix and match PFRT with your own configurations; however I will try to keep this updated with the latest findings and research. All feedback is welcome.
@@ -137,7 +137,7 @@ with:
 ```
 
 ## Inspiration
-The project is heavily inspired by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/master) 👏, although I have altered many bits to better suit my personal preferences which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
+The project is heavily inspired by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/master) and [Create React App](https://github.com/facebook/create-react-app), although I have altered many bits to better suit my personal preferences which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
 
 ## Contributing
 

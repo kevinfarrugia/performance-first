@@ -1,10 +1,10 @@
+/* eslint-disable import/no-import-module-exports */
 import path from "path";
 
 import compression from "compression";
 import cookieParser from "cookie-parser";
-import express from "express";
-import exphbs from "express-handlebars";
-import expressStaticGzip from "express-static-gzip";
+import * as express from "express";
+import { create } from "express-handlebars";
 import helmet from "helmet";
 import PrettyError from "pretty-error";
 
@@ -15,7 +15,7 @@ const app = express();
 app.disable("x-powered-by");
 
 // setup express to use handlebars as the templating engine
-const hbs = exphbs.create({
+const hbs = create({
   defaultLayout: false,
   extname: ".hbs",
 });
@@ -24,18 +24,37 @@ app.set("views", path.join(__dirname, "/public"));
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 
-// https://helmetjs.github.io/
 app.use(helmet());
 
+// https://helmetjs.github.io/
 app.use(
-  "/",
-  expressStaticGzip(path.join(__dirname, "/public"), {
-    index: false,
-    enableBrotli: true,
-    orderPreference: ["br", "gz"],
-    serveStatic: {
-      maxAge: 31536000000, // in milliseconds
+  helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'", "https://www.google-analytics.com"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      scriptSrc: [
+        "'self'",
+        "'unsafe-inline'",
+        "'unsafe-eval'",
+        "https://www.google-analytics.com",
+        "https://www.googletagmanager.com",
+        "https://cdn.speedcurve.com",
+        "https://lux.speedcurve.com",
+      ],
+      scriptSrcAttr: "'unsafe-inline'",
+      connectSrc: [
+        "'self'",
+        "https://www.google-analytics.com",
+        "https://www.googletagmanager.com",
+      ],
+      frameSrc: ["'self'", "https://www.googletagmanager.com"],
     },
+  })
+);
+
+app.use(
+  express.static(path.join(__dirname, "/public"), {
+    maxAge: 31536000000, // in milliseconds
   })
 );
 

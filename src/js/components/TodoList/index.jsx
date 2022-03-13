@@ -4,7 +4,7 @@ import Header from "../Header";
 import ListItem from "../ListItem";
 import styles from "./critical.scss";
 
-const TodoList = () => {
+function TodoList() {
   const [todoList, setTodoList] = useState([]);
 
   const handleSubmit = (todo) => {
@@ -31,6 +31,6 @@ const TodoList = () => {
       </ul>
     </section>
   );
-};
+}
 
 export default TodoList;

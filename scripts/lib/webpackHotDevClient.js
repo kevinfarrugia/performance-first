@@ -1,3 +1,4 @@
+/* eslint-disable import/no-import-module-exports */
 /**
  * React Starter Kit (https://www.reactstarterkit.com/)
  *

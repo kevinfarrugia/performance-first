@@ -3,25 +3,21 @@
 	<head>
 		{{{ head }}}
 
-		<% if (process.env.CDN_URL) { %>
-			<link rel="preconnect" href="<%= process.env.CDN_URL %>" crossorigin />
-		<% } %>
-
 		<% if (!process.env.IS_DEVELOPMENT) { %>
 			<% for (let index in htmlWebpackPlugin.files.css) { %>
 				<% if (/critical(\..*)?\.css$/.test(htmlWebpackPlugin.files.css[index])) { %>
 					<style>
-							<%= compilation.assets[htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length)].source() %>
+						<%= compilation.getAsset(htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length))?.source?._value %>
 					</style>
 				<% } else { %>
-					<link rel="stylesheet" href=<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.css[index]}` %> media="print" onload="this.media='all'">
-					<noscript><link rel="stylesheet" href=<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.css[index]}` %> media="all"></noscript>
+					<link rel="stylesheet" href=<%= `${htmlWebpackPlugin.files.css[index]}` %> media="print" onload="this.media='all'">
+					<noscript><link rel="stylesheet" href=<%= `${htmlWebpackPlugin.files.css[index]}` %> media="all"></noscript>
 				<% } %>
 			<% } %>
 		<% } %>
 		
-		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Regular.woff2` %> as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href=<%= `${process.env.CDN_URL}/fonts/Montserrat-Bold.woff2` %> as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href=<%= `/fonts/Montserrat-Regular.woff2` %> as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href=<%= `/fonts/Montserrat-Bold.woff2` %> as="font" type="font/woff2" crossorigin />
 
 		<% for (let index in htmlWebpackPlugin.files.js) { %>
 			<% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
@@ -36,7 +32,7 @@
 
 			<% for (let index in htmlWebpackPlugin.files.js) { %>
 				<% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
-					scripts.push("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>");
+					scripts.push("<%= `${htmlWebpackPlugin.files.js[index]}` %>");
 				<% } %>
 			<% } %>
 
@@ -52,7 +48,7 @@
 			}
 
 			if (!isModernBrowser()) {
-				scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>"); 
+				scripts.unshift("<%= `${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>"); 
 			}
 
 			scripts.forEach((n) => {

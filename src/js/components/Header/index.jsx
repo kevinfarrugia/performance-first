@@ -2,7 +2,7 @@ import React from "react";
 
 import styles from "./critical.scss";
 
-const Header = ({ handleSubmit }) => {
+function Header({ handleSubmit }) {
   return (
     <header>
       <form
@@ -23,6 +23,6 @@ const Header = ({ handleSubmit }) => {
       </form>
     </header>
   );
-};
+}
 
 export default Header;

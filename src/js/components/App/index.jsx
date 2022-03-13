@@ -5,7 +5,7 @@ import Layout from "../Layout";
 import TodoList from "../TodoList";
 import styles from "./critical.scss";
 
-const App = () => {
+function App() {
   return (
     <Layout meta={{ title: "Performance First React Webpack" }}>
       <div className={styles.container}>
@@ -17,6 +17,6 @@ const App = () => {
       </div>
     </Layout>
   );
-};
+}
 
 export default App;
