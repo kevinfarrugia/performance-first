@@ -1,7 +1,7 @@
 import * as React from "react";
 import { Route, Routes } from "react-router";
 
-import { getRouteConfig } from "./config";
+import getRouteConfig from "./config";
 
 function AppRouter({ routes }) {
   return (

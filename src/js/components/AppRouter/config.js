@@ -1,17 +1,17 @@
-import About from "../About";
-import Home from "../Home";
+import About, { getAboutSSR } from "../About";
+import Home, { getHomeSSR } from "../Home";
 
 const getRouteConfig = (name) => {
   switch (name) {
     case "home":
       return {
         Component: Home,
-        fetchData: [],
+        fetchData: [getHomeSSR],
       };
     case "about":
       return {
         Component: About,
-        fetchData: [],
+        fetchData: [getAboutSSR],
       };
     default:
       console.error(`Route ${name} does not have a component.`);
@@ -22,5 +22,4 @@ const getRouteConfig = (name) => {
   }
 };
 
-// eslint-disable-next-line import/prefer-default-export
-export { getRouteConfig };
+export default getRouteConfig;

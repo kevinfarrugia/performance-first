@@ -475,7 +475,7 @@ const serverConfig = {
               "@babel/preset-env",
               {
                 targets: {
-                  node: pkg.engines.node.match(/(\d+\.?)+/)[0],
+                  node: true,
                 },
                 bugfixes: true,
                 modules: false,
