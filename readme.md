@@ -13,7 +13,7 @@ If you are looking for a Webpack v4 compatible verion, please see branch [`webpa
 
 ## Getting Started
 
-If you don't already have Node.js, download and install [Node.js](https://nodejs.org/en/) >= 12.18.1
+If you don't already have Node.js, download and install [Node.js](https://nodejs.org/en/) >= 16.
 
 ### Folder Structure
 
