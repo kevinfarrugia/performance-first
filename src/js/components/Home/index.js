@@ -20,13 +20,9 @@ const Home = compose(connect(mapStateToProps, mapDispatchToProps))(Component);
 
 export default Home;
 
-export const getHomeSSR = (store, { path, match, query, url, route }) =>
+export const getHomeSSR = (store, { url }) =>
   store.dispatch(
     getHomePage({
-      path,
-      match,
-      query,
       url,
-      route,
     })
   );
