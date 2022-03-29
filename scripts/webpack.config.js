@@ -155,8 +155,68 @@ const config = {
   module: {
     rules: [
       {
+        test: /\.(woff2?|[ot]tf|eot)$/,
+        type: "asset/resource",
+        generator: {
+          filename: "fonts/[name][ext]",
+        },
+      },
+      {
+        exclude: [
+          /\.(js|jsx)$/,
+          /\.(sa|sc|c)ss$/,
+          /\.(jpe?g|png|gif|svg|webp|avif)$/,
+          /\.(woff2?|[ot]tf|eot)$/,
+          /\.json$/,
+          /\.hbs$/,
+        ],
+        type: "asset/resource",
+        generator: {
+          filename: staticAssetName,
+        },
+      },
+    ],
+  },
+  plugins: [
+    new webpack.DefinePlugin({
+      "process.env.IS_DEVELOPMENT": isDevelopment,
+      "process.env.NAME": JSON.stringify(pkg.name),
+      "process.env.DESCRIPTION": JSON.stringify(pkg.description),
+      "process.env.VERSION": JSON.stringify(pkg.version),
+    }),
+    new ESLintPlugin({
+      extensions: ["js", "jsx"],
+      exclude: "node_modules/",
+      fix: true,
+      emitWarning: true,
+    }),
+    new StyleLintPlugin({ customSyntax: "postcss-scss", fix: true }),
+  ],
+};
+
+const clientConfig = {
+  ...config,
+  name: "client",
+  target: "web",
+  entry: {
+    client: ["./src/client.js"],
+    polyfills: ["./src/polyfills.js"],
+  },
+  resolve: {
+    ...config.resolve,
+  },
+  module: {
+    ...config.module,
+    rules: [
+      {
         test: /\.(sa|sc|c)ss$/,
         rules: [
+          {
+            // style-loader causes a FOUC but allows HMR for styles - if you don't require HMR it may be replaced by MiniCssExtractPlugin.loader
+            loader: isDevelopment
+              ? "style-loader"
+              : MiniCssExtractPlugin.loader,
+          },
           {
             exclude: SRC_DIR,
             loader: "css-loader",
@@ -200,77 +260,6 @@ const config = {
                 path.resolve(SRC_DIR, "scss", "mixins.scss"),
               ],
             },
-          },
-        ],
-      },
-      {
-        test: /\.(woff2?|[ot]tf|eot)$/,
-        type: "asset/resource",
-        generator: {
-          filename: "fonts/[name][ext]",
-        },
-      },
-      {
-        exclude: [
-          /\.(js|jsx)$/,
-          /\.(sa|sc|c)ss$/,
-          /\.(jpe?g|png|gif|svg|webp|avif)$/,
-          /\.(woff2?|[ot]tf|eot)$/,
-          /\.json$/,
-          /\.hbs$/,
-        ],
-        type: "asset/resource",
-        generator: {
-          filename: staticAssetName,
-        },
-      },
-    ],
-  },
-  plugins: [
-    new webpack.DefinePlugin({
-      "process.env.IS_DEVELOPMENT": isDevelopment,
-      "process.env.NAME": JSON.stringify(pkg.name),
-      "process.env.DESCRIPTION": JSON.stringify(pkg.description),
-      "process.env.VERSION": JSON.stringify(pkg.version),
-    }),
-    new ESLintPlugin({
-      extensions: ["js", "jsx"],
-      exclude: "node_modules/",
-      fix: true,
-      emitWarning: true,
-    }),
-    new StyleLintPlugin({ customSyntax: "postcss-scss", fix: true }),
-    new MiniCssExtractPlugin({
-      filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
-      chunkFilename: `${
-        isDevelopment ? "[name].css" : "[name].[contenthash].css"
-      }`,
-    }),
-  ],
-};
-
-const clientConfig = {
-  ...config,
-  name: "client",
-  target: "web",
-  entry: {
-    client: ["./src/client.js"],
-    polyfills: ["./src/polyfills.js"],
-  },
-  resolve: {
-    ...config.resolve,
-  },
-  module: {
-    ...config.module,
-    rules: [
-      {
-        test: /\.(sa|sc|c)ss$/,
-        rules: [
-          {
-            // style-loader causes a FOUC but allows HMR for styles - if you don't require HMR it may be replaced by MiniCssExtractPlugin.loader
-            loader: isDevelopment
-              ? "style-loader"
-              : MiniCssExtractPlugin.loader,
           },
         ],
       },
@@ -378,6 +367,12 @@ const clientConfig = {
       template: path.join(ROOT_DIR, "src/templates", "500.hbs"),
       inject: false,
     }),
+    new MiniCssExtractPlugin({
+      filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
+      chunkFilename: `${
+        isDevelopment ? "[name].css" : "[name].[contenthash].css"
+      }`,
+    }),
     ...(isDevelopment
       ? []
       : [
@@ -429,7 +424,41 @@ const serverConfig = {
         test: /\.(sa|sc|c)ss$/,
         rules: [
           {
-            loader: MiniCssExtractPlugin.loader,
+            include: SRC_DIR,
+            loader: "css-loader",
+            options: {
+              sourceMap: false,
+              modules: {
+                localIdentName: isDevelopment
+                  ? "[name]-[local]-[hash:base64:5]"
+                  : "[hash:base64:5]",
+                exportOnlyLocals: true,
+              },
+            },
+          },
+          {
+            loader: "postcss-loader",
+          },
+          {
+            loader: "resolve-url-loader",
+          },
+          {
+            test: /\.(scss|sass)$/,
+            loader: "sass-loader",
+            options: {
+              sassOptions: {
+                includePaths: [path.resolve(SRC_DIR, "scss")],
+              },
+            },
+          },
+          {
+            loader: "sass-resources-loader",
+            options: {
+              resources: [
+                path.resolve(SRC_DIR, "scss", "vars.scss"),
+                path.resolve(SRC_DIR, "scss", "mixins.scss"),
+              ],
+            },
           },
         ],
       },

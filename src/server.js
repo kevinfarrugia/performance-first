@@ -68,7 +68,7 @@ app.use(compression());
 app.use(cookieParser());
 
 // path validation middleware (could be connected to an API)
-app.use(async (req, res, next) => {
+app.use(async (req, _res, next) => {
   const isValid = await isValidPath(req.path);
   // eslint-disable-next-line no-console
   if (isValid) {
@@ -88,8 +88,7 @@ const prettyError = new PrettyError();
 prettyError.skipNodeFiles();
 prettyError.skipPackage("express");
 
-// eslint-disable-next-line no-unused-vars
-app.use((err, req, res, next) => {
+app.use((err, _req, res) => {
   console.error(prettyError.render(err));
   res.status(err.status || 500);
   res.send();
