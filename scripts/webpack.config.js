@@ -132,7 +132,7 @@ const isAnalyze =
   process.argv.includes("--analyze") || process.argv.includes("--analyse");
 
 const staticAssetName = isDevelopment
-  ? "[hash:8][ext][query]"
+  ? "[fullhash:8][ext][query]"
   : "[contenthash:8][ext]";
 
 const config = {
@@ -509,6 +509,7 @@ const serverConfig = {
                 generator: {
                   filename: staticAssetName,
                   dataUrl: (content) => svgToMiniDataURI(content.toString()),
+                  emit: false,
                 },
                 parser: {
                   dataUrlCondition: {
@@ -520,6 +521,7 @@ const serverConfig = {
                 type: "asset",
                 generator: {
                   filename: staticAssetName,
+                  emit: false,
                 },
                 parser: {
                   dataUrlCondition: {
@@ -533,6 +535,7 @@ const serverConfig = {
             type: "asset/resource",
             generator: {
               filename: staticAssetName,
+              emit: false,
             },
           },
           {
@@ -549,6 +552,7 @@ const serverConfig = {
         type: "asset/resource",
         generator: {
           filename: "fonts/[name][ext]",
+          emit: false,
         },
       },
       ...config.module.rules,
