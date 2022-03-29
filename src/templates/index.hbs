@@ -18,45 +18,16 @@
 		
 		<link rel="preload" href=<%= `/fonts/Montserrat-Regular.woff2` %> as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href=<%= `/fonts/Montserrat-Bold.woff2` %> as="font" type="font/woff2" crossorigin />
-
-		<% for (let index in htmlWebpackPlugin.files.js) { %>
-			<% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
-				<link rel="preload" href=<%= `${htmlWebpackPlugin.files.js[index]}` %> as="script" />
-			<% } %>
-		<% } %>
 	</head>
 	<body {{{ bodyattributes }}}>
 		<div id="root">{{{ html }}}</div>			
+		
+		<% for (let index in htmlWebpackPlugin.files.js) { %>
+			<script defer src="<%= `${htmlWebpackPlugin.files.js[index]}` %>"></script>
+		<% } %>
+
 		<script>
-			const scripts = [];
-
-			<% for (let index in htmlWebpackPlugin.files.js) { %>
-				<% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
-					scripts.push("<%= `${htmlWebpackPlugin.files.js[index]}` %>");
-				<% } %>
-			<% } %>
-
-			function isModernBrowser() {
-				  return (
-						"Promise" in window &&
-						"startsWith" in String.prototype &&
-            "endsWith" in String.prototype &&
-            "includes" in Array.prototype &&
-            "assign" in Object &&
-            "keys" in Object
-					);
-			}
-
-			if (!isModernBrowser()) {
-				scripts.unshift("<%= `${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>"); 
-			}
-
-			scripts.forEach((n) => {
-				const scriptEl = document.createElement('script');
-				scriptEl.src = n;
-				scriptEl.defer = true;
-				document.head.appendChild(scriptEl);
-			});
-		</script>
+      window.__PRELOADED_STATE__ = {{{preloadedState}}};
+    </script>
 	</body>
 </html>

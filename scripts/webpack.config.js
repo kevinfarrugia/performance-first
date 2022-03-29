@@ -117,7 +117,8 @@ const splitChunksConfig = {
       criticalStyles: {
         name: "critical",
         test: /critical\.(sa|sc|c)ss$/,
-        chunks: "initial",
+        type: "css/mini-extract",
+        chunks: "all",
         priority: 40,
         enforce: true,
       },

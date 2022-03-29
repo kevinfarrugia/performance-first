@@ -85,11 +85,13 @@ To pass arguments to the NPM script, you are required to use double dashes, ex:
 npm run build -- --release
 ```
 
-## Redux
+## State Management
 
-[Redux](https://redux.js.org/) is a state container often used together with React. The template does not require Redux, however it works perfectly well with Redux, [Redux Toolkit](https://redux-toolkit.js.org/) and also [reselect](https://github.com/reduxjs/reselect). When implementing a Redux solution, if data is fetched from the server-side it is recommended to follow this [recipe](https://redux.js.org/recipes/server-rendering).
+[Redux](https://redux.js.org/) is a state container often used together with React. The template now includes `redux`, `reselect` and `redux-thunk` by default. There are plans to update it to support [Redux Toolkit](https://redux-toolkit.js.org/).
 
-_I will try to create a branch including Redux, React Router and other commonly used frameworks._
+## Routing
+
+Routing is configured using [`react-router`](https://github.com/remix-run/react-router) v6, which works well on both the client and server-side. The routing configuration is setup in `src/js/components/AppRouter/config.js` which defines which components should render for each URL and what data should be fetched on the server-side.
 
 ## Hot Module Reloading
 
@@ -111,7 +113,7 @@ If you want to generate a static site without any client-side JavaScript, you ar
 
   <% for (let index in htmlWebpackPlugin.files.js) { %>
     <% if (!/polyfills/.test(htmlWebpackPlugin.files.js[index])) { %>
-      scripts.push("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>");
+      scripts.push("<%= `${htmlWebpackPlugin.files.js[index]}` %>");
     <% } %>
   <% } %>
 
@@ -127,7 +129,7 @@ If you want to generate a static site without any client-side JavaScript, you ar
   }
 
   if (!isModernBrowser()) {
-    scripts.unshift("<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>");
+    scripts.unshift("<%= `${htmlWebpackPlugin.files.js.find(n => /polyfills/.test(n))}` %>");
   }
 
   scripts.forEach((n) => {
@@ -139,17 +141,19 @@ If you want to generate a static site without any client-side JavaScript, you ar
 </script>
 ```
 
-with:
+**with:**
 
 ```
 <% if (process.env.IS_DEVELOPMENT) { %>
   <% for (let index in htmlWebpackPlugin.files.js) { %>
-    <script src="<%= `${process.env.CDN_URL}${htmlWebpackPlugin.files.js[index]}` %>"></script>
+    <script src="<%= `${htmlWebpackPlugin.files.js[index]}` %>"></script>
   <% } %>
 <% } %>
 ```
 
-- Remove `sideEffects` from [package.json](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/package.json).
+- Remove `sideEffects` from [package.json](https://github.com/kevinfarrugia/performance-first-react-template/blob/main/package.json) to indicate that there could be `sideEffects`.
+
+**Replace:**
 
 ```
 "sideEffects": [
@@ -157,6 +161,20 @@ with:
   "**/*.scss"
 ]
 ```
+
+**with:**
+
+```
+
+```
+
+## Naming Conventions
+
+Below are some naming conventions followed throughout the template.
+- Folders begin with an uppercase letter.
+- Files begin with a lowercase letter.
+
+Folders contain an `index.js` file which exports the functions and components for that module.
 
 ## Inspiration
 

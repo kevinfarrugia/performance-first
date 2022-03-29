@@ -9,7 +9,7 @@ import helmet from "helmet";
 import PrettyError from "pretty-error";
 
 import handleRender from "./render";
-import Router from "./service/router";
+import { isValidPath } from "./service/Router";
 
 const app = express();
 app.disable("x-powered-by");
@@ -67,23 +67,18 @@ app.use(compression());
 
 app.use(cookieParser());
 
-const router = new Router();
-
 // path validation middleware (could be connected to an API)
-app.use((req, res, next) => {
-  router
-    .isValidPath(req.path)
-    .then((isValid) => {
-      if (isValid) {
-        return next();
-      }
+app.use(async (req, res, next) => {
+  const isValid = await isValidPath(req.path);
+  // eslint-disable-next-line no-console
+  if (isValid) {
+    return next();
+  }
 
-      // return a 404 status
-      const error = new Error(`${req.path} not found`);
-      error.status = 404;
-      return next(error);
-    })
-    .catch(next);
+  // return a 404 status
+  const error = new Error(`${req.path} not found`);
+  error.status = 404;
+  return next(error);
 });
 
 // middleware to render server side HTML

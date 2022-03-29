@@ -1,12 +1,3 @@
-/**
- * React Starter Kit (https://www.reactstarterkit.com/)
- *
- * Copyright © 2014-present Kriasoft, LLC. All rights reserved.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE.txt file in the root directory of this source tree.
- */
-
 import path from "path";
 
 import browserSync from "browser-sync";
@@ -90,9 +81,10 @@ async function start() {
 
   // Configure server-side hot module replacement
   const serverConfig = webpackConfig.find((config) => config.name === "server");
-  serverConfig.output.hotUpdateMainFilename = "updates/[hash].hot-update.json";
+  serverConfig.output.hotUpdateMainFilename =
+    "updates/[fullhash].hot-update.json";
   serverConfig.output.hotUpdateChunkFilename =
-    "updates/[id].[hash].hot-update.js";
+    "updates/[id].[fullhash].hot-update.js";
   serverConfig.module.rules = serverConfig.module.rules.filter(
     (x) => x.loader !== "null-loader"
   );
@@ -135,7 +127,6 @@ async function start() {
   serverCompiler.hooks.compile.tap("server", () => {
     if (!appPromiseIsResolved) return;
     appPromiseIsResolved = false;
-    // eslint-disable-next-line no-return-assign
     appPromise = new Promise((resolve) => {
       appPromiseResolve = resolve;
     });

@@ -1,22 +1,6 @@
-import React from "react";
-
-import Footer from "../Footer";
-import Layout from "../Layout";
-import TodoList from "../TodoList";
-import styles from "./critical.scss";
-
-function App() {
-  return (
-    <Layout meta={{ title: "Performance First React Webpack" }}>
-      <div className={styles.container}>
-        <h1 className={styles.title}>todos</h1>
-        <div className={styles.content}>
-          <TodoList />
-          <Footer />
-        </div>
-      </div>
-    </Layout>
-  );
-}
+import App from "./app";
+import AppReducer from "./reducer";
 
 export default App;
+
+export { AppReducer };

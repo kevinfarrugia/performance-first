@@ -1,6 +1,8 @@
-import React from "react";
+import * as React from "react";
+import { Link } from "react-router-dom";
 
 import Meta from "../Meta";
+import styles from "./critical.scss";
 
 function Layout({ meta, children }) {
   return (
@@ -10,7 +12,15 @@ function Layout({ meta, children }) {
         description={meta.description}
         keywords={meta.keywords}
       />
-      <main>{React.Children.only(children)}</main>
+      <nav className={styles.nav}>
+        <Link className={styles.navLink} to="/">
+          Home
+        </Link>
+        <Link className={styles.navLink} to="/about">
+          About
+        </Link>
+      </nav>
+      <main>{children}</main>
     </>
   );
 }

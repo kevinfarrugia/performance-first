@@ -22,9 +22,9 @@ function TodoList() {
         {todoList &&
           todoList.map((n, index) => (
             <ListItem
-              key={n}
+              key={n.id}
               id={index}
-              title={n}
+              title={n.value}
               handleRemove={handleRemove}
             />
           ))}
