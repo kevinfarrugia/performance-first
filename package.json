@@ -1,5 +1,6 @@
 {
   "name": "performance-first-react-template",
+  "description": "Universal React boilerplate prioritising performance and core web vitals.",
   "version": "1.1.1",
   "private": false,
   "license": "MIT",

@@ -5,7 +5,7 @@ const getPage = () => Promise.resolve(page);
 
 // Fetch from an external API
 // const getPage = async ({ url }) => {
-//   const res = await fetch(`${process.env.CMS_URL}/pages/?url=${url}`);
+//   const res = await fetch(`${CMS_URL}/pages/?url=${url}`);
 //   if (res.ok) {
 //     return res.json();
 //   }

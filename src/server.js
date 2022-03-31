@@ -30,7 +30,7 @@ app.use(helmet());
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'", "https://www.google-analytics.com"],
+      defaultSrc: ["'self'", "https://www.google-analytics.com", CMS_URL],
       styleSrc: ["'self'", "'unsafe-inline'"],
       scriptSrc: [
         "'self'",

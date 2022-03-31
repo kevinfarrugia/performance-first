@@ -19,9 +19,20 @@ import WorkboxPlugin from "workbox-webpack-plugin";
 
 import pkg from "../package.json";
 
+const isDevelopment = !process.argv.includes("--release");
+
+const isAnalyze =
+  process.argv.includes("--analyze") || process.argv.includes("--analyse");
+
+const staticAssetName = isDevelopment
+  ? "[fullhash:8][ext][query]"
+  : "[contenthash:8][ext]";
+
 const ROOT_DIR = path.resolve(__dirname, "..");
 const SRC_DIR = path.resolve(ROOT_DIR, "src");
 const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
+
+const CMS_URL = "https://example.com";
 
 // the total number of entrypoints (including async chunks)
 const ENTRYPOINTS_COUNT = 1;
@@ -126,15 +137,6 @@ const splitChunksConfig = {
   },
 };
 
-const isDevelopment = !process.argv.includes("--release");
-
-const isAnalyze =
-  process.argv.includes("--analyze") || process.argv.includes("--analyse");
-
-const staticAssetName = isDevelopment
-  ? "[fullhash:8][ext][query]"
-  : "[contenthash:8][ext]";
-
 const config = {
   stats: {
     errorDetails: true,
@@ -178,11 +180,14 @@ const config = {
     ],
   },
   plugins: [
+    new webpack.EnvironmentPlugin({
+      IS_DEVELOPMENT: isDevelopment,
+      NAME: JSON.stringify(pkg.name),
+      DESCRIPTION: JSON.stringify(pkg.description),
+      VERSION: JSON.stringify(pkg.version),
+    }),
     new webpack.DefinePlugin({
-      "process.env.IS_DEVELOPMENT": isDevelopment,
-      "process.env.NAME": JSON.stringify(pkg.name),
-      "process.env.DESCRIPTION": JSON.stringify(pkg.description),
-      "process.env.VERSION": JSON.stringify(pkg.version),
+      CMS_URL: JSON.stringify(CMS_URL),
     }),
     new ESLintPlugin({
       extensions: ["js", "jsx"],

@@ -12,7 +12,8 @@
   "globals": {
     "document": true,
     "window": true,
-    "module": true
+    "module": true,
+    "CMS_URL": true
   },
   "parser": "@babel/eslint-parser",
   "parserOptions": {
