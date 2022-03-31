@@ -30,24 +30,12 @@ app.use(helmet());
 app.use(
   helmet.contentSecurityPolicy({
     directives: {
-      defaultSrc: ["'self'", "https://www.google-analytics.com", CMS_URL],
+      defaultSrc: ["'self'"],
       styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: [
-        "'self'",
-        "'unsafe-inline'",
-        "'unsafe-eval'",
-        "https://www.google-analytics.com",
-        "https://www.googletagmanager.com",
-        "https://cdn.speedcurve.com",
-        "https://lux.speedcurve.com",
-      ],
+      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
       scriptSrcAttr: "'unsafe-inline'",
-      connectSrc: [
-        "'self'",
-        "https://www.google-analytics.com",
-        "https://www.googletagmanager.com",
-      ],
-      frameSrc: ["'self'", "https://www.googletagmanager.com"],
+      connectSrc: ["'self'", CMS_URL],
+      frameSrc: ["'self'"],
     },
   })
 );
