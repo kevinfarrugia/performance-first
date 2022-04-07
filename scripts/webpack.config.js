@@ -25,7 +25,7 @@ const isAnalyze =
   process.argv.includes("--analyze") || process.argv.includes("--analyse");
 
 const staticAssetName = isDevelopment
-  ? "[fullhash:8][ext][query]"
+  ? "[hash:8][ext][query]"
   : "[contenthash:8][ext]";
 
 const ROOT_DIR = path.resolve(__dirname, "..");
