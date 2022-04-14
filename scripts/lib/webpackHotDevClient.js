@@ -20,7 +20,7 @@ setEditorHandler((errorLocation) => {
 });
 
 hotClient.useCustomOverlay({
-  showProblems(type, errors) {
+  showProblems(_type, errors) {
     const formatted = formatWebpackMessages({
       errors,
       warnings: [],

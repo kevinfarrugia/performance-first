@@ -58,7 +58,6 @@ app.use(cookieParser());
 // path validation middleware (could be connected to an API)
 app.use(async (req, _res, next) => {
   const isValid = await isValidPath(req.path);
-  // eslint-disable-next-line no-console
   if (isValid) {
     return next();
   }
