@@ -68,11 +68,11 @@ async function start() {
     .sort((a, b) => b.includes("polyfill") - a.includes("polyfill"));
   clientConfig.output.filename = clientConfig.output.filename.replace(
     "chunkhash",
-    "hash"
+    "fullhash"
   );
   clientConfig.output.chunkFilename = clientConfig.output.chunkFilename.replace(
     "chunkhash",
-    "hash"
+    "fullhash"
   );
   clientConfig.module.rules = clientConfig.module.rules.filter(
     (x) => x.loader !== "null-loader"
