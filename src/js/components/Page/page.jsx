@@ -1,7 +1,7 @@
 import * as React from "react";
 import { useMatch } from "react-router-dom";
 
-import ScrollToTopOnMount from "../ScrollToTop";
+import ScrollToTop from "../ScrollToTop";
 
 const DEFAULT_VALUE = {
   meta: {},
@@ -40,7 +40,7 @@ function Page({
 
   return (
     <>
-      {scrollToTop && <ScrollToTopOnMount />}
+      {scrollToTop && <ScrollToTop />}
       {children({ isReady, page: page ?? DEFAULT_VALUE })}
     </>
   );

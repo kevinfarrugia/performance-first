@@ -204,8 +204,7 @@ const clientConfig = {
   name: "client",
   target: "web",
   entry: {
-    client: ["./src/client.js"],
-    polyfills: ["./src/polyfills.js"],
+    client: ["./src/polyfills.js", "./src/client.js"],
   },
   resolve: {
     ...config.resolve,
@@ -213,6 +212,7 @@ const clientConfig = {
   module: {
     ...config.module,
     rules: [
+      ...config.module.rules,
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [
@@ -351,7 +351,6 @@ const clientConfig = {
           },
         ],
       },
-      ...config.module.rules,
     ],
   },
   plugins: [
@@ -359,18 +358,6 @@ const clientConfig = {
     new webpack.IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
       contextRegExp: /moment$/,
-    }),
-    new HtmlWebpackPlugin({
-      filename: "index.hbs",
-      showErrors: isDevelopment,
-      template: path.join(ROOT_DIR, "src/templates", "index.hbs"),
-      inject: false,
-    }),
-    new HtmlWebpackPlugin({
-      filename: "500.hbs",
-      showErrors: isDevelopment,
-      template: path.join(ROOT_DIR, "src/templates", "500.hbs"),
-      inject: false,
     }),
     new MiniCssExtractPlugin({
       filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
@@ -425,9 +412,13 @@ const serverConfig = {
   module: {
     ...config.module,
     rules: [
+      ...config.module.rules,
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [
+          {
+            loader: MiniCssExtractPlugin.loader,
+          },
           {
             include: SRC_DIR,
             loader: "css-loader",
@@ -437,8 +428,8 @@ const serverConfig = {
                 localIdentName: isDevelopment
                   ? "[name]-[local]-[hash:base64:5]"
                   : "[hash:base64:5]",
-                exportOnlyLocals: true,
               },
+              importLoaders: 1,
             },
           },
           {
@@ -560,11 +551,46 @@ const serverConfig = {
           emit: false,
         },
       },
-      ...config.module.rules,
     ],
   },
   externals: [nodeExternals()],
-  plugins: [...config.plugins],
+  plugins: [
+    ...config.plugins,
+    new MiniCssExtractPlugin({
+      filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
+      chunkFilename: `${
+        isDevelopment ? "[name].css" : "[name].[contenthash].css"
+      }`,
+    }),
+    new HtmlWebpackPlugin({
+      filename: "index.hbs",
+      showErrors: isDevelopment,
+      template: path.join(ROOT_DIR, "src/templates", "index.hbs"),
+      inject: false,
+    }),
+    new HtmlWebpackPlugin({
+      filename: "500.hbs",
+      showErrors: isDevelopment,
+      template: path.join(ROOT_DIR, "src/templates", "500.hbs"),
+      inject: false,
+    }),
+  ],
+  optimization: {
+    splitChunks: {
+      cacheGroups: {
+        // bundle all critical into one stylesheet to inline in the HTML
+        criticalStyles: {
+          name: "critical",
+          test: /\.(sa|sc|c)ss$/,
+          type: "css/mini-extract",
+          chunks: "all",
+          priority: 40,
+          enforce: true,
+        },
+      },
+    },
+    minimizer: [new CssMinimizerPlugin()],
+  },
   node: {
     global: false,
     __filename: false,
