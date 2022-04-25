@@ -1,8 +1,8 @@
 import { nanoid } from "nanoid";
 import React, { useState } from "react";
 
-import Header from "../Header";
 import ListItem from "../ListItem";
+import TodoListForm from "../TodoListForm";
 import styles from "./critical.scss";
 
 function TodoList() {
@@ -22,7 +22,7 @@ function TodoList() {
 
   return (
     <section className={styles.section}>
-      <Header handleSubmit={handleSubmit} />
+      <TodoListForm handleSubmit={handleSubmit} />
       <ul className={styles.list}>
         {todoList &&
           todoList.map((n, index) => (
