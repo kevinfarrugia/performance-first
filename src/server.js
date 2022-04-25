@@ -20,7 +20,7 @@ const hbs = create({
   extname: ".hbs",
 });
 
-app.set("views", path.join(__dirname, "/public"));
+app.set("views", path.join(__dirname));
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 

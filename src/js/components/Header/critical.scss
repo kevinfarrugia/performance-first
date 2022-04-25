@@ -1,0 +1,26 @@
+.header {
+  display: flex;
+  max-width: $max-width;
+  height: 4.5em;
+  padding: 0.5em;
+  margin: 0 auto;
+}
+
+.nav {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+
+  @include breakpoint {
+    width: 100%;
+  }
+}
+
+.navLink {
+  padding: 1em;
+}
+
+.logo {
+  width: auto;
+  height: 100%;
+}
