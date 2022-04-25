@@ -146,23 +146,6 @@ const clientSplitChunksConfig = {
   },
 };
 
-const serverSplitChunksConfig = {
-  dev: {},
-  prod: {
-    cacheGroups: {
-      // bundle all critical into one stylesheet to inline in the HTML
-      criticalStyles: {
-        name: "critical",
-        test: /\.(sa|sc|c)ss$/,
-        type: "css/mini-extract",
-        chunks: "all",
-        priority: 40,
-        enforce: true,
-      },
-    },
-  },
-};
-
 const config = {
   stats: {
     errorDetails: true,
@@ -587,9 +570,19 @@ const serverConfig = {
     }),
   ],
   optimization: {
-    splitChunks: isDevelopment
-      ? serverSplitChunksConfig.dev
-      : serverSplitChunksConfig.prod,
+    splitChunks: {
+      cacheGroups: {
+        // bundle all critical into one stylesheet to inline in the HTML
+        criticalStyles: {
+          name: "critical",
+          test: /\.(sa|sc|c)ss$/,
+          type: "css/mini-extract",
+          chunks: "all",
+          priority: 40,
+          enforce: true,
+        },
+      },
+    },
     minimizer: [new CssMinimizerPlugin()],
   },
   node: {

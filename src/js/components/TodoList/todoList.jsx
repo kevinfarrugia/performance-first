@@ -1,3 +1,4 @@
+import { nanoid } from "nanoid";
 import React, { useState } from "react";
 
 import Header from "../Header";
@@ -5,7 +6,11 @@ import ListItem from "../ListItem";
 import styles from "./critical.scss";
 
 function TodoList() {
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState([
+    { id: nanoid(), value: "Wash dog" },
+    { id: nanoid(), value: "Feed dog" },
+    { id: nanoid(), value: "Pet dog" },
+  ]);
 
   const handleSubmit = (todo) => {
     setTodoList([...todoList, todo]);
