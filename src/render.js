@@ -94,7 +94,8 @@ const handleRender = async (req, res) => {
 
   const helmet = Helmet.renderStatic();
 
-  const css = await renderCriticalCss();
+  // load critical stylesheets
+  const css = process.env.IS_DEVELOPMENT ? null : await renderCriticalCss();
 
   // Send the rendered page back to the client using the server's view engine
   res.render("index", {

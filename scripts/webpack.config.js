@@ -48,11 +48,20 @@ const isModuleCSS = (module) =>
   // extract-css-chunks-webpack-plugin (new)
   module.type === `css/extract-css-chunks`;
 
-const splitChunksConfig = {
+const clientSplitChunksConfig = {
   dev: {
     cacheGroups: {
       defaultVendors: false,
       default: false,
+      // bundle all critical CSS into one stylesheet to inline in the HTML
+      criticalStyles: {
+        name: "critical",
+        test: /critical\.(sa|sc|c)ss$/,
+        type: "css/mini-extract",
+        chunks: "all",
+        priority: 40,
+        enforce: true,
+      },
     },
   },
   prod: {
@@ -124,10 +133,27 @@ const splitChunksConfig = {
         minChunks: 2,
         reuseExistingChunk: true,
       },
-      // bundle all critical into one stylesheet to inline in the HTML
+      // bundle all critical CSS into one stylesheet to inline in the HTML
       criticalStyles: {
         name: "critical",
         test: /critical\.(sa|sc|c)ss$/,
+        type: "css/mini-extract",
+        chunks: "all",
+        priority: 40,
+        enforce: true,
+      },
+    },
+  },
+};
+
+const serverSplitChunksConfig = {
+  dev: {},
+  prod: {
+    cacheGroups: {
+      // bundle all critical into one stylesheet to inline in the HTML
+      criticalStyles: {
+        name: "critical",
+        test: /\.(sa|sc|c)ss$/,
         type: "css/mini-extract",
         chunks: "all",
         priority: 40,
@@ -218,7 +244,9 @@ const clientConfig = {
         test: /\.(sa|sc|c)ss$/,
         rules: [
           {
-            loader: MiniCssExtractPlugin.loader,
+            loader: isDevelopment
+              ? "style-loader" // style-loader caused duplication of critical styles in development
+              : MiniCssExtractPlugin.loader,
           },
           {
             exclude: SRC_DIR,
@@ -381,7 +409,9 @@ const clientConfig = {
   ],
   optimization: {
     runtimeChunk: { name: "webpack" },
-    splitChunks: isDevelopment ? splitChunksConfig.dev : splitChunksConfig.prod,
+    splitChunks: isDevelopment
+      ? clientSplitChunksConfig.dev
+      : clientSplitChunksConfig.prod,
     minimizer: [
       new TerserJSPlugin({
         terserOptions: {
@@ -557,19 +587,9 @@ const serverConfig = {
     }),
   ],
   optimization: {
-    splitChunks: {
-      cacheGroups: {
-        // bundle all critical into one stylesheet to inline in the HTML
-        criticalStyles: {
-          name: "critical",
-          test: /\.(sa|sc|c)ss$/,
-          type: "css/mini-extract",
-          chunks: "all",
-          priority: 40,
-          enforce: true,
-        },
-      },
-    },
+    splitChunks: isDevelopment
+      ? serverSplitChunksConfig.dev
+      : serverSplitChunksConfig.prod,
     minimizer: [new CssMinimizerPlugin()],
   },
   node: {
