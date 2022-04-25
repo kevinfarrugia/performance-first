@@ -153,7 +153,7 @@ const config = {
     extensions: [".js", ".jsx"],
   },
   cache: isDevelopment,
-  devtool: isDevelopment ? "source-map" : false,
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -218,10 +218,7 @@ const clientConfig = {
         test: /\.(sa|sc|c)ss$/,
         rules: [
           {
-            // style-loader causes a FOUC but allows HMR for styles - if you don't require HMR it may be replaced by MiniCssExtractPlugin.loader
-            loader: isDevelopment
-              ? "style-loader"
-              : MiniCssExtractPlugin.loader,
+            loader: MiniCssExtractPlugin.loader,
           },
           {
             exclude: SRC_DIR,
@@ -556,10 +553,7 @@ const serverConfig = {
   plugins: [
     ...config.plugins,
     new MiniCssExtractPlugin({
-      filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
-      chunkFilename: `${
-        isDevelopment ? "[name].css" : "[name].[contenthash].css"
-      }`,
+      filename: "[name].css",
     }),
   ],
   optimization: {

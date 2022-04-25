@@ -16,7 +16,7 @@ function TodoList() {
   };
 
   return (
-    <section>
+    <section className={styles.section}>
       <Header handleSubmit={handleSubmit} />
       <ul className={styles.list}>
         {todoList &&
