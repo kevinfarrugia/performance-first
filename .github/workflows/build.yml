@@ -3,6 +3,8 @@ name: Build
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build:
@@ -36,7 +38,7 @@ jobs:
 
       - run: npm ci
 
-      - name: Build Staging Release
+      - name: Build
         run: npm run build -- --release --docker
         env:
           NODE_ENV: production
