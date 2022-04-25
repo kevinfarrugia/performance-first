@@ -153,7 +153,7 @@ const config = {
     extensions: [".js", ".jsx"],
   },
   cache: isDevelopment,
-  devtool: isDevelopment ? "eval-source-map" : "source-map",
+  devtool: isDevelopment ? "source-map" : false,
   module: {
     rules: [
       {
@@ -161,6 +161,7 @@ const config = {
         type: "asset/resource",
         generator: {
           filename: "fonts/[name][ext]",
+          emit: false, // fonts are generated on the server-config
         },
       },
       {
@@ -342,13 +343,6 @@ const clientConfig = {
               filename: staticAssetName,
             },
           },
-          {
-            loader: "image-webpack-loader",
-            options: {
-              bypassOnDebug: true,
-              svgo: {},
-            },
-          },
         ],
       },
     ],
@@ -364,6 +358,18 @@ const clientConfig = {
       chunkFilename: `${
         isDevelopment ? "[name].css" : "[name].[contenthash].css"
       }`,
+    }),
+    new HtmlWebpackPlugin({
+      filename: "index.hbs",
+      showErrors: isDevelopment,
+      template: path.resolve(SRC_DIR, "templates", "index.hbs"),
+      inject: false,
+    }),
+    new HtmlWebpackPlugin({
+      filename: "500.hbs",
+      showErrors: isDevelopment,
+      template: path.resolve(SRC_DIR, "templates", "500.hbs"),
+      inject: false,
     }),
     ...(isDevelopment
       ? []
@@ -534,13 +540,6 @@ const serverConfig = {
               emit: false,
             },
           },
-          {
-            loader: "image-webpack-loader",
-            options: {
-              bypassOnDebug: true,
-              svgo: {},
-            },
-          },
         ],
       },
       {
@@ -548,7 +547,7 @@ const serverConfig = {
         type: "asset/resource",
         generator: {
           filename: "fonts/[name][ext]",
-          emit: false,
+          emit: true,
         },
       },
     ],
@@ -561,18 +560,6 @@ const serverConfig = {
       chunkFilename: `${
         isDevelopment ? "[name].css" : "[name].[contenthash].css"
       }`,
-    }),
-    new HtmlWebpackPlugin({
-      filename: "index.hbs",
-      showErrors: isDevelopment,
-      template: path.join(ROOT_DIR, "src/templates", "index.hbs"),
-      inject: false,
-    }),
-    new HtmlWebpackPlugin({
-      filename: "500.hbs",
-      showErrors: isDevelopment,
-      template: path.join(ROOT_DIR, "src/templates", "500.hbs"),
-      inject: false,
     }),
   ],
   optimization: {

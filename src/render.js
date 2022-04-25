@@ -1,3 +1,6 @@
+import fs from "fs";
+import path from "path";
+
 /*
  * Render React application middleware
  */
@@ -12,7 +15,20 @@ import AppRouter, { getRoutesSSR } from "./js/components/AppRouter";
 import getRouteConfig from "./js/components/AppRouter/config";
 import configureStore from "./js/store";
 
-const renderRoutesData = async ({ path, url, query, routes, store }) => {
+const renderCriticalCss = async () =>
+  new Promise((resolve, reject) => {
+    fs.readFile(path.join(__dirname, "./critical.css"), "utf8", (err, data) =>
+      err ? reject(err) : resolve(data)
+    );
+  });
+
+const renderRoutesData = async ({
+  path: pathname,
+  url,
+  query,
+  routes,
+  store,
+}) => {
   // retrieve data for all components on the current route
   const promises = [];
 
@@ -22,7 +38,7 @@ const renderRoutesData = async ({ path, url, query, routes, store }) => {
       {
         path: route.url,
       },
-      path
+      pathname
     );
 
     if (match) {
@@ -33,7 +49,7 @@ const renderRoutesData = async ({ path, url, query, routes, store }) => {
         routeComponent.fetchData.forEach((fn) => {
           promises.push(
             fn(store, {
-              path,
+              path: pathname,
               match,
               query,
               url,
@@ -78,11 +94,14 @@ const handleRender = async (req, res) => {
 
   const helmet = Helmet.renderStatic();
 
+  const css = await renderCriticalCss();
+
   // Send the rendered page back to the client using the server's view engine
   res.render("index", {
     htmlattributes: helmet.htmlAttributes.toString() || "",
     bodyattributes: helmet.bodyAttributes.toString() || "",
     head: `${helmet.title} ${helmet.meta} ${helmet.link}`,
+    css,
     html,
     preloadedState: JSON.stringify(preloadedState).replace(/</g, "\\u003c"),
   });

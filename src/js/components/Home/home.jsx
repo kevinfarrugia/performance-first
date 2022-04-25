@@ -15,10 +15,10 @@ function Home({ onGetHomePage }) {
         }
 
         return (
-          <>
+          <div className={styles.content}>
             <h1 className={styles.title}>{page.title}</h1>
             <TodoList />
-          </>
+          </div>
         );
       }}
     </Page>

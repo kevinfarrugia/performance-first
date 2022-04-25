@@ -1,46 +1,40 @@
 <!DOCTYPE html>
 <html {{{ htmlattributes }}}>
-	<head>
-		<meta charset="utf-8" />
-		<meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      
-		<% if (!process.env.IS_DEVELOPMENT) { %>
-			<% for (let index in htmlWebpackPlugin.files.css) { %>
-				<% if (/critical(\..*)?\.css$/.test(htmlWebpackPlugin.files.css[index])) { %>
-					<style>
-						<%= compilation.getAsset(htmlWebpackPlugin.files.css[index].substr(htmlWebpackPlugin.files.publicPath.length))?.source?._value %>
-					</style>
-				<% } else { %>
-					<link rel="stylesheet" href=<%= `${htmlWebpackPlugin.files.css[index]}` %> media="print" onload="this.media='all'">
-					<noscript><link rel="stylesheet" href=<%= `${htmlWebpackPlugin.files.css[index]}` %> media="all"></noscript>
-				<% } %>
-			<% } %>
-		<% } %>
-		
-		<link rel="preload" href=<%= `/fonts/Montserrat-Regular.woff2` %> as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href=<%= `/fonts/Montserrat-Bold.woff2` %> as="font" type="font/woff2" crossorigin />
+  <head>
+    <meta charset="utf-8" />
+    <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <style>
+      {{{ css }}}
+    </style>
 
-		<meta name="theme-color" content="#fff" />
-		<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
-		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
-		<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
-		<link rel="apple-touch-icon" href="/icon.png" />
-		<meta name="msapplication-TileColor" content="#ce132d">
-		<link rel="manifest" href="/site.webmanifest" />
-		<meta property="og:image" content="/img/logo.jpg" />
+    <% for (let index in htmlWebpackPlugin.files.css) { %>
+      <% if (!/critical(\..*)?\.css$/.test(htmlWebpackPlugin.files.css[index])) { %>
+        <link rel="stylesheet" href=<%= `${htmlWebpackPlugin.files.css[index]}` %> media="print" onload="this.media='all'">
+        <noscript><link rel="stylesheet" href=<%= `${htmlWebpackPlugin.files.css[index]}` %> media="all"></noscript>
+      <% } %>
+    <% } %>
 
-		{{{ head }}}
-	</head>
-	<body {{{ bodyattributes }}}>
-		<div id="root">{{{ html }}}</div>			
-		
+    <meta name="theme-color" content="#fff" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
+    <link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon.png" />
+    <meta name="msapplication-TileColor" content="#ce132d">
+    <link rel="manifest" href="/site.webmanifest" />
+    <meta property="og:image" content="/img/logo.jpg" />
+
+    {{{ head }}}
+  </head>
+  <body {{{ bodyattributes }}}>
+    <div id="root">{{{ html }}}</div>
+
 		<% for (let index in htmlWebpackPlugin.files.js) { %>
 			<script defer src="<%= `${htmlWebpackPlugin.files.js[index]}` %>"></script>
 		<% } %>
-
-		<script>
+    
+    <script>
       window.__PRELOADED_STATE__ = {{{preloadedState}}};
     </script>
-	</body>
+  </body>
 </html>
