@@ -114,7 +114,8 @@ async function start() {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      writeToDisk: (filePath) => /\.hbs$/.test(filePath),
+      writeToDisk: (filePath) =>
+        /\.hbs$/.test(filePath) || /loadable-stats/.test(filePath),
     })
   );
 

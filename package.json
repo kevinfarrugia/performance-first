@@ -20,6 +20,7 @@
     "not ie > 0"
   ],
   "dependencies": {
+    "@loadable/server": "^5.15.2",
     "compression": "^1.7.4",
     "cookie-parser": "^1.4.6",
     "core-js": "^3.21.1",
@@ -61,6 +62,8 @@
     "@babel/plugin-transform-react-inline-elements": "^7.16.7",
     "@babel/preset-env": "^7.16.11",
     "@babel/preset-react": "^7.16.7",
+    "@loadable/babel-plugin": "^5.13.2",
+    "@loadable/webpack-plugin": "^5.15.2",
     "autoprefixer": "^10.4.2",
     "babel-jest": "^27.5.1",
     "babel-loader": "^8.2.3",

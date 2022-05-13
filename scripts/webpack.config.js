@@ -5,6 +5,7 @@
 import crypto from "crypto";
 import path from "path";
 
+import LoadablePlugin from "@loadable/webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
 import HtmlWebpackPlugin from "html-webpack-plugin";
@@ -302,6 +303,7 @@ const clientConfig = {
             ["@babel/preset-react", { development: isDevelopment }],
           ],
           plugins: [
+            "@loadable/babel-plugin",
             "@babel/plugin-proposal-class-properties",
             "@babel/plugin-syntax-dynamic-import",
             ...(isDevelopment
@@ -565,24 +567,12 @@ const serverConfig = {
   externals: [nodeExternals()],
   plugins: [
     ...config.plugins,
+    new LoadablePlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css",
     }),
   ],
   optimization: {
-    splitChunks: {
-      cacheGroups: {
-        // bundle all critical into one stylesheet to inline in the HTML
-        criticalStyles: {
-          name: "critical",
-          test: /\.(sa|sc|c)ss$/,
-          type: "css/mini-extract",
-          chunks: "all",
-          priority: 40,
-          enforce: true,
-        },
-      },
-    },
     minimizer: [new CssMinimizerPlugin()],
   },
   node: {
