@@ -191,6 +191,7 @@ const config = {
     ],
   },
   plugins: [
+    new LoadablePlugin(),
     new webpack.EnvironmentPlugin({
       IS_DEVELOPMENT: isDevelopment,
       NAME: JSON.stringify(pkg.name),
@@ -500,6 +501,7 @@ const serverConfig = {
             ["@babel/preset-react", { development: isDevelopment }],
           ],
           plugins: [
+            "@loadable/babel-plugin",
             "@babel/plugin-proposal-class-properties",
             "@babel/plugin-syntax-dynamic-import",
             ...(isDevelopment
@@ -567,7 +569,6 @@ const serverConfig = {
   externals: [nodeExternals()],
   plugins: [
     ...config.plugins,
-    new LoadablePlugin(),
     new MiniCssExtractPlugin({
       filename: "[name].css",
     }),

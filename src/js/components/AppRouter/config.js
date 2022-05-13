@@ -1,5 +1,10 @@
-import About, { getAboutSSR } from "../About";
-import Home, { getHomeSSR } from "../Home";
+import loadable from "@loadable/component";
+
+import { getAboutSSR } from "../About";
+import { getHomeSSR } from "../Home";
+
+const Home = loadable(() => import("../Home"));
+const About = loadable(() => import("../About"));
 
 const getRouteConfig = (name) => {
   switch (name) {

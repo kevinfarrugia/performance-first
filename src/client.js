@@ -1,3 +1,4 @@
+import { loadableReady } from "@loadable/component";
 import * as React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
@@ -17,14 +18,16 @@ delete window.__PRELOADED_STATE__;
 const store = configureStore(preloadedState);
 const routes = selectRoutes(store.getState());
 
-ReactDOM.hydrate(
-  <BrowserRouter>
-    <App store={store}>
-      <AppRouter routes={routes} />
-    </App>
-  </BrowserRouter>,
-  document.getElementById("root")
-);
+loadableReady(() => {
+  ReactDOM.hydrate(
+    <BrowserRouter>
+      <App store={store}>
+        <AppRouter routes={routes} />
+      </App>
+    </BrowserRouter>,
+    document.getElementById("root")
+  );
+});
 
 if (process.env.NODE_ENV === "production") {
   if ("serviceWorker" in navigator) {

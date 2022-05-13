@@ -13,14 +13,17 @@ const getDynamicReducers = (reducers, initialState) => {
   const reducerNames = Object.keys(reducers);
   const staticReducerNames = Object.keys(reducers);
   const output = reducers;
-  Object.keys(initialState).forEach((item) => {
-    if (
-      reducerNames.indexOf(item) === -1 &&
-      staticReducerNames.indexOf(item) !== -1
-    ) {
-      output[item] = (state = null) => state;
-    }
-  });
+
+  if (initialState) {
+    Object.keys(initialState).forEach((item) => {
+      if (
+        reducerNames.indexOf(item) === -1 &&
+        staticReducerNames.indexOf(item) !== -1
+      ) {
+        output[item] = (state = null) => state;
+      }
+    });
+  }
   return output;
 };
 
