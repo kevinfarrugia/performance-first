@@ -1,7 +1,7 @@
 import loadable from "@loadable/component";
 
-import { getAboutSSR } from "../About";
-import { getHomeSSR } from "../Home";
+import getAboutSSR from "../About/server";
+import getHomeSSR from "../Home/server";
 
 const Home = loadable(() => import("../Home"));
 const About = loadable(() => import("../About"));

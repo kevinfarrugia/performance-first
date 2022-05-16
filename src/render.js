@@ -61,25 +61,21 @@ const renderRoutesData = async ({
 };
 
 const handleRender = async (req, res) => {
-  const serverStatsFile = path.resolve(__dirname, "./loadable-stats.json");
-  const serverChunkExtractor = new ChunkExtractor({
-    statsFile: serverStatsFile,
-    entrypoints: ["server"],
+  // const serverStatsFile = path.resolve(__dirname, "./loadable-stats.json");
+  // const serverChunkExtractor = new ChunkExtractor({
+  //   statsFile: serverStatsFile,
+  //   entrypoints: ["server"],
+  // });
+  // const { default: Server } = serverChunkExtractor.requireEntrypoint();
+
+  const clientStatsFile = path.resolve(
+    __dirname,
+    "./public/loadable-stats.json"
+  );
+  const clientChunkExtractor = new ChunkExtractor({
+    statsFile: clientStatsFile,
+    entrypoints: ["client"],
   });
-
-  // const clientChunkExtractor = new ChunkExtractor({
-  //   CLIENT_STATS,
-  //   entrypoints: ["client"],
-  // });
-
-  // const clientStatsFile = path.resolve(
-  //   __dirname,
-  //   "./public/loadable-stats.json"
-  // );
-  // const clientChunkExtractor = new ChunkExtractor({
-  //   clientStatsFile,
-  //   entrypoints: ["client"],
-  // });
 
   // Create a new Redux store instance
   const store = configureStore();
@@ -94,7 +90,7 @@ const handleRender = async (req, res) => {
     store,
   });
 
-  const jsx = serverChunkExtractor.collectChunks(
+  const jsx = clientChunkExtractor.collectChunks(
     <StaticRouter location={req.url}>
       <App store={store}>
         <AppRouter routes={routes} />
@@ -104,8 +100,8 @@ const handleRender = async (req, res) => {
 
   const html = renderToString(jsx);
 
-  const css = await serverChunkExtractor.getCssString();
-  const scripts = serverChunkExtractor.getScriptTags();
+  const css = clientChunkExtractor.getStyleTags();
+  const scripts = clientChunkExtractor.getScriptTags();
 
   // Grab the initial state from our Redux store
   const preloadedState = store.getState();
