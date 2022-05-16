@@ -54,15 +54,6 @@ const clientSplitChunksConfig = {
     cacheGroups: {
       defaultVendors: false,
       default: false,
-      // bundle all critical CSS into one stylesheet to inline in the HTML
-      criticalStyles: {
-        name: "critical",
-        test: /critical\.(sa|sc|c)ss$/,
-        type: "css/mini-extract",
-        chunks: "all",
-        priority: 40,
-        enforce: true,
-      },
     },
   },
   prod: {
@@ -133,15 +124,6 @@ const clientSplitChunksConfig = {
         priority: 10,
         minChunks: 2,
         reuseExistingChunk: true,
-      },
-      // bundle all critical CSS into one stylesheet to inline in the HTML
-      criticalStyles: {
-        name: "critical",
-        test: /critical\.(sa|sc|c)ss$/,
-        type: "css/mini-extract",
-        chunks: "all",
-        priority: 40,
-        enforce: true,
       },
     },
   },
