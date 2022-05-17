@@ -8,11 +8,9 @@ import * as React from "react";
 import { renderToString } from "react-dom/server";
 import Helmet from "react-helmet";
 import { matchPath } from "react-router";
-import { StaticRouter } from "react-router-dom/server";
 
-import App from "./js/components/App";
-import AppRouter, { getRoutesSSR } from "./js/components/AppRouter";
 import getRouteConfig from "./js/components/AppRouter/config";
+import getRoutesSSR from "./js/components/AppRouter/server";
 import configureStore from "./js/store";
 
 const renderRoutesData = async ({
@@ -61,12 +59,12 @@ const renderRoutesData = async ({
 };
 
 const handleRender = async (req, res) => {
-  // const serverStatsFile = path.resolve(__dirname, "./loadable-stats.json");
-  // const serverChunkExtractor = new ChunkExtractor({
-  //   statsFile: serverStatsFile,
-  //   entrypoints: ["server"],
-  // });
-  // const { default: Server } = serverChunkExtractor.requireEntrypoint();
+  const serverStatsFile = path.resolve(__dirname, "./loadable-stats.json");
+  const serverChunkExtractor = new ChunkExtractor({
+    statsFile: serverStatsFile,
+    entrypoints: ["main"],
+  });
+  const { default: Main } = serverChunkExtractor.requireEntrypoint();
 
   const clientStatsFile = path.resolve(
     __dirname,
@@ -91,11 +89,7 @@ const handleRender = async (req, res) => {
   });
 
   const jsx = clientChunkExtractor.collectChunks(
-    <StaticRouter location={req.url}>
-      <App store={store}>
-        <AppRouter routes={routes} />
-      </App>
-    </StaticRouter>
+    <Main url={req.url} store={store} routes={routes} />
   );
 
   const html = renderToString(jsx);
