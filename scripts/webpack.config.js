@@ -144,7 +144,7 @@ const config = {
   context: ROOT_DIR,
   mode: isDevelopment ? "development" : "production",
   output: {
-    path: path.resolve(ROOT_DIR, OUTPUT_DIR, "public"),
+    path: path.resolve(OUTPUT_DIR, "public"),
     publicPath: "/",
     filename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
     chunkFilename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
@@ -153,7 +153,7 @@ const config = {
     extensions: [".js", ".jsx"],
   },
   cache: isDevelopment,
-  devtool: isDevelopment ? "eval-source-map" : "source-map",
+  devtool: "source-map",
   module: {
     rules: [
       {
@@ -204,8 +204,7 @@ const clientConfig = {
   name: "client",
   target: "web",
   entry: {
-    client: ["./src/client.js"],
-    polyfills: ["./src/polyfills.js"],
+    client: ["./src/polyfills.js", "./src/client.js"],
   },
   resolve: {
     ...config.resolve,
@@ -213,6 +212,7 @@ const clientConfig = {
   module: {
     ...config.module,
     rules: [
+      ...config.module.rules,
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [
@@ -425,6 +425,7 @@ const serverConfig = {
   module: {
     ...config.module,
     rules: [
+      ...config.module.rules,
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [

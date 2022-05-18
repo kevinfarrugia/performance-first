@@ -8,13 +8,7 @@ import configureStore from "./js/store";
 
 // grab the state from a global variable injected into the server-generated HTML
 // eslint-disable-next-line no-underscore-dangle
-const preloadedState = window.__PRELOADED_STATE__;
-
-// allow the passed state to be garbage-collected
-// eslint-disable-next-line no-underscore-dangle
-delete window.__PRELOADED_STATE__;
-
-const store = configureStore(preloadedState);
+const store = configureStore(window.__PRELOADED_STATE__);
 const routes = selectRoutes(store.getState());
 
 ReactDOM.hydrate(
