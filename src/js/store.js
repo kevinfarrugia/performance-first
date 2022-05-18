@@ -1,25 +1,41 @@
 /**
  * Create the store with dynamic reducers
- * Based on: https://stackoverflow.com/questions/32968016/how-to-dynamically-load-reducers-for-code-splitting-in-a-redux-application
+ * Based on: https://nicolasgallagher.com/redux-modules-and-code-splitting/
  */
 
-import { applyMiddleware, createStore } from "redux";
+import { applyMiddleware, combineReducers, createStore } from "redux";
 import { composeWithDevTools } from "redux-devtools-extension";
 import thunk from "redux-thunk";
 
-import { createReducer } from "./reducers";
-import reducerRegistry from "./util/reducerRegistry";
+import reducerRegistry from "./reducerRegistry";
+import staticReducers from "./reducers";
 
 const configureStore = (initialState = {}) => {
+  const combine = (reducers) => {
+    const updatedReducers = reducers;
+    const reducerNames = Object.keys(reducers);
+    Object.keys(initialState).forEach((item) => {
+      if (reducerNames.indexOf(item) === -1) {
+        updatedReducers[item] = (state = null) => state;
+      }
+    });
+    return combineReducers(reducers);
+  };
+
+  const reducer = combine({
+    ...staticReducers,
+    ...reducerRegistry.getReducers(),
+  });
+
   const store = createStore(
-    createReducer({ initialState }),
+    reducer,
     initialState,
     composeWithDevTools(applyMiddleware(thunk))
   );
 
-  // replace the store's reducer whenever a new reducer is registered.
+  // Replace the store's reducer whenever a new reducer is registered.
   reducerRegistry.setChangeListener((reducers) => {
-    store.replaceReducer(createReducer({ reducers }));
+    store.replaceReducer(combine(reducers));
   });
 
   return store;
