@@ -1,32 +1,39 @@
-import { nanoid } from "nanoid";
 import * as React from "react";
+import { NavLink } from "react-router-dom";
 
 import styles from "./critical.scss";
+import logo from "./img/logo.png";
 
-function Header({ handleSubmit }) {
+const activeStyle = {
+  textDecoration: "underline",
+};
+
+function Header() {
   return (
-    <header>
-      <form
-        onSubmit={(e) => {
-          e.preventDefault();
-          const form = e.target;
-          const formData = new FormData(form);
-          handleSubmit({
-            id: formData.get("id"),
-            value: formData.get("input"),
-          });
-          form.reset();
-        }}
-      >
-        <input type="hidden" name="id" value={nanoid()} />
-        <input
-          name="input"
-          type="text"
-          placeholder="What needs to be done?"
-          className={styles.input}
-          autoComplete="off"
-        />
-      </form>
+    <header className={styles.header}>
+      <img
+        src={logo}
+        alt="logo"
+        width="64"
+        height="64"
+        className={styles.logo}
+      />
+      <nav className={styles.nav}>
+        <NavLink
+          className={styles.navLink}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
+          to="/"
+        >
+          Home
+        </NavLink>
+        <NavLink
+          className={styles.navLink}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
+          to="/about"
+        >
+          About
+        </NavLink>
+      </nav>
     </header>
   );
 }

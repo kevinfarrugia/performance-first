@@ -9,16 +9,18 @@ function Home({ onGetHomePage }) {
 
   return (
     <Page url="/" onGetPage={getPage} scrollToTop>
-      {({ page, isReady: isPageReady }) => {
+      {({ page: { title, html }, isReady: isPageReady }) => {
         if (!isPageReady) {
           return null;
         }
 
         return (
-          <>
-            <h1 className={styles.title}>{page.title}</h1>
+          <div className={styles.content}>
+            <h1 className={styles.title}>{title}</h1>
+            {/* eslint-disable-next-line react/no-danger */}
+            <div dangerouslySetInnerHTML={{ __html: html }} />
             <TodoList />
-          </>
+          </div>
         );
       }}
     </Page>
