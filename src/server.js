@@ -8,6 +8,7 @@ import { create } from "express-handlebars";
 import helmet from "helmet";
 import PrettyError from "pretty-error";
 
+import Main from "./main";
 import handleRender from "./render";
 import { isValidPath } from "./service/Router";
 
@@ -20,7 +21,7 @@ const hbs = create({
   extname: ".hbs",
 });
 
-app.set("views", path.join(__dirname, "/public"));
+app.set("views", path.resolve(__dirname, "templates"));
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 
@@ -42,6 +43,13 @@ app.use(
 
 app.use(
   express.static(path.join(__dirname, "/public"), {
+    maxAge: 31536000000, // in milliseconds
+  })
+);
+
+app.use(
+  "/fonts",
+  express.static(path.join(__dirname, "/public/fonts"), {
     maxAge: 31536000000, // in milliseconds
   })
 );
@@ -101,3 +109,5 @@ if (module.hot) {
 }
 
 export default app;
+
+export { Main };

@@ -8,6 +8,7 @@ import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 
 import clean from "./clean";
+import copy from "./copy";
 import run, { format } from "./run";
 import webpackConfig from "./webpack.config";
 
@@ -63,9 +64,9 @@ async function start() {
 
   // Configure client-side hot module replacement
   const clientConfig = webpackConfig.find((config) => config.name === "client");
-  clientConfig.entry.client = ["./scripts/lib/webpackHotDevClient"]
-    .concat(clientConfig.entry.client)
-    .sort((a, b) => b.includes("polyfill") - a.includes("polyfill"));
+  clientConfig.entry.client = ["./scripts/lib/webpackHotDevClient"].concat(
+    clientConfig.entry.client
+  );
   clientConfig.output.filename = clientConfig.output.filename.replace(
     "chunkhash",
     "fullhash"
@@ -92,6 +93,7 @@ async function start() {
 
   // Configure compilation
   await run(clean);
+  await run(copy);
   const multiCompiler = webpack(webpackConfig);
   const clientCompiler = multiCompiler.compilers.find(
     (compiler) => compiler.name === "client"
@@ -114,7 +116,7 @@ async function start() {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      writeToDisk: (filePath) => /\.hbs$/.test(filePath),
+      writeToDisk: (filePath) => /loadable-stats/.test(filePath),
     })
   );
 

@@ -1,19 +1,26 @@
-/*
- * Render React application middleware
- */
+/* eslint-disable import/no-import-module-exports */
+
+import path from "path";
+
+import { ChunkExtractor } from "@loadable/server";
 import * as React from "react";
 import { renderToString } from "react-dom/server";
 import Helmet from "react-helmet";
 import { matchPath } from "react-router";
-import { StaticRouter } from "react-router-dom/server";
 
-import App from "./js/components/App";
-import AppRouter from "./js/components/AppRouter";
 import getRouteConfig from "./js/components/AppRouter/config";
 import getRoutesSSR from "./js/components/AppRouter/server";
 import configureStore from "./js/store";
 
-const renderRoutesData = async ({ path, url, query, routes, store }) => {
+// import Main from "./main";
+
+const renderRoutesData = async ({
+  path: pathname,
+  url,
+  query,
+  routes,
+  store,
+}) => {
   // retrieve data for all components on the current route
   const promises = [];
 
@@ -23,7 +30,7 @@ const renderRoutesData = async ({ path, url, query, routes, store }) => {
       {
         path: route.url,
       },
-      path
+      pathname
     );
 
     if (match) {
@@ -34,7 +41,7 @@ const renderRoutesData = async ({ path, url, query, routes, store }) => {
         routeComponent.fetchData.forEach((fn) => {
           promises.push(
             fn(store, {
-              path,
+              path: pathname,
               match,
               query,
               url,
@@ -53,6 +60,22 @@ const renderRoutesData = async ({ path, url, query, routes, store }) => {
 };
 
 const handleRender = async (req, res) => {
+  const serverStatsFile = path.resolve(__dirname, "./loadable-stats.json");
+  const serverChunkExtractor = new ChunkExtractor({
+    statsFile: serverStatsFile,
+    entrypoints: ["server"],
+  });
+  const { Main } = serverChunkExtractor.requireEntrypoint();
+
+  const clientStatsFile = path.resolve(
+    __dirname,
+    "./public/loadable-stats.json"
+  );
+  const clientChunkExtractor = new ChunkExtractor({
+    statsFile: clientStatsFile,
+    entrypoints: ["client"],
+  });
+
   // Create a new Redux store instance
   const store = configureStore();
 
@@ -66,17 +89,25 @@ const handleRender = async (req, res) => {
     store,
   });
 
-  const html = renderToString(
-    <StaticRouter location={req.url}>
-      <App store={store}>
-        <AppRouter routes={routes} />
-      </App>
-    </StaticRouter>
+  const jsx = clientChunkExtractor.collectChunks(
+    <Main url={req.url} store={store} routes={routes} />
   );
 
   // Grab the initial state from our Redux store
   const preloadedState = store.getState();
 
+  const html = renderToString(jsx);
+
+  const scripts = clientChunkExtractor.getScriptTags();
+
+  let inlineCss = "";
+  let css = "";
+
+  if (!module.hot) {
+    inlineCss = await clientChunkExtractor.getCssString();
+  } else {
+    css = clientChunkExtractor.getStyleTags();
+  }
   const helmet = Helmet.renderStatic();
 
   // Send the rendered page back to the client using the server's view engine
@@ -85,7 +116,10 @@ const handleRender = async (req, res) => {
     bodyattributes: helmet.bodyAttributes.toString() || "",
     head: `${helmet.title} ${helmet.meta} ${helmet.link}`,
     html,
-    preloadedState: JSON.stringify(preloadedState).replace(/</g, "\\u003c"),
+    inlineCss,
+    css,
+    scripts,
+    preloadedState: JSON.stringify(preloadedState),
   });
 };
 

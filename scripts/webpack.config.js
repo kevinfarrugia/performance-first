@@ -5,9 +5,9 @@
 import crypto from "crypto";
 import path from "path";
 
+import LoadablePlugin from "@loadable/webpack-plugin";
 import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
 import ESLintPlugin from "eslint-webpack-plugin";
-import HtmlWebpackPlugin from "html-webpack-plugin";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
 import svgToMiniDataURI from "mini-svg-data-uri";
 import StyleLintPlugin from "stylelint-webpack-plugin";
@@ -124,15 +124,6 @@ const splitChunksConfig = {
         minChunks: 2,
         reuseExistingChunk: true,
       },
-      // bundle all critical into one stylesheet to inline in the HTML
-      criticalStyles: {
-        name: "critical",
-        test: /critical\.(sa|sc|c)ss$/,
-        type: "css/mini-extract",
-        chunks: "all",
-        priority: 40,
-        enforce: true,
-      },
     },
   },
 };
@@ -170,7 +161,6 @@ const config = {
           /\.(jpe?g|png|gif|svg|webp|avif)$/,
           /\.(woff2?|[ot]tf|eot)$/,
           /\.json$/,
-          /\.hbs$/,
         ],
         type: "asset/resource",
         generator: {
@@ -180,6 +170,7 @@ const config = {
     ],
   },
   plugins: [
+    new LoadablePlugin(),
     new webpack.EnvironmentPlugin({
       IS_DEVELOPMENT: isDevelopment,
       NAME: JSON.stringify(pkg.name),
@@ -217,7 +208,6 @@ const clientConfig = {
         test: /\.(sa|sc|c)ss$/,
         rules: [
           {
-            // style-loader causes a FOUC but allows HMR for styles - if you don't require HMR it may be replaced by MiniCssExtractPlugin.loader
             loader: isDevelopment
               ? "style-loader"
               : MiniCssExtractPlugin.loader,
@@ -293,6 +283,7 @@ const clientConfig = {
             ["@babel/preset-react", { development: isDevelopment }],
           ],
           plugins: [
+            "@loadable/babel-plugin",
             "@babel/plugin-proposal-class-properties",
             "@babel/plugin-syntax-dynamic-import",
             ...(isDevelopment
@@ -342,16 +333,8 @@ const clientConfig = {
               filename: staticAssetName,
             },
           },
-          {
-            loader: "image-webpack-loader",
-            options: {
-              bypassOnDebug: true,
-              svgo: {},
-            },
-          },
         ],
       },
-      ...config.module.rules,
     ],
   },
   plugins: [
@@ -359,18 +342,6 @@ const clientConfig = {
     new webpack.IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
       contextRegExp: /moment$/,
-    }),
-    new HtmlWebpackPlugin({
-      filename: "index.hbs",
-      showErrors: isDevelopment,
-      template: path.join(ROOT_DIR, "src/templates", "index.hbs"),
-      inject: false,
-    }),
-    new HtmlWebpackPlugin({
-      filename: "500.hbs",
-      showErrors: isDevelopment,
-      template: path.join(ROOT_DIR, "src/templates", "500.hbs"),
-      inject: false,
     }),
     new MiniCssExtractPlugin({
       filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
@@ -429,6 +400,13 @@ const serverConfig = {
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [
+          ...(isDevelopment
+            ? []
+            : [
+                {
+                  loader: MiniCssExtractPlugin.loader,
+                },
+              ]),
           {
             include: SRC_DIR,
             loader: "css-loader",
@@ -438,8 +416,9 @@ const serverConfig = {
                 localIdentName: isDevelopment
                   ? "[name]-[local]-[hash:base64:5]"
                   : "[hash:base64:5]",
-                exportOnlyLocals: true,
+                exportOnlyLocals: isDevelopment,
               },
+              importLoaders: 1,
             },
           },
           {
@@ -492,6 +471,7 @@ const serverConfig = {
             ["@babel/preset-react", { development: isDevelopment }],
           ],
           plugins: [
+            "@loadable/babel-plugin",
             "@babel/plugin-proposal-class-properties",
             "@babel/plugin-syntax-dynamic-import",
             ...(isDevelopment
@@ -515,7 +495,6 @@ const serverConfig = {
                 generator: {
                   filename: staticAssetName,
                   dataUrl: (content) => svgToMiniDataURI(content.toString()),
-                  emit: false,
                 },
                 parser: {
                   dataUrlCondition: {
@@ -544,13 +523,6 @@ const serverConfig = {
               emit: false,
             },
           },
-          {
-            loader: "image-webpack-loader",
-            options: {
-              bypassOnDebug: true,
-              svgo: {},
-            },
-          },
         ],
       },
       {
@@ -561,11 +533,22 @@ const serverConfig = {
           emit: false,
         },
       },
-      ...config.module.rules,
     ],
   },
-  externals: [nodeExternals()],
-  plugins: [...config.plugins],
+  externals: ["@loadable/component", nodeExternals()],
+  plugins: [
+    ...config.plugins,
+    ...(isDevelopment
+      ? []
+      : [
+          new MiniCssExtractPlugin({
+            filename: "[name].css",
+          }),
+        ]),
+  ],
+  optimization: {
+    minimizer: [new CssMinimizerPlugin()],
+  },
   node: {
     global: false,
     __filename: false,

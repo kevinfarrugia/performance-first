@@ -31,6 +31,7 @@ async function copy() {
     copyFile("LICENSE", "build/LICENSE"),
     copyFile("package-lock.json", "build/package-lock.json"),
     copyDir("public", "build/public"),
+    copyDir("src/templates", "build/templates"),
   ]);
 
   if (process.argv.includes("--watch")) {
