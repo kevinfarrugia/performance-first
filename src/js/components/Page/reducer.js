@@ -1,6 +1,6 @@
 import { createSelector } from "reselect";
 
-import reducerRegistry from "../../util/reducerRegistry";
+import reducerRegistry from "../../reducerRegistry";
 import { REDUCER_NAME, RESET_PAGE, SET_PAGE } from "./constants";
 
 const initialState = {

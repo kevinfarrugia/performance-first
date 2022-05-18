@@ -8,6 +8,7 @@ import webpackDevMiddleware from "webpack-dev-middleware";
 import webpackHotMiddleware from "webpack-hot-middleware";
 
 import clean from "./clean";
+import copy from "./copy";
 import run, { format } from "./run";
 import webpackConfig from "./webpack.config";
 
@@ -92,6 +93,7 @@ async function start() {
 
   // Configure compilation
   await run(clean);
+  await run(copy);
   const multiCompiler = webpack(webpackConfig);
   const clientCompiler = multiCompiler.compilers.find(
     (compiler) => compiler.name === "client"
@@ -114,8 +116,7 @@ async function start() {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      writeToDisk: (filePath) =>
-        /\.hbs$/.test(filePath) || /loadable-stats/.test(filePath),
+      writeToDisk: (filePath) => /loadable-stats/.test(filePath),
     })
   );
 

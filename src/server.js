@@ -21,7 +21,7 @@ const hbs = create({
   extname: ".hbs",
 });
 
-app.set("views", path.join(__dirname));
+app.set("views", path.resolve(__dirname, "templates"));
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 
@@ -49,7 +49,7 @@ app.use(
 
 app.use(
   "/fonts",
-  express.static(path.join(__dirname, "/fonts"), {
+  express.static(path.join(__dirname, "/public/fonts"), {
     maxAge: 31536000000, // in milliseconds
   })
 );
