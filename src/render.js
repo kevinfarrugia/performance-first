@@ -93,6 +93,9 @@ const handleRender = async (req, res) => {
     <Main url={req.url} store={store} routes={routes} />
   );
 
+  // Grab the initial state from our Redux store
+  const preloadedState = store.getState();
+
   const html = renderToString(jsx);
 
   const scripts = clientChunkExtractor.getScriptTags();
@@ -105,10 +108,6 @@ const handleRender = async (req, res) => {
   } else {
     css = clientChunkExtractor.getStyleTags();
   }
-
-  // Grab the initial state from our Redux store
-  const preloadedState = store.getState();
-
   const helmet = Helmet.renderStatic();
 
   // Send the rendered page back to the client using the server's view engine
@@ -120,7 +119,7 @@ const handleRender = async (req, res) => {
     inlineCss,
     css,
     scripts,
-    preloadedState: JSON.stringify(preloadedState).replace(/</g, "\\u003c"),
+    preloadedState: JSON.stringify(preloadedState),
   });
 };
 

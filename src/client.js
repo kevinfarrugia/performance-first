@@ -13,7 +13,6 @@ const store = configureStore(window.__PRELOADED_STATE__);
 
 loadableReady(() => {
   const routes = selectRoutes(store.getState());
-  // eslint-disable-next-line no-console
   ReactDOM.hydrate(
     <BrowserRouter>
       <App store={store}>
