@@ -516,6 +516,7 @@ const serverConfig = {
                 type: "asset",
                 generator: {
                   filename: staticAssetName,
+                  emit: false,
                 },
                 parser: {
                   dataUrlCondition: {
@@ -529,6 +530,7 @@ const serverConfig = {
             type: "asset/resource",
             generator: {
               filename: staticAssetName,
+              emit: false,
             },
           },
         ],

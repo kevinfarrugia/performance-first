@@ -1,9 +1,8 @@
+/* eslint-disable import/no-import-module-exports */
+
 import path from "path";
 
 import { ChunkExtractor } from "@loadable/server";
-/*
- * Render React application middleware
- */
 import * as React from "react";
 import { renderToString } from "react-dom/server";
 import Helmet from "react-helmet";
@@ -96,14 +95,16 @@ const handleRender = async (req, res) => {
 
   const html = renderToString(jsx);
 
-  const inlineCss = await serverChunkExtractor.getCssString();
-  const css = clientChunkExtractor.getStyleTags();
   const scripts = clientChunkExtractor.getScriptTags();
-  // eslint-disable-next-line no-console
-  console.log({
-    client: JSON.stringify(clientChunkExtractor.getStyleElements()),
-    server: JSON.stringify(serverChunkExtractor.getStyleElements()),
-  });
+
+  let inlineCss = "";
+  let css = "";
+
+  if (!module.hot) {
+    inlineCss = await clientChunkExtractor.getCssString();
+  } else {
+    css = clientChunkExtractor.getStyleTags();
+  }
 
   // Grab the initial state from our Redux store
   const preloadedState = store.getState();
