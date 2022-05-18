@@ -152,7 +152,6 @@ const config = {
         type: "asset/resource",
         generator: {
           filename: "fonts/[name][ext]",
-          emit: true,
         },
       },
       {
