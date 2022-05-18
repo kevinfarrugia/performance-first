@@ -6,7 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="preload" href="/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin />
 		<link rel="preload" href="/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin />
-    {{{ css }}}
+
+    <style>{{{ inlineCss }}}</style>
+
     <meta name="theme-color" content="#fff" />
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
@@ -21,7 +23,6 @@
     <div id="root">{{{ html }}}</div>
 
     {{{ scripts }}}
-
     <script>
       window.__PRELOADED_STATE__ = {{{preloadedState}}};
     </script>

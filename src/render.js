@@ -13,6 +13,8 @@ import getRouteConfig from "./js/components/AppRouter/config";
 import getRoutesSSR from "./js/components/AppRouter/server";
 import configureStore from "./js/store";
 
+// import Main from "./main";
+
 const renderRoutesData = async ({
   path: pathname,
   url,
@@ -62,9 +64,9 @@ const handleRender = async (req, res) => {
   const serverStatsFile = path.resolve(__dirname, "./loadable-stats.json");
   const serverChunkExtractor = new ChunkExtractor({
     statsFile: serverStatsFile,
-    entrypoints: ["main"],
+    entrypoints: ["server"],
   });
-  const { default: Main } = serverChunkExtractor.requireEntrypoint();
+  const { Main } = serverChunkExtractor.requireEntrypoint();
 
   const clientStatsFile = path.resolve(
     __dirname,
@@ -94,8 +96,14 @@ const handleRender = async (req, res) => {
 
   const html = renderToString(jsx);
 
+  const inlineCss = await serverChunkExtractor.getCssString();
   const css = clientChunkExtractor.getStyleTags();
   const scripts = clientChunkExtractor.getScriptTags();
+  // eslint-disable-next-line no-console
+  console.log({
+    client: JSON.stringify(clientChunkExtractor.getStyleElements()),
+    server: JSON.stringify(serverChunkExtractor.getStyleElements()),
+  });
 
   // Grab the initial state from our Redux store
   const preloadedState = store.getState();
@@ -108,6 +116,7 @@ const handleRender = async (req, res) => {
     bodyattributes: helmet.bodyAttributes.toString() || "",
     head: `${helmet.title} ${helmet.meta} ${helmet.link}`,
     html,
+    inlineCss,
     css,
     scripts,
     preloadedState: JSON.stringify(preloadedState).replace(/</g, "\\u003c"),

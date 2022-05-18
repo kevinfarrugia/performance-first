@@ -49,7 +49,7 @@ const isModuleCSS = (module) =>
   // extract-css-chunks-webpack-plugin (new)
   module.type === `css/extract-css-chunks`;
 
-const clientSplitChunksConfig = {
+const splitChunksConfig = {
   dev: {
     cacheGroups: {
       defaultVendors: false,
@@ -136,7 +136,7 @@ const config = {
   context: ROOT_DIR,
   mode: isDevelopment ? "development" : "production",
   output: {
-    path: path.resolve(OUTPUT_DIR, "./public"),
+    path: path.resolve(OUTPUT_DIR, "public"),
     publicPath: "/",
     filename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
     chunkFilename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
@@ -377,9 +377,7 @@ const clientConfig = {
   ],
   optimization: {
     runtimeChunk: { name: "webpack" },
-    splitChunks: isDevelopment
-      ? clientSplitChunksConfig.dev
-      : clientSplitChunksConfig.prod,
+    splitChunks: isDevelopment ? splitChunksConfig.dev : splitChunksConfig.prod,
     minimizer: [
       new TerserJSPlugin({
         terserOptions: {
@@ -398,7 +396,6 @@ const serverConfig = {
   target: "node",
   entry: {
     server: ["./src/server.js"],
-    main: ["./src/main.js"],
   },
   output: {
     ...config.output,
@@ -546,7 +543,7 @@ const serverConfig = {
       },
     ],
   },
-  externals: [nodeExternals()],
+  externals: ["@loadable/component", nodeExternals()],
   plugins: [
     ...config.plugins,
     new MiniCssExtractPlugin({
