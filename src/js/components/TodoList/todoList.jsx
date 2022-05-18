@@ -7,9 +7,9 @@ import styles from "./critical.scss";
 
 function TodoList() {
   const [todoList, setTodoList] = useState([
-    { id: nanoid(), value: "Wash dog" },
-    { id: nanoid(), value: "Feed dog" },
     { id: nanoid(), value: "Pet dog" },
+    { id: nanoid(), value: "Feed dog" },
+    { id: nanoid(), value: "Pet dog again" },
   ]);
 
   const handleSubmit = (todo) => {
