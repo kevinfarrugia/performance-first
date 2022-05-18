@@ -1,11 +1,16 @@
+import { nanoid } from "nanoid";
 import React, { useState } from "react";
 
-import Header from "../Header";
 import ListItem from "../ListItem";
+import TodoListForm from "../TodoListForm";
 import styles from "./critical.scss";
 
 function TodoList() {
-  const [todoList, setTodoList] = useState([]);
+  const [todoList, setTodoList] = useState([
+    { id: nanoid(), value: "Pet dog" },
+    { id: nanoid(), value: "Feed dog" },
+    { id: nanoid(), value: "Pet dog again" },
+  ]);
 
   const handleSubmit = (todo) => {
     setTodoList([...todoList, todo]);
@@ -16,8 +21,8 @@ function TodoList() {
   };
 
   return (
-    <section>
-      <Header handleSubmit={handleSubmit} />
+    <section className={styles.section}>
+      <TodoListForm handleSubmit={handleSubmit} />
       <ul className={styles.list}>
         {todoList &&
           todoList.map((n, index) => (

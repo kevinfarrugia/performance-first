@@ -1,3 +1,26 @@
 .title {
   text-transform: uppercase;
 }
+
+.content {
+  position: relative;
+  width: 100%;
+  max-width: $max-width;
+  align-self: center;
+  padding: 1em;
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+.banner {
+  z-index: -1;
+  display: block;
+  width: 100%;
+  max-width: calc($max-width + 6em);
+  height: auto;
+  margin: 0 auto 0.5em;
+
+  @include breakpoint {
+    margin-bottom: -12em;
+  }
+}

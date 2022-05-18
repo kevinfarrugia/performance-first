@@ -19,10 +19,3 @@ const mapDispatchToProps = (dispatch) => ({
 const About = compose(connect(mapStateToProps, mapDispatchToProps))(Component);
 
 export default About;
-
-export const getAboutSSR = (store, { url }) =>
-  store.dispatch(
-    getAboutPage({
-      url,
-    })
-  );

@@ -19,10 +19,3 @@ const mapDispatchToProps = (dispatch) => ({
 const Home = compose(connect(mapStateToProps, mapDispatchToProps))(Component);
 
 export default Home;
-
-export const getHomeSSR = (store, { url }) =>
-  store.dispatch(
-    getHomePage({
-      url,
-    })
-  );

@@ -4,6 +4,10 @@
   padding: 1em;
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 
+  &:last-child {
+    border-bottom: none;
+  }
+
   &:hover .remove {
     opacity: 1;
   }
@@ -58,6 +62,10 @@
   background: url("./remove.svg") no-repeat center center;
   background-size: contain;
   cursor: pointer;
-  opacity: 0;
+  opacity: 1;
   text-indent: -9999em;
+
+  @include breakpoint {
+    opacity: 0;
+  }
 }

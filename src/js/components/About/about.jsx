@@ -1,6 +1,7 @@
 import * as React from "react";
 
 import Page from "../Page";
+import ResponsivePicture from "../ResponsivePicture";
 import styles from "./critical.scss";
 
 function About({ onGetAboutPage }) {
@@ -8,15 +9,30 @@ function About({ onGetAboutPage }) {
 
   return (
     <Page url="/about" onGetPage={getPage} scrollToTop>
-      {({ page, isReady: isPageReady }) => {
+      {({ page: { title, html, banner }, isReady: isPageReady }) => {
         if (!isPageReady) {
           return null;
         }
 
         return (
           <>
-            <h1 className={styles.title}>{page.title}</h1>
-            <div dangerouslySetInnerHTML={{ __html: page.html }} />
+            {banner && (
+              <ResponsivePicture
+                image={banner.image}
+                alt={banner.alt}
+                width={banner.width}
+                height={banner.height}
+                caption={banner.caption}
+                formats={banner.formats}
+                availableWidths={banner.availableWidths}
+                className={styles.banner}
+              />
+            )}
+            <div className={styles.content}>
+              <h1 className={styles.title}>{title}</h1>
+              {/* eslint-disable-next-line react/no-danger */}
+              <div dangerouslySetInnerHTML={{ __html: html }} />
+            </div>
           </>
         );
       }}

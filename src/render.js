@@ -8,8 +8,9 @@ import { matchPath } from "react-router";
 import { StaticRouter } from "react-router-dom/server";
 
 import App from "./js/components/App";
-import AppRouter, { getRoutesSSR } from "./js/components/AppRouter";
+import AppRouter from "./js/components/AppRouter";
 import getRouteConfig from "./js/components/AppRouter/config";
+import getRoutesSSR from "./js/components/AppRouter/server";
 import configureStore from "./js/store";
 
 const renderRoutesData = async ({ path, url, query, routes, store }) => {

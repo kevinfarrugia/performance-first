@@ -10,7 +10,7 @@ function App({ store, children }) {
     <Provider store={store}>
       <Layout meta={{ title: "Performance First React Webpack" }}>
         <div className={styles.container}>
-          <div className={styles.content}>{children}</div>
+          {children}
           <Footer />
         </div>
       </Layout>
