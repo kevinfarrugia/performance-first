@@ -3,7 +3,7 @@ import React, { useState } from "react";
 
 import ListItem from "../ListItem";
 import TodoListForm from "../TodoListForm";
-import styles from "./critical.scss";
+import styles from "./styles.scss";
 
 function TodoList() {
   const [todoList, setTodoList] = useState([

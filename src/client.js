@@ -3,9 +3,9 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 
-import App from "./js/components/App";
-import AppRouter, { selectRoutes } from "./js/components/AppRouter";
+import { selectRoutes } from "./js/components/AppRouter";
 import configureStore from "./js/store";
+import Main from "./main";
 
 // grab the state from a global variable injected into the server-generated HTML
 // eslint-disable-next-line no-underscore-dangle
@@ -15,9 +15,7 @@ loadableReady(() => {
   const routes = selectRoutes(store.getState());
   ReactDOM.hydrate(
     <BrowserRouter>
-      <App store={store}>
-        <AppRouter routes={routes} />
-      </App>
+      <Main routes={routes} store={store} />
     </BrowserRouter>,
     document.getElementById("root")
   );

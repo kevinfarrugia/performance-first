@@ -1,8 +1,8 @@
 import * as React from "react";
 import { NavLink } from "react-router-dom";
 
-import styles from "./critical.scss";
 import logo from "./img/logo.png";
+import styles from "./styles.scss";
 
 const activeStyle = {
   textDecoration: "underline",

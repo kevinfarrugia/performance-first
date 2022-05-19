@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import * as React from "react";
 
-import styles from "./critical.scss";
+import styles from "./styles.scss";
 
 function TodoListForm({ handleSubmit }) {
   return (

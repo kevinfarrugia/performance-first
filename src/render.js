@@ -7,12 +7,11 @@ import * as React from "react";
 import { renderToString } from "react-dom/server";
 import Helmet from "react-helmet";
 import { matchPath } from "react-router";
+import { StaticRouter } from "react-router-dom/server";
 
 import getRouteConfig from "./js/components/AppRouter/config";
 import getRoutesSSR from "./js/components/AppRouter/server";
 import configureStore from "./js/store";
-
-// import Main from "./main";
 
 const renderRoutesData = async ({
   path: pathname,
@@ -90,10 +89,12 @@ const handleRender = async (req, res) => {
   });
 
   const jsx = clientChunkExtractor.collectChunks(
-    <Main url={req.url} store={store} routes={routes} />
+    <StaticRouter location={req.url}>
+      <Main store={store} routes={routes} />
+    </StaticRouter>
   );
 
-  // Grab the initial state from our Redux store
+  // Grab the state from our Redux store
   const preloadedState = store.getState();
 
   const html = renderToString(jsx);

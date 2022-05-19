@@ -1,4 +1,5 @@
 /* eslint-disable import/no-import-module-exports */
+
 import path from "path";
 
 import compression from "compression";
@@ -110,4 +111,5 @@ if (module.hot) {
 
 export default app;
 
+// re-export Main to be consumed by loadable-components's ChunkExtractor
 export { Main };

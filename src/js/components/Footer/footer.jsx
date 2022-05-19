@@ -1,6 +1,6 @@
 import * as React from "react";
 
-import styles from "./critical.scss";
+import styles from "./styles.scss";
 
 function Footer() {
   return (

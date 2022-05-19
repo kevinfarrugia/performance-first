@@ -1,6 +1,6 @@
 import React from "react";
 
-import styles from "./style.scss";
+import styles from "./styles.scss";
 
 function ListItem({ id, title, handleRemove }) {
   return (

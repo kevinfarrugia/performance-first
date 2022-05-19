@@ -2,7 +2,7 @@ import * as React from "react";
 
 import Page from "../Page";
 import ResponsivePicture from "../ResponsivePicture";
-import styles from "./critical.scss";
+import styles from "./styles.scss";
 
 function About({ onGetAboutPage }) {
   const getPage = React.useCallback(onGetAboutPage, [onGetAboutPage]);

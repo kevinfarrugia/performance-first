@@ -2,7 +2,7 @@ import * as React from "react";
 
 import Page from "../Page";
 import TodoList from "../TodoList";
-import styles from "./critical.scss";
+import styles from "./styles.scss";
 
 function Home({ onGetHomePage }) {
   const getPage = React.useCallback(onGetHomePage, [onGetHomePage]);

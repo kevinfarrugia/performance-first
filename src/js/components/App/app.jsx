@@ -3,7 +3,7 @@ import { Provider } from "react-redux";
 
 import Footer from "../Footer";
 import Layout from "../Layout";
-import styles from "./critical.scss";
+import styles from "./styles.scss";
 
 function App({ store, children }) {
   return (
