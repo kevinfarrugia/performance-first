@@ -35,9 +35,16 @@ const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
 const CMS_URL = "https://example.com";
 
 // the total number of entrypoints (including async chunks)
-const ENTRYPOINTS_COUNT = 1;
+const ENTRYPOINTS_COUNT = 4;
 
-const FRAMEWORK_BUNDLES = ["react", "react-dom", "scheduler", "prop-types"];
+const FRAMEWORK_BUNDLES = [
+  "react",
+  "react-dom",
+  "redux",
+  "react-redux",
+  "scheduler",
+  "prop-types",
+];
 
 // returns true if module is CSS
 const isModuleCSS = (module) =>
