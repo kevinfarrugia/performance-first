@@ -11,6 +11,7 @@ import { StaticRouter } from "react-router-dom/server";
 
 import getRouteConfig from "./js/components/AppRouter/config";
 import getRoutesSSR from "./js/components/AppRouter/server";
+import Scripts from "./js/components/Scripts";
 import configureStore from "./js/store";
 
 const renderRoutesData = async ({
@@ -96,7 +97,8 @@ const handleRender = async (req, res) => {
 
   const html = renderToString(jsx);
 
-  const scripts = clientChunkExtractor.getScriptTags();
+  const scriptElements = clientChunkExtractor.getScriptElements();
+  const scripts = renderToString(<Scripts scripts={scriptElements} />);
 
   let inlineCss = "";
   let css = "";
