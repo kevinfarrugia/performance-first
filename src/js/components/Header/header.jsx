@@ -6,6 +6,7 @@ import styles from "./styles.scss";
 
 const activeStyle = {
   textDecoration: "underline",
+  pointerEvents: "none",
 };
 
 function Header() {
@@ -32,6 +33,20 @@ function Header() {
           to="/about"
         >
           About
+        </NavLink>
+        <NavLink
+          className={styles.navLink}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
+          to="/page-a"
+        >
+          Page A
+        </NavLink>
+        <NavLink
+          className={styles.navLink}
+          style={({ isActive }) => (isActive ? activeStyle : undefined)}
+          to="/page-b"
+        >
+          Page B
         </NavLink>
       </nav>
     </header>

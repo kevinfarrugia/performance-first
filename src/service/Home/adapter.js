@@ -1,4 +1,4 @@
-import { toPage } from "../adapter";
+import { toPage } from "../Page/adapter";
 
 const toHome = (data) => {
   if (data) {

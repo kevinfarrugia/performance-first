@@ -8,7 +8,7 @@ import styles from "./styles.scss";
 function App({ store, children }) {
   return (
     <Provider store={store}>
-      <Layout meta={{ title: "Performance First React Webpack" }}>
+      <Layout>
         <div className={styles.container}>
           {children}
           <Footer />

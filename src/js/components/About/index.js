@@ -3,7 +3,7 @@ import { compose } from "redux";
 import { createStructuredSelector } from "reselect";
 
 import Component from "./about";
-import { getAbout, getAboutPage } from "./actions";
+import { getAboutPage } from "./actions";
 import { selectAbout, selectIsReady } from "./reducer";
 
 const mapStateToProps = createStructuredSelector({
@@ -12,7 +12,6 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetAbout: (data) => dispatch(getAbout(data)),
   onGetAboutPage: (data) => dispatch(getAboutPage(data)),
 });
 

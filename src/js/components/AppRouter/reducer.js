@@ -7,7 +7,7 @@ const initialState = {
 };
 
 // eslint-disable-next-line default-param-last
-const AppRouterReducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_ROUTES:
       return { ...state, routes: action.data };
@@ -25,4 +25,4 @@ const getState = (state) => {
 
 export const selectRoutes = createSelector(getState, (n) => n.routes);
 
-export default AppRouterReducer;
+export default reducer;

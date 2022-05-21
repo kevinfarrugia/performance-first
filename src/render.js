@@ -27,7 +27,7 @@ const renderRoutesData = async ({
   routes.every((route) => {
     const match = matchPath(
       {
-        path: route.url,
+        path: route.path,
       },
       pathname
     );
@@ -75,8 +75,8 @@ const handleRender = async (req, res) => {
     entrypoints: ["client"],
   });
 
-  // Create a new Redux store instance
-  const store = configureStore();
+  // create a new Redux store instance and clear all dynamic reducers
+  const store = configureStore({}, true);
 
   const routes = await getRoutesSSR(store);
 
@@ -94,9 +94,6 @@ const handleRender = async (req, res) => {
     </StaticRouter>
   );
 
-  // Grab the state from our Redux store
-  const preloadedState = store.getState();
-
   const html = renderToString(jsx);
 
   const scripts = clientChunkExtractor.getScriptTags();
@@ -110,6 +107,9 @@ const handleRender = async (req, res) => {
     css = clientChunkExtractor.getStyleTags();
   }
   const helmet = Helmet.renderStatic();
+
+  // Grab the state from our Redux store
+  const preloadedState = store.getState();
 
   // Send the rendered page back to the client using the server's view engine
   res.render("index", {

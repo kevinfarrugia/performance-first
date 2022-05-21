@@ -1,9 +1,9 @@
 import { getAboutPage } from "./actions";
 
-const getAboutSSR = (store, { url }) =>
+const getAboutSSR = (store, { path }) =>
   store.dispatch(
     getAboutPage({
-      url,
+      path,
     })
   );
 

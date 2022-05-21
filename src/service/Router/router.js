@@ -43,15 +43,15 @@ const getRoutingTable = async () => {
 
 const isValidPath = async (urlPath) => {
   const routes = await getRoutingTable();
-  return routes.find((n) => match(n.url)(urlPath));
+  return routes.find((n) => match(n.path)(urlPath));
 };
 
-const getUrl = async (docType) => {
+const getPath = async (docType) => {
   const routingTable = await getRoutingTable();
-  return routingTable.find((item) => item.value === docType).url;
+  return routingTable.find((item) => item.value === docType).path;
 };
 
-const getUrls = async (docTypes) => {
+const getPaths = async (docTypes) => {
   const routingTable = await getRoutingTable();
   const results = routingTable.filter(
     (item) => docTypes.indexOf(item.value) > -1
@@ -60,7 +60,7 @@ const getUrls = async (docTypes) => {
   const obj = {};
 
   for (let i = results.length - 1; i >= 0; i -= 1) {
-    obj[results[i].value] = results[i].url;
+    obj[results[i].value] = results[i].path;
   }
   return obj;
 };
@@ -72,4 +72,11 @@ cache.on("expired", (key, data) => {
   cache.set(key, data);
 });
 
-export { getData, refreshCache, getUrls, getUrl, getRoutingTable, isValidPath };
+export {
+  getData,
+  refreshCache,
+  getPaths,
+  getPath,
+  getRoutingTable,
+  isValidPath,
+};

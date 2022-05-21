@@ -16,7 +16,7 @@ const extractUrlPath = (url) => {
 const toRoutes = (routes) => {
   if (routes) {
     return routes.map((n) => ({
-      url: n.key,
+      path: n.key,
       name: n.value.toLowerCase(),
     }));
   }

@@ -1,5 +1,5 @@
 /**
- * Create the store with dynamic reducers
+ * Create a Redux store with dynamic reducers
  * Based on: https://nicolasgallagher.com/redux-modules-and-code-splitting/
  */
 
@@ -10,7 +10,13 @@ import thunk from "redux-thunk";
 import reducerRegistry from "./reducerRegistry";
 import staticReducers from "./reducers";
 
-const configureStore = (initialState = {}) => {
+/**
+ * Create a new Redux store and connect the reducerRegistry change listener to dynamically append reducers.
+ * @param {Object} initialState
+ * @param {Boolean} resetReducers
+ * @returns The initialized Redux store
+ */
+const configureStore = (initialState = {}, resetReducers = false) => {
   const combine = (reducers) => {
     const updatedReducers = reducers;
     const reducerNames = Object.keys(reducers);
@@ -21,6 +27,11 @@ const configureStore = (initialState = {}) => {
     });
     return combineReducers(reducers);
   };
+
+  // clears all dynamically added reducers
+  if (resetReducers) {
+    reducerRegistry.reset();
+  }
 
   const reducer = combine({
     ...staticReducers,
@@ -35,7 +46,12 @@ const configureStore = (initialState = {}) => {
 
   // Replace the store's reducer whenever a new reducer is registered.
   reducerRegistry.setChangeListener((reducers) => {
-    store.replaceReducer(combine(reducers));
+    store.replaceReducer(
+      combine({
+        ...staticReducers,
+        ...reducers,
+      })
+    );
   });
 
   return store;

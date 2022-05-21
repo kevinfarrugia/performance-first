@@ -1,9 +1,9 @@
 import { getHomePage } from "./actions";
 
-const getHomeSSR = (store, { url }) =>
+const getHomeSSR = (store, { path }) =>
   store.dispatch(
     getHomePage({
-      url,
+      path,
     })
   );
 

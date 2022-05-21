@@ -9,7 +9,7 @@ function AppRouter({ routes }) {
       {routes.map((route) => {
         const { Component } = getRouteConfig(route.name);
         return (
-          <Route key={route.url} path={route.url} element={<Component />} />
+          <Route key={route.path} path={route.path} element={<Component />} />
         );
       })}
     </Routes>
