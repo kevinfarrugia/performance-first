@@ -98,7 +98,6 @@ const handleRender = async (req, res) => {
   const html = renderToString(jsx);
 
   const scriptElements = clientChunkExtractor.getScriptElements();
-
   const scripts = renderToString(<Scripts scripts={scriptElements} />);
 
   let inlineCss = "";
