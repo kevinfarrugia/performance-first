@@ -1,0 +1,50 @@
+[
+  {
+    "name": "en",
+    "title": "Page A",
+    "summary": "<p><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></p>",
+    "banner": {
+      "caption": "Photo by Lukasz Szmigiel on Unsplash",
+      "image": "/media/page-a-banner",
+      "alt": "Photograph taken inside a forest showing tall trees and green leaves.",
+      "width": 1920,
+      "height": 1080,
+      "formats": ["jpg", "avif"],
+      "availableWidths": [1920, 1024, 540]
+    },
+    "path": "/page-a",
+    "meta": {
+      "title": "Page A",
+      "description": "Default Page A",
+      "keywords": "Default Page, React, Web Performance",
+      "creator": "Kevin Farrugia",
+      "date": "2022-05-21T10:00:00.000Z"
+    },
+    "html": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Usmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>",
+    "id": 1003
+  },
+  {
+    "name": "en",
+    "title": "Page B",
+    "summary": "<p><span>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</span></p>",
+    "banner": {
+      "caption": "Photo by nasim dadfar on Unsplash",
+      "image": "/media/page-b-banner",
+      "alt": "Dark, rocky mountains covered in snow.",
+      "width": 1920,
+      "height": 1080,
+      "formats": ["jpg", "avif"],
+      "availableWidths": [1920, 1024, 540]
+    },
+    "path": "/page-b",
+    "meta": {
+      "title": "Page B",
+      "description": "Default Page B",
+      "keywords": "Default Page, React, Web Performance",
+      "creator": "Kevin Farrugia",
+      "date": "2022-05-21T10:00:00.000Z"
+    },
+    "html": "<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod<p><p><strong>Tempor incididunt ut</strong></p><p>Labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Usmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Badipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p><p>Usmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum</p>",
+    "id": 1004
+  }
+]

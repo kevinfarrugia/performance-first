@@ -16,6 +16,10 @@ export class ReducerRegistry {
     }
   }
 
+  reset() {
+    this.reducers = {};
+  }
+
   setChangeListener(listener) {
     this.emitChange = listener;
   }

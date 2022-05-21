@@ -8,7 +8,7 @@ function Home({ onGetHomePage }) {
   const getPage = React.useCallback(onGetHomePage, [onGetHomePage]);
 
   return (
-    <Page url="/" onGetPage={getPage} scrollToTop>
+    <Page path="/" onGetPage={getPage} scrollToTop>
       {({ page: { title, html }, isReady: isPageReady }) => {
         if (!isPageReady) {
           return null;

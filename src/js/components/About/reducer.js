@@ -4,15 +4,17 @@ import reducerRegistry from "../../reducerRegistry";
 import { REDUCER_NAME, SET_ABOUT } from "./constants";
 
 const initialState = {
-  // extend the default page with custom properties for this reducer
+  // extend the state with custom properties for this reducer
+  date: null,
 };
 
 // eslint-disable-next-line default-param-last
-export const reducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_ABOUT:
       return {
         ...state,
+        date: action.data.date,
         isReady: true,
         isError: false,
       };
@@ -32,7 +34,9 @@ export const selectIsReady = createSelector(getState, (n) => n.isReady);
 
 export const selectAbout = createSelector(getState, (n) => ({
   // extend the default page with custom selectors for this reducer
-  ...n,
+  date: n.date && new Date(n.date).toLocaleDateString(),
 }));
+
+export default reducer;
 
 reducerRegistry.register(REDUCER_NAME, reducer);

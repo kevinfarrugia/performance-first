@@ -7,6 +7,7 @@ import { registerRoute } from "workbox-routing/registerRoute";
 import { CacheFirst } from "workbox-strategies/CacheFirst";
 import { StaleWhileRevalidate } from "workbox-strategies/StaleWhileRevalidate";
 
+// precache WebPack assets
 // eslint-disable-next-line no-underscore-dangle
 precacheAndRoute(self.__WB_MANIFEST || []);
 
@@ -35,6 +36,7 @@ registerRoute(
   })
 );
 
+// cache images for 30 days
 registerRoute(
   ({ request }) => request.destination === "image",
   new CacheFirst({
@@ -48,6 +50,7 @@ registerRoute(
   })
 );
 
+// cache scripts and styles with a StaleWhileRevalidate strategy
 registerRoute(
   ({ request }) =>
     request.destination === "script" || request.destination === "style",
@@ -56,6 +59,7 @@ registerRoute(
   })
 );
 
+// cache JSON files with a StaleWhileRevalidate strategy
 registerRoute(/\.json$/, new StaleWhileRevalidate());
 
 self.skipWaiting();

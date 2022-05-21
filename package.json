@@ -7,7 +7,7 @@
   "author": {
     "name": "Kevin Farrugia",
     "email": "hello@imkev.dev",
-    "url": "https://github.com/kevinfarrugia"
+    "path": "https://github.com/kevinfarrugia"
   },
   "engines": {
     "node": ">=16.13.1",

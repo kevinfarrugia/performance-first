@@ -4,8 +4,7 @@ import reducerRegistry from "../../reducerRegistry";
 import { REDUCER_NAME, SET_HOME } from "./constants";
 
 const initialState = {
-  // TODO: unused
-  name: "",
+  // extend the state with custom properties for this reducer
 };
 
 // eslint-disable-next-line default-param-last
@@ -14,7 +13,6 @@ export const reducer = (state = initialState, action) => {
     case SET_HOME:
       return {
         ...state,
-        name: action.data.name,
         isReady: true,
         isError: false,
       };
@@ -33,7 +31,7 @@ const getState = (state) => {
 export const selectIsReady = createSelector(getState, (n) => n.isReady);
 
 export const selectHome = createSelector(getState, (n) => ({
-  name: n.name,
+  ...n,
 }));
 
 reducerRegistry.register(REDUCER_NAME, reducer);

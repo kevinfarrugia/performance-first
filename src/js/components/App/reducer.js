@@ -7,8 +7,7 @@ import {
   SET_BOUNDARY_ERROR,
   SET_DEFERRED_PROMPT,
   SET_META,
-  SET_TITLE,
-  SET_URL,
+  SET_PATH,
 } from "./constants";
 
 const initialState = {
@@ -18,11 +17,11 @@ const initialState = {
   isBoundaryError: false,
   meta: {},
   title: "",
-  url: "",
+  path: "",
 };
 
 // eslint-disable-next-line default-param-last
-const AppReducer = (state = initialState, action) => {
+const reducer = (state = initialState, action) => {
   switch (action.type) {
     case APP_LOADING:
       return { ...state, isLoading: action.data };
@@ -34,10 +33,8 @@ const AppReducer = (state = initialState, action) => {
       return { ...state, deferredPrompt: action.data };
     case SET_META:
       return { ...state, meta: action.data };
-    case SET_TITLE:
-      return { ...state, title: action.data };
-    case SET_URL:
-      return { ...state, url: action.data };
+    case SET_PATH:
+      return { ...state, path: action.data };
     default:
       return state;
   }
@@ -66,8 +63,6 @@ export const selectDeferredPrompt = createSelector(
 
 export const selectMeta = createSelector(getState, (n) => n.meta);
 
-export const selectTitle = createSelector(getState, (n) => n.title);
+export const selectPath = createSelector(getState, (n) => n.path);
 
-export const selectUrl = createSelector(getState, (n) => n.url);
-
-export default AppReducer;
+export default reducer;

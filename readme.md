@@ -1,15 +1,15 @@
-# Performance-First React Template
+# Performance-First React template
 
-PFRT is a boilerplate for universal React web development with performance treated as a first-class citizen. Built using [Node.js](https://nodejs.org/), [Express](http://expressjs.com/) and
+Performance-First is a template for universal React web development prioritizing performance best practices. Built using [Node.js](https://nodejs.org/), [Express](http://expressjs.com/) and
 [React](https://facebook.github.io/react/) and bundled using [Webpack v5](http://webpack.github.io/) and [Babel](http://babeljs.io/). The goal is to provide a simple, flexible (not constrained to using Redux or any other pattern) and extensible starting point for universal React web development. The boilerplate includes critical CSS, service worker using Workbox, server-side rendering, granular chunking, resource hints, async CSS using `media=print` technique, code-splitting & more.
 
 ## Scope
 
-The goal of this project is to create a reference for a fast performing website configuration using ReactJS. There are many variations & techniques and you may want to mix and match PFRT with your own configurations; however I will try to keep this updated with the latest findings and research. All feedback is welcome.
+The goal of this project is to create a reference for a fast-performing website configuration using ReactJS. There are many variations & techniques and you may want to mix and match Performance First with your configurations; however, I will try to keep this updated with the latest findings and research. All feedback is welcome.
 
 ## Webpack v4
 
-If you are looking for a Webpack v4 compatible verion, please see branch [`webpack-4`](https://github.com/kevinfarrugia/performance-first-react-template/tree/webpack-4).
+If you are looking for a Webpack v4 compatible version, please see branch [`webpack-4`](https://github.com/kevinfarrugia/performance-first-react-template/tree/webpack-4).
 
 ## Getting Started
 
@@ -87,15 +87,15 @@ npm run build -- --release
 
 ## State Management
 
-[Redux](https://redux.js.org/) is a state container often used together with React. The template now includes `redux`, `reselect` and `redux-thunk` by default. There are plans to update it to support [Redux Toolkit](https://redux-toolkit.js.org/).
+[Redux](https://redux.js.org/) is a state container often used together with React. The template now includes `redux`, `reselect`, and `redux-thunk` by default. There are plans to update it to support [Redux Toolkit](https://redux-toolkit.js.org/).
 
 ## Routing
 
-Routing is configured using [`react-router`](https://github.com/remix-run/react-router) v6, which works well on both the client and server-side. The routing configuration is setup in `src/js/components/AppRouter/config.js` which defines which components should render for each URL and what data should be fetched on the server-side.
+Routing is configured using [`react-router`](https://github.com/remix-run/react-router) v6, which works well on both the client and server-side. The routing configuration is set up in `src/js/components/AppRouter/config.js` which defines which components should render for each URL and what data should be fetched on the server-side.
 
 ## Hot Module Reloading
 
-The project allows for Hot Module Reloading using `webpack-hot-middleware` and a helper library included in React Starter Kit. This enables HMR for JSX, S/CSS and Express. However, it causes a FOUC since `style-loader` styles are injected through JavaScript. If you wish to remove the FOUC and do not require HMR for CSS, you may replace `style-loader` with `MiniCssExtractPlugin.loader` inside the Webpack configuration.
+The project allows for Hot Module Reloading using `webpack-hot-middleware` and a helper library included in React Starter Kit. This enables HMR for JSX, S/CSS, and Express. However, it causes a FOUC since `style-loader` styles are injected through JavaScript. If you wish to remove the FOUC and do not require HMR for CSS, you may replace `style-loader` with `MiniCssExtractPlugin.loader` inside the Webpack configuration.
 
 ## Static Site
 
@@ -174,15 +174,15 @@ Below are some naming conventions followed throughout the template.
 - Folders begin with an uppercase letter.
 - Files begin with a lowercase letter.
 
-Folders contain an `index.js` file which exports the functions and components for that module.
+Folders contain an `index.js` file that exports the functions and components for that module.
 
 ## Inspiration
 
-The project is heavily inspired by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/master) and [Create React App](https://github.com/facebook/create-react-app), although I have altered many bits to better suit my personal preferences which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
+The project is heavily inspired by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/master) and [Create React App](https://github.com/facebook/create-react-app), although I have altered many bits to better suit my personal preferences, which usually center around simplicity or performance. As a result, the code is opinionated and attempts to follow the best/standard practices.
 
 ## Contributing
 
-Anyone and everyone is welcome to contribute to this project and leave feedback. Please take a moment to review the [guidelines for contributing](contributing.md).
+Anyone and everyone are welcome to contribute to this project and leave feedback. Please take a moment to review the [guidelines for contributing](contributing.md).
 
 ## License
 

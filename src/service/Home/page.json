@@ -2,17 +2,14 @@
   "name": "en",
   "title": "Home",
   "summary": "",
-  "url": "/",
-  "isHidden": true,
-  "showInNavigation": false,
+  "path": "/",
   "meta": {
-    "title": "Home",
-    "description": "Performance First React Template is a universal ReactJS template built around web performance best practices. This demo includes two pages which you may navigate to using the above menu.",
+    "title": "Performance First",
+    "description": "Performance First is a universal ReactJS template built around web performance best practices.",
     "keywords": "Home, React, Web Performance",
     "creator": "Kevin Farrugia",
-    "date": "2022-04-25T10:00:00.000Z"
+    "date": "2022-05-21T10:00:00.000Z"
   },
-  "html": "<p>Performance First React Template is a universal ReactJS template built around web performance best practices. This demo includes two pages which you may navigate to using the above menu.</p>",
-  "template": "Home",
+  "html": "<p>Performance First is a universal ReactJS template built around web performance best practices.</p>",
   "id": 1001
 }

@@ -1,6 +1,6 @@
 import { connect } from "react-redux";
 
-import { setMeta, setTitle } from "../App/actions";
+import { setMeta, setPath } from "../App/actions";
 import { resetPage } from "./actions";
 import Component from "./page";
 import { makeSelectIsReady, makeSelectPage } from "./reducer";
@@ -18,7 +18,7 @@ const makeMapStateToProps = () => {
 
 const mapDispatchToProps = (dispatch) => ({
   onResetPage: (data) => dispatch(resetPage(data)),
-  onSetTitle: (data) => dispatch(setTitle(data)),
+  onSetPath: (data) => dispatch(setPath(data)),
   onSetMeta: (data) => dispatch(setMeta(data)),
 });
 

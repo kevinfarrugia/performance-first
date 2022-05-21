@@ -1,14 +1,16 @@
 import * as React from "react";
+import { useLocation } from "react-router-dom";
 
 import Page from "../Page";
 import ResponsivePicture from "../ResponsivePicture";
 import styles from "./styles.scss";
 
-function About({ about, onGetAboutPage }) {
-  const getPage = React.useCallback(onGetAboutPage, [onGetAboutPage]);
+function About({ onGetPage }) {
+  const { pathname } = useLocation();
+  const getPage = React.useCallback(onGetPage, [onGetPage]);
 
   return (
-    <Page path="/about" onGetPage={getPage} scrollToTop>
+    <Page path={pathname} onGetPage={getPage} scrollToTop>
       {({ page: { title, html, banner }, isReady: isPageReady }) => {
         if (!isPageReady) {
           return null;
@@ -30,7 +32,6 @@ function About({ about, onGetAboutPage }) {
             )}
             <div className={styles.content}>
               <h1 className={styles.title}>{title}</h1>
-              {about && <span className={styles.date}>Date: {about.date}</span>}
               {/* eslint-disable-next-line react/no-danger */}
               <div dangerouslySetInnerHTML={{ __html: html }} />
             </div>

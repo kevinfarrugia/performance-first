@@ -1,6 +1,5 @@
 import { createSelector } from "reselect";
 
-import reducerRegistry from "../../reducerRegistry";
 import { REDUCER_NAME, RESET_PAGE, SET_PAGE } from "./constants";
 
 const initialState = {
@@ -9,29 +8,30 @@ const initialState = {
 };
 
 // eslint-disable-next-line default-param-last
-export const reducer = (state = initialState, action) => {
-  switch (action.type) {
+const reducer = (state = initialState, action) => {
+  const { type, key, data } = action;
+  switch (type) {
     case SET_PAGE:
       return {
         ...state,
         isReady: {
           ...state.isReady,
-          [action.key]: true,
+          [key]: true,
         },
         page: {
           ...state.page,
-          [action.key]: action.data,
+          [key]: data,
         },
       };
     case RESET_PAGE:
       return {
         isReady: {
           ...state.isReady,
-          [action.key]: false,
+          [key]: false,
         },
         page: {
           ...state.page,
-          [action.key]: null,
+          [key]: null,
         },
       };
     default:
@@ -39,19 +39,19 @@ export const reducer = (state = initialState, action) => {
   }
 };
 
-export const getState = (state) => {
+const getState = (state) => {
   if (state[REDUCER_NAME]) {
     return state[REDUCER_NAME];
   }
   return initialState;
 };
 
-const selectIsReady = (state, { url }) => getState(state).isReady[url];
+const selectIsReady = (state, { path }) => getState(state).isReady[path];
 
 export const makeSelectIsReady = () => createSelector(selectIsReady, (n) => n);
 
-const selectPage = (state, { url }) => getState(state).page[url];
+const selectPage = (state, { path }) => getState(state).page[path];
 
 export const makeSelectPage = () => createSelector(selectPage, (n) => n);
 
-reducerRegistry.register(REDUCER_NAME, reducer);
+export default reducer;
