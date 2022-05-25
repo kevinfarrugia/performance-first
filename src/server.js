@@ -84,15 +84,8 @@ const prettyError = new PrettyError();
 prettyError.skipNodeFiles();
 prettyError.skipPackage("express");
 
-process.on("unhandledRejection", (reason) => {
-  throw reason;
-});
-
-process.on("uncaughtException", (err) => {
-  console.error(prettyError.render(err));
-});
-
-app.use((err, _req, res) => {
+// eslint-disable-next-line no-unused-vars
+app.use((err, _req, res, _next) => {
   console.error(prettyError.render(err));
   res.status(err.status || 500);
   res.send();
