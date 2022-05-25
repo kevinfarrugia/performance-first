@@ -44,9 +44,11 @@ export const getPage =
   (dispatch) =>
     fetchPage({ path })
       .then((response) => {
-        dispatch(setPage(response, path));
         dispatch(setPath(path));
-        dispatch(setMeta(response.meta));
+        if (response) {
+          dispatch(setPage(response, path));
+          dispatch(setMeta(response.meta));
+        }
         return response;
       })
       .catch((error) => {

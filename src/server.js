@@ -88,7 +88,9 @@ prettyError.skipPackage("express");
 app.use((err, _req, res, _next) => {
   console.error(prettyError.render(err));
   res.status(err.status || 500);
-  res.send();
+  res.render("500", {
+    html: err,
+  });
 });
 
 if (!module.hot) {
