@@ -14,7 +14,10 @@ function Scripts({ scripts }) {
               dangerouslySetInnerHTML={dangerouslySetInnerHTML}
             />
           ) : (
-            <script key={key} src={src} defer />
+            <React.Fragment key={key}>
+              <script type="module" src={src} />
+              <script nomodule src={src} defer />
+            </React.Fragment>
           )
       )) ||
     null

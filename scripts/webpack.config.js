@@ -46,6 +46,134 @@ const FRAMEWORK_BUNDLES = [
   "prop-types",
 ];
 
+const configureImageLoaders = () => ({
+  test: /\.(jpe?g|png|gif|svg|webp|avif)$/i,
+  oneOf: [
+    {
+      issuer: /\.(sa|sc|c)ss$/,
+      oneOf: [
+        {
+          test: /\.svg$/,
+          type: "asset",
+          generator: {
+            filename: staticAssetName,
+            dataUrl: (content) => svgToMiniDataURI(content.toString()),
+          },
+          parser: {
+            dataUrlCondition: {
+              maxSize: 4 * 1024, // 4kb
+            },
+          },
+        },
+        {
+          type: "asset",
+          generator: {
+            filename: staticAssetName,
+          },
+          parser: {
+            dataUrlCondition: {
+              maxSize: 4 * 1024, // 4kb
+            },
+          },
+        },
+      ],
+    },
+    {
+      type: "asset/resource",
+      generator: {
+        filename: staticAssetName,
+      },
+    },
+  ],
+});
+
+const configureStyleLoaders = () => ({
+  test: /\.(sa|sc|c)ss$/,
+  rules: [
+    {
+      loader: isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+    },
+    {
+      exclude: SRC_DIR,
+      loader: "css-loader",
+      options: {
+        sourceMap: isDevelopment,
+      },
+    },
+    {
+      include: SRC_DIR,
+      loader: "css-loader",
+      options: {
+        modules: {
+          localIdentName: isDevelopment
+            ? "[name]-[local]-[hash:base64:5]"
+            : "[hash:base64:5]",
+        },
+        importLoaders: 1,
+        sourceMap: isDevelopment,
+      },
+    },
+    {
+      loader: "postcss-loader",
+    },
+    {
+      loader: "resolve-url-loader",
+    },
+    {
+      test: /\.(scss|sass)$/,
+      loader: "sass-loader",
+      options: {
+        sassOptions: {
+          includePaths: [path.resolve(SRC_DIR, "scss")],
+        },
+      },
+    },
+    {
+      loader: "sass-resources-loader",
+      options: {
+        resources: [
+          path.resolve(SRC_DIR, "scss", "vars.scss"),
+          path.resolve(SRC_DIR, "scss", "mixins.scss"),
+        ],
+      },
+    },
+  ],
+});
+
+const configureBabelLoader = (browserslist) => ({
+  test: /\.(js|jsx)$/,
+  include: [SRC_DIR, path.resolve(ROOT_DIR, "scripts")],
+  loader: "babel-loader",
+  options: {
+    cacheDirectory: isDevelopment,
+    babelrc: false,
+    configFile: false,
+    presets: [
+      [
+        "@babel/preset-env",
+        {
+          targets: {
+            browsers: browserslist,
+          },
+          bugfixes: true,
+          modules: false,
+          useBuiltIns: "usage",
+          corejs: "3.21",
+          debug: false,
+        },
+      ],
+      ["@babel/preset-react", { development: isDevelopment }],
+    ],
+    plugins: [
+      "@loadable/babel-plugin",
+      "@babel/plugin-proposal-class-properties",
+      "@babel/plugin-syntax-dynamic-import",
+      ...(isDevelopment ? [] : ["@babel/transform-react-constant-elements"]),
+      ...(isDevelopment ? [] : ["@babel/transform-react-inline-elements"]),
+    ],
+  },
+});
+
 // returns true if module is CSS
 const isModuleCSS = (module) =>
   // mini-css-extract-plugin
@@ -135,18 +263,12 @@ const splitChunksConfig = {
   },
 };
 
-const config = {
+const baseConfig = {
   stats: {
     errorDetails: true,
   },
   context: ROOT_DIR,
   mode: isDevelopment ? "development" : "production",
-  output: {
-    path: path.resolve(OUTPUT_DIR, "public"),
-    publicPath: "/",
-    filename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
-    chunkFilename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
-  },
   resolve: {
     extensions: [".js", ".jsx"],
   },
@@ -197,159 +319,98 @@ const config = {
   ],
 };
 
-const clientConfig = {
-  ...config,
-  name: "client",
+const legacyClientConfig = {
+  ...baseConfig,
+  name: "legacy",
   target: "web",
+  output: {
+    path: path.resolve(OUTPUT_DIR, "public"),
+    publicPath: "/",
+    filename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
+    chunkFilename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
+  },
   entry: {
     client: ["./src/polyfills.js", "./src/client.js"],
   },
-  resolve: {
-    ...config.resolve,
-  },
   module: {
-    ...config.module,
+    ...baseConfig.module,
     rules: [
-      ...config.module.rules,
-      {
-        test: /\.(sa|sc|c)ss$/,
-        rules: [
-          {
-            loader: isDevelopment
-              ? "style-loader"
-              : MiniCssExtractPlugin.loader,
-          },
-          {
-            exclude: SRC_DIR,
-            loader: "css-loader",
-            options: {
-              sourceMap: isDevelopment,
-            },
-          },
-          {
-            include: SRC_DIR,
-            loader: "css-loader",
-            options: {
-              modules: {
-                localIdentName: isDevelopment
-                  ? "[name]-[local]-[hash:base64:5]"
-                  : "[hash:base64:5]",
-              },
-              importLoaders: 1,
-              sourceMap: isDevelopment,
-            },
-          },
-          {
-            loader: "postcss-loader",
-          },
-          {
-            loader: "resolve-url-loader",
-          },
-          {
-            test: /\.(scss|sass)$/,
-            loader: "sass-loader",
-            options: {
-              sassOptions: {
-                includePaths: [path.resolve(SRC_DIR, "scss")],
-              },
-            },
-          },
-          {
-            loader: "sass-resources-loader",
-            options: {
-              resources: [
-                path.resolve(SRC_DIR, "scss", "vars.scss"),
-                path.resolve(SRC_DIR, "scss", "mixins.scss"),
-              ],
-            },
-          },
-        ],
-      },
-      {
-        test: /\.(js|jsx)$/,
-        include: [SRC_DIR, path.resolve(ROOT_DIR, "scripts")],
-        loader: "babel-loader",
-        options: {
-          cacheDirectory: isDevelopment,
-          babelrc: false,
-          configFile: false,
-          presets: [
-            [
-              "@babel/preset-env",
-              {
-                targets: {
-                  browsers: pkg.browserslist,
-                },
-                bugfixes: true,
-                modules: false,
-                useBuiltIns: "entry",
-                corejs: "3.21",
-                debug: false,
-              },
-            ],
-            ["@babel/preset-react", { development: isDevelopment }],
-          ],
-          plugins: [
-            "@loadable/babel-plugin",
-            "@babel/plugin-proposal-class-properties",
-            "@babel/plugin-syntax-dynamic-import",
-            ...(isDevelopment
-              ? []
-              : ["@babel/transform-react-constant-elements"]),
-            ...(isDevelopment
-              ? []
-              : ["@babel/transform-react-inline-elements"]),
-          ],
-        },
-      },
-      {
-        test: /\.(jpe?g|png|gif|svg|webp|avif)$/i,
-        oneOf: [
-          {
-            issuer: /\.(sa|sc|c)ss$/,
-            oneOf: [
-              {
-                test: /\.svg$/,
-                type: "asset",
-                generator: {
-                  filename: staticAssetName,
-                  dataUrl: (content) => svgToMiniDataURI(content.toString()),
-                },
-                parser: {
-                  dataUrlCondition: {
-                    maxSize: 4 * 1024, // 4kb
-                  },
-                },
-              },
-              {
-                type: "asset",
-                generator: {
-                  filename: staticAssetName,
-                },
-                parser: {
-                  dataUrlCondition: {
-                    maxSize: 4 * 1024, // 4kb
-                  },
-                },
-              },
-            ],
-          },
-          {
-            type: "asset/resource",
-            generator: {
-              filename: staticAssetName,
-            },
-          },
-        ],
-      },
+      ...baseConfig.module.rules,
+      configureStyleLoaders(),
+      configureBabelLoader(pkg.browserslist),
+      configureImageLoaders(),
     ],
   },
   plugins: [
-    ...config.plugins,
-    new webpack.IgnorePlugin({
-      resourceRegExp: /^\.\/locale$/,
-      contextRegExp: /moment$/,
+    ...baseConfig.plugins,
+    new MiniCssExtractPlugin({
+      filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
+      chunkFilename: `${
+        isDevelopment ? "[name].css" : "[name].[contenthash].css"
+      }`,
     }),
+    ...(isDevelopment
+      ? []
+      : [
+          new WorkboxPlugin.InjectManifest({
+            swSrc: `${ROOT_DIR}/src/sw.js`,
+            swDest: "sw.js",
+            include: [/\.js$/, /\.css$/],
+          }),
+        ]),
+  ],
+  optimization: {
+    runtimeChunk: { name: "webpack" },
+    splitChunks: isDevelopment ? splitChunksConfig.dev : splitChunksConfig.prod,
+    minimizer: [
+      new TerserJSPlugin({
+        terserOptions: {
+          compress: !isDevelopment,
+          mangle: true,
+        },
+      }),
+      new CssMinimizerPlugin(),
+    ],
+  },
+};
+
+const clientConfig = {
+  ...baseConfig,
+  name: "client",
+  target: "web",
+  output: {
+    path: path.resolve(OUTPUT_DIR, "public"),
+    publicPath: "/",
+    filename: isDevelopment ? "[name].mjs" : "[name].[chunkhash:8].mjs",
+    chunkFilename: isDevelopment ? "[name].mjs" : "[name].[chunkhash:8].mjs",
+  },
+  entry: {
+    client: ["./src/client.js"],
+  },
+  module: {
+    ...baseConfig.module,
+    rules: [
+      ...baseConfig.module.rules,
+      configureStyleLoaders(),
+      configureBabelLoader([
+        // The last two versions of each browser, excluding versions
+        // that don't support <script type="module">.
+        "last 2 Chrome versions",
+        "not Chrome < 60",
+        "last 2 Safari versions",
+        "not Safari < 10.1",
+        "last 2 iOS versions",
+        "not iOS < 10.3",
+        "last 2 Firefox versions",
+        "not Firefox < 54",
+        "last 2 Edge versions",
+        "not Edge < 15",
+      ]),
+      configureImageLoaders(),
+    ],
+  },
+  plugins: [
+    ...baseConfig.plugins,
     new MiniCssExtractPlugin({
       filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
       chunkFilename: `${
@@ -383,27 +444,24 @@ const clientConfig = {
 };
 
 const serverConfig = {
-  ...config,
+  ...baseConfig,
   name: "server",
   target: "node",
   entry: {
     server: ["./src/server.js"],
   },
   output: {
-    ...config.output,
     path: OUTPUT_DIR,
+    publicPath: "/",
     filename: "[name].js",
     chunkFilename: "chunks/[name].js",
     libraryTarget: "commonjs2",
   },
   // https://github.com/webpack/webpack/issues/4817
-  resolve: {
-    ...config.resolve,
-  },
   module: {
-    ...config.module,
+    ...baseConfig.module,
     rules: [
-      ...config.module.rules,
+      ...baseConfig.module.rules,
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [
@@ -544,7 +602,7 @@ const serverConfig = {
   },
   externals: ["@loadable/component", nodeExternals()],
   plugins: [
-    ...config.plugins,
+    ...baseConfig.plugins,
     ...(isDevelopment
       ? []
       : [
@@ -563,4 +621,4 @@ const serverConfig = {
   },
 };
 
-export default [clientConfig, serverConfig];
+export default [legacyClientConfig, clientConfig, serverConfig];
