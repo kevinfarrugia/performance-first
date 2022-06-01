@@ -266,6 +266,7 @@ const splitChunksConfig = {
 const baseConfig = {
   stats: {
     errorDetails: true,
+    colors: true,
   },
   context: ROOT_DIR,
   mode: isDevelopment ? "development" : "production",
@@ -299,7 +300,6 @@ const baseConfig = {
     ],
   },
   plugins: [
-    new LoadablePlugin(),
     new webpack.EnvironmentPlugin({
       IS_DEVELOPMENT: isDevelopment,
       NAME: JSON.stringify(pkg.name),
@@ -343,6 +343,9 @@ const legacyClientConfig = {
   },
   plugins: [
     ...baseConfig.plugins,
+    new LoadablePlugin({
+      filename: "legacy-stats.json",
+    }),
     new MiniCssExtractPlugin({
       filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
       chunkFilename: `${
@@ -411,6 +414,9 @@ const clientConfig = {
   },
   plugins: [
     ...baseConfig.plugins,
+    new LoadablePlugin({
+      filename: "client-stats.json",
+    }),
     new MiniCssExtractPlugin({
       filename: `${isDevelopment ? "[name].css" : "[name].[contenthash].css"}`,
       chunkFilename: `${
@@ -603,6 +609,9 @@ const serverConfig = {
   externals: ["@loadable/component", nodeExternals()],
   plugins: [
     ...baseConfig.plugins,
+    new LoadablePlugin({
+      filename: "server-stats.json",
+    }),
     ...(isDevelopment
       ? []
       : [

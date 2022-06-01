@@ -1,8 +1,7 @@
 /* eslint-disable import/no-import-module-exports */
-
 import path from "path";
 
-import { ChunkExtractor } from "@loadable/server";
+import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import * as React from "react";
 import { renderToString } from "react-dom/server";
 import Helmet from "react-helmet";
@@ -61,21 +60,30 @@ const renderRoutesData = async ({
 
 const handleRender = async (req, res, next) => {
   try {
-    const serverStatsFile = path.resolve(__dirname, "./loadable-stats.json");
     const serverChunkExtractor = new ChunkExtractor({
-      statsFile: serverStatsFile,
+      statsFile: path.resolve(__dirname, "./server-stats.json"),
       entrypoints: ["server"],
     });
     const { Main } = serverChunkExtractor.requireEntrypoint();
 
-    const clientStatsFile = path.resolve(
-      __dirname,
-      "./public/loadable-stats.json"
-    );
-    const clientChunkExtractor = new ChunkExtractor({
-      statsFile: clientStatsFile,
+    const modernChunkExtractor = new ChunkExtractor({
+      statsFile: path.resolve(__dirname, "./public/client-stats.json"),
       entrypoints: ["client"],
     });
+
+    const legacyChunkExtractor = new ChunkExtractor({
+      namespace: "legacy",
+      statsFile: path.resolve(__dirname, "./public/legacy-stats.json"),
+      entrypoints: ["client"],
+    });
+
+    // override the default addChunk method to add the chunk to legacy and modern extractor
+    const clientChunkExtractor = {
+      addChunk(chunk) {
+        modernChunkExtractor.addChunk(chunk);
+        legacyChunkExtractor.addChunk(chunk);
+      },
+    };
 
     // create a new Redux store instance and clear all dynamic reducers
     const store = configureStore({}, true);
@@ -90,24 +98,28 @@ const handleRender = async (req, res, next) => {
       store,
     });
 
-    const jsx = clientChunkExtractor.collectChunks(
-      <StaticRouter location={req.url}>
-        <Main store={store} routes={routes} />
-      </StaticRouter>
+    const html = renderToString(
+      <ChunkExtractorManager extractor={clientChunkExtractor}>
+        <StaticRouter location={req.url}>
+          <Main store={store} routes={routes} />
+        </StaticRouter>
+      </ChunkExtractorManager>
     );
 
-    const html = renderToString(jsx);
+    const scriptElements = modernChunkExtractor.getScriptElements();
+    const legacyScriptElements = legacyChunkExtractor.getScriptElements();
 
-    const scriptElements = clientChunkExtractor.getScriptElements();
-    const scripts = renderToString(<Scripts scripts={scriptElements} />);
+    const scripts = renderToString(
+      <Scripts scripts={scriptElements} legacyScripts={legacyScriptElements} />
+    );
 
     let inlineCss = "";
     let css = "";
 
     if (!module.hot) {
-      inlineCss = await clientChunkExtractor.getCssString();
+      inlineCss = await modernChunkExtractor.getCssString();
     } else {
-      css = clientChunkExtractor.getStyleTags();
+      css = modernChunkExtractor.getStyleTags();
     }
     const helmet = Helmet.renderStatic();
 
