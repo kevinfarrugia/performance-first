@@ -1,2 +1,3 @@
-import "core-js/modules/es.promise";
+import "regenerator-runtime";
+import "core-js/stable";
 import "unfetch/polyfill";

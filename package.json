@@ -45,6 +45,7 @@
     "redux": "^4.1.2",
     "redux-devtools-extension": "^2.13.9",
     "redux-thunk": "^2.4.1",
+    "regenerator-runtime": "^0.13.9",
     "reselect": "^4.1.5",
     "unfetch": "^4.2.0",
     "workbox-cacheable-response": "^6.5.1",
