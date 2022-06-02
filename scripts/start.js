@@ -1,16 +1,16 @@
-import path from "path";
+const path = require("path");
 
-import browserSync from "browser-sync";
-import express from "express";
-import errorOverlayMiddleware from "react-dev-utils/errorOverlayMiddleware";
-import webpack from "webpack";
-import webpackDevMiddleware from "webpack-dev-middleware";
-import webpackHotMiddleware from "webpack-hot-middleware";
+const browserSync = require("browser-sync");
+const express = require("express");
+const errorOverlayMiddleware = require("react-dev-utils/errorOverlayMiddleware");
+const webpack = require("webpack");
+const webpackDevMiddleware = require("webpack-dev-middleware");
+const webpackHotMiddleware = require("webpack-hot-middleware");
 
-import clean from "./clean";
-import copy from "./copy";
-import run, { format } from "./run";
-import webpackConfig from "./webpack.config";
+const clean = require("./clean");
+const copy = require("./copy");
+const { default: run, format } = require("./run");
+const webpackConfig = require("./webpack.config");
 
 const isDebug = !process.argv.includes("--release");
 
@@ -116,7 +116,7 @@ async function start() {
   server.use(
     webpackDevMiddleware(clientCompiler, {
       publicPath: clientConfig.output.publicPath,
-      writeToDisk: (filePath) => /loadable-stats/.test(filePath),
+      writeToDisk: (filePath) => /stats.json$/.test(filePath),
     })
   );
 
@@ -228,4 +228,4 @@ async function start() {
   return server;
 }
 
-export default start;
+module.exports = { default: start };

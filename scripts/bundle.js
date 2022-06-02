@@ -1,13 +1,13 @@
-import webpack from "webpack";
+const webpack = require("webpack");
 
-import webpackConfig from "./webpack.config";
+const webpackConfig = require("./webpack.config");
 
 /**
  * Creates application bundles from the source files.
  */
 function bundle() {
   return new Promise((resolve, reject) => {
-    webpack(webpackConfig).run((err, stats) => {
+    webpack(webpackConfig, (err, stats) => {
       if (err) {
         return reject(err);
       }
@@ -22,4 +22,4 @@ function bundle() {
   });
 }
 
-export default bundle;
+module.exports = { default: bundle };

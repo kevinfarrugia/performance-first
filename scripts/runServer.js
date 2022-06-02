@@ -1,14 +1,14 @@
-import cp from "child_process";
-import path from "path";
+const cp = require("child_process");
+const path = require("path");
 
-import webpackConfig from "./webpack.config";
+const webpackConfig = require("./webpack.config");
 
 // Should match the text string used in `src/server.js/server.listen(...)`
 const RUNNING_REGEXP = /The server is running at http:\/\/(.*?)\//;
 
 let server;
 let pending = true;
-const [, serverConfig] = webpackConfig;
+const serverConfig = webpackConfig.find((n) => n.name === "server");
 const serverPath = path.join(
   serverConfig.output.path,
   serverConfig.output.filename.replace("[name]", "server")
@@ -63,4 +63,4 @@ process.on("exit", () => {
   }
 });
 
-export default runServer;
+module.exports = { default: runServer };

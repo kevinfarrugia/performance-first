@@ -71,17 +71,22 @@ const handleRender = async (req, res, next) => {
       entrypoints: ["client"],
     });
 
-    const legacyChunkExtractor = new ChunkExtractor({
-      namespace: "legacy",
-      statsFile: path.resolve(__dirname, "./public/legacy-stats.json"),
-      entrypoints: ["client"],
-    });
+    let legacyChunkExtractor;
+    if (!module.hot) {
+      legacyChunkExtractor = new ChunkExtractor({
+        namespace: "legacy",
+        statsFile: path.resolve(__dirname, "./public/legacy-stats.json"),
+        entrypoints: ["client"],
+      });
+    }
 
     // override the default addChunk method to add the chunk to legacy and modern extractor
     const clientChunkExtractor = {
       addChunk(chunk) {
         modernChunkExtractor.addChunk(chunk);
-        legacyChunkExtractor.addChunk(chunk);
+        if (legacyChunkExtractor) {
+          legacyChunkExtractor.addChunk(chunk);
+        }
       },
     };
 
@@ -107,7 +112,11 @@ const handleRender = async (req, res, next) => {
     );
 
     const scriptElements = modernChunkExtractor.getScriptElements();
-    const legacyScriptElements = legacyChunkExtractor.getScriptElements();
+
+    let legacyScriptElements;
+    if (legacyChunkExtractor) {
+      legacyScriptElements = legacyChunkExtractor.getScriptElements();
+    }
 
     const scripts = renderToString(
       <Scripts scripts={scriptElements} legacyScripts={legacyScriptElements} />

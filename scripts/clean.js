@@ -1,4 +1,4 @@
-import { cleanDir } from "./lib/fs";
+const { cleanDir } = require("./lib/fs");
 
 /**
  * Cleans up the output (build) directory.
@@ -13,4 +13,4 @@ function clean() {
   ]);
 }
 
-export default clean;
+module.exports = { default: clean };

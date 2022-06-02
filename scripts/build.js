@@ -1,10 +1,10 @@
-import cp from "child_process";
+const cp = require("child_process");
 
-import pkg from "../package.json";
-import bundle from "./bundle";
-import clean from "./clean";
-import copy from "./copy";
-import run from "./run";
+const pkg = require("../package.json");
+const bundle = require("./bundle");
+const clean = require("./clean");
+const copy = require("./copy");
+const { default: run } = require("./run");
 
 /**
  * Compiles the project from source files into a distributable
@@ -22,4 +22,4 @@ async function build() {
   }
 }
 
-export default build;
+module.exports = { default: build };

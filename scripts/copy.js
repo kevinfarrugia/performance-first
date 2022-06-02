@@ -1,10 +1,10 @@
-import path from "path";
+const path = require("path");
+const chokidar = require("chokidar");
 
-import chokidar from "chokidar";
+const { cleanDir, copyDir, copyFile, makeDir, writeFile } = require("./lib/fs");
+const { format } = require("./run");
 
-import pkg from "../package.json";
-import { cleanDir, copyDir, copyFile, makeDir, writeFile } from "./lib/fs";
-import { format } from "./run";
+const pkg = require("../package.json");
 
 /**
  * Copies static files such as robots.txt, favicon.ico to the
@@ -64,4 +64,4 @@ async function copy() {
   }
 }
 
-export default copy;
+module.exports = { default: copy };

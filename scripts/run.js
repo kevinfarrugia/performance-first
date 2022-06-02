@@ -1,4 +1,4 @@
-export function format(time) {
+function format(time) {
   return time.toTimeString().replace(/.*(\d{2}:\d{2}:\d{2}).*/, "$1");
 }
 
@@ -10,6 +10,7 @@ function run(fn, options) {
       options ? ` (${options})` : ""
     }'...`
   );
+
   return task(options).then((resolution) => {
     const end = new Date();
     const time = end.getTime() - start.getTime();
@@ -35,4 +36,4 @@ if (require.main === module && process.argv.length > 2) {
   });
 }
 
-export default run;
+module.exports = { format, default: run };
