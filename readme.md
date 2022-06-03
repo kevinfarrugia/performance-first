@@ -262,7 +262,7 @@ The output HTML should include both `.mjs` and `.js` files. A modern browser wil
 
 There are plans to update the template to support [Redux Toolkit](https://redux-toolkit.js.org/).
 
-## Creating a new page
+## Add a new page
 
 // ... TODO:
 // ... routing API
@@ -270,7 +270,7 @@ There are plans to update the template to support [Redux Toolkit](https://redux-
 // ... extended page
 // ...
 
-## Guidelines
+## Suggested guidelines
 
 Below are some recommendations I like to follow when working on a website. These may not all apply equally to every project, so I use them as guidelines and then test to see how they perform.
 

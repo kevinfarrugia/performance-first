@@ -4,7 +4,7 @@ const pkg = require("../package.json");
 const bundle = require("./bundle");
 const clean = require("./clean");
 const copy = require("./copy");
-const { default: run } = require("./run");
+const run = require("./run");
 
 /**
  * Compiles the project from source files into a distributable
