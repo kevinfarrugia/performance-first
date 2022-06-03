@@ -32,7 +32,7 @@ const ROOT_DIR = path.resolve(__dirname, "..");
 const SRC_DIR = path.resolve(ROOT_DIR, "src");
 const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
 
-const CMS_URL = "https://example.com";
+const CMS_URL = "https://raw.githubusercontent.com";
 
 // the total number of entrypoints (including async chunks)
 const ENTRYPOINTS_COUNT = 4;

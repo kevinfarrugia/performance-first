@@ -86,11 +86,15 @@ Routing is configured using [`react-router`](https://github.com/remix-run/react-
 Adding a default page requires zero-config. The route will be picked up by the `/:path` wildcard, assigning it a value of `defaultpage`. This will render the [`DefaultPage`](./src/js/components/DefaultPage/) component which renders the page's content and updates the `<meta>` elements.
 
 ```js
-const getPage = ({ path }) =>
-  Promise.resolve(page.find((n) => n.path === path));
+const getPage = async ({ path }) =>
+  fetch(
+    new URL(
+      `${CMS_URL}/api/Page/${path}`
+    )
+  );
 ```
 
-The application makes a request to `getPage` using the `path` as an argument. You may use an external API which returns the page data for the given `path` or a static JSON file as used by default in the template.
+The application makes a request to `getPage` using the `path` as an argument. The `getPage` should call your API endpoint which returns the page data while accepting the `path`. The template uses a mock API service by downloading the JSON files directly from GitHub.
 
 ```jsx
 <Page path={pathname} onGetPage={getPage} scrollToTop>
@@ -108,7 +112,7 @@ You are able to fully-customize the appearance & structure of the `DefaultPage` 
 
 ### Custom page
 
-If you want to create a route which serves a custom page - meaning a page which has a different structure to the other pages - then you are able to create a new component and configure that page using the `AppRouter` [`config`](./src/js/components/AppRouter/config.js). 
+If you want to create a route which serves a custom page - meaning a page which has a different structure to the other pages - then you are able to create a new component and configure that page using the `AppRouter` [`config`](./src/js/components/AppRouter/config.js).
 
 ```js
 const getRouteConfig = (name) => {
@@ -253,6 +257,7 @@ npm run build -- --release --docker
 .
 ├── .github/workflows          # GitHub actions
 ├── .husky/                    # Husky pre-commit hooks
+├── api/                       # Mock API JSON service
 ├── build/                     # Compiled output
 ├── public/                    # Static files which are copied into the /build/public folder
 ├── scripts/                   # Build automation scripts and utilities
@@ -418,6 +423,10 @@ Legacy bundles are only compiled when serving a production build so as not to sl
 ### Error: loadable: cannot find `MyPage` in stats
 
 This error occurs when you have added a new dynamically imported bundle but have not yet compiled. If the issue doesn't resolve itself automatically, try re-running `npm start`.
+
+### Can I use the mock API on production?
+
+The API could be a simple hard-coded JSON file, so as long as the data is publicly accessible you can continue using the mock API.
 
 ## GitHub Actions
 

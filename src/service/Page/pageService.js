@@ -1,7 +1,11 @@
-import page from "./page.json";
+import fetch from "node-fetch";
 
-const getPage = ({ path }) =>
-  Promise.resolve(page.find((n) => n.path === path));
+const getPage = async ({ path }) =>
+  fetch(
+    new URL(
+      `${CMS_URL}/kevinfarrugia/performance-first/main/api/Page/${path}.json`
+    )
+  );
 
 // eslint-disable-next-line import/prefer-default-export
 export { getPage };
