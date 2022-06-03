@@ -1,6 +1,6 @@
-# Performance-First Template
+# Performance-First template
 
-Performance-First Template is a template for server-side rendering React web apps prioritizing performance best practices. The template includes [critical CSS](https://imkev.dev/inlining-critical-css), [module/nomodule](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/), code-splitting, service workers, server-side rendering, partial hydration, [granular chunking](https://web.dev/granular-chunking-nextjs/), resource hints, CSS modules, [async CSS](https://www.filamentgroup.com/lab/load-css-simpler/), and much more.
+Performance-First template is a template for server-side rendering React web apps prioritizing performance best practices. The template includes [critical CSS](https://imkev.dev/inlining-critical-css), [module/nomodule](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/), code-splitting, service workers, server-side rendering, partial hydration, [granular chunking](https://web.dev/granular-chunking-nextjs/), resource hints, CSS modules, [async CSS](https://www.filamentgroup.com/lab/load-css-simpler/), and much more.
 
 ## Technologies
 
@@ -34,6 +34,176 @@ npm install
 ```
 npm start
 ```
+
+## Adding a new route
+
+Performance-First template allows you to add routes dynamically or statically. A dynamic route is added through an external service, such as an API; while a static route is declared directly in the codebase, usually in the form of a JSON file.
+
+### Router service
+
+The default [Router](./src/service/Router/router.js) included in the template retrieves the routes from [en.json](./src/service/Router/en.json). It is responsible for caching routes using a _stale-while-revalidate_ strategy and checking if a given route is valid.
+
+```json
+[
+  {
+    "key": "/",
+    "value": "home"
+  },
+  {
+    "key": "/about",
+    "value": "about"
+  },
+  {
+    "key": "/:path",
+    "value": "defaultpage"
+  }
+]
+```
+
+The `en.json` file contains three different types of routes and a corresponding path for each one. The `home` and `about` route use exact URLs, while the `defaultpage` supports a wildcard `:path`. The more specific routes should be declared at the top of the file, while the more generic ones should be placed at the bottom.
+
+```
+const toRoutes = (routes) => {
+  if (routes) {
+    return routes.map((n) => ({
+      path: n.key,
+      name: n.value.toLowerCase(),
+    }));
+  }
+
+  return [];
+};
+```
+
+The `en.json` file is then transformed using [adapter.js](./src/service/Router/adapter.js) to create an array of Route objects that is understood by our router. This means that you could plug the Performance-First template into any API by changing the `toRoutes` method to match your API's response.
+
+### react-router
+
+Routing is configured using [`react-router`](https://github.com/remix-run/react-router) v6 on both the client and server-side.
+
+### DefaultPage
+
+Adding a default page requires zero-config. The route will be picked up by the `/:path` wildcard, assigning it a value of `defaultpage`. This will render the [`DefaultPage`](./src/js/components/DefaultPage/) component which renders the page's content and updates the `<meta>` elements.
+
+```js
+const getPage = ({ path }) =>
+  Promise.resolve(page.find((n) => n.path === path));
+```
+
+The application makes a request to `getPage` using the `path` as an argument. You may use an external API which returns the page data for the given `path` or a static JSON file as used by default in the template.
+
+```jsx
+<Page path={pathname} onGetPage={getPage} scrollToTop>
+  {({ page: { title, html, banner }, isReady: isPageReady }) => {
+    {/* ... */}
+  }}
+</Page>
+```
+
+If the user is navigating to the page using a soft-navigation, i.e. within the client-side application, then the [`<Page>`](./src/js/components/Page/) component is responsible for fetching and updating the Redux store.
+
+#### Customizing the DefaultPage
+
+You are able to fully-customize the appearance & structure of the `DefaultPage` component by modifying the [`defaultPage`](./src/js/components/DefaultPage/defaultPage.jsx) component and the corresponding [`styles.scss`](./src/js/components/DefaultPage/styles.scss).
+
+### Custom page
+
+If you want to create a route which serves a custom page - meaning a page which has a different structure to the other pages - then you are able to create a new component and configure that page using the `AppRouter` [`config`](./src/js/components/AppRouter/config.js). 
+
+```js
+const getRouteConfig = (name) => {
+  switch (name) {
+    case "home":
+      return {
+        Component: Home,
+        fetchData: [getHomeSSR],
+      };
+    case "about":
+      return {
+        Component: About,
+        fetchData: [getAboutSSR],
+      };
+    case "defaultpage":
+      return {
+        Component: DefaultPage,
+        fetchData: [getDefaultPageSSR],
+      };
+    case "blogpage":
+      return {
+        Component: BlogPage,
+        fetchData: [getBlogPageSSR],
+      };
+  }
+};
+```
+
+The `getRouteConfig` receives the `name` of the route as defined in the `toRoutes` adapter and returns an object containting the `Component` and a `fetchData` array.
+
+#### fetchData
+
+The `fetchData` array is a list of Promises which are executed and awaited when the route is requested from the server-side application.
+
+As an example, if the user lands on the `"home"` route, the server will execute `getHomeSSR` and await it before rendering the HTML.
+
+Each function in the `fetchData` array, will receive the following arguments:
+
+```js
+fn(store, options)
+```
+
+The `store` refers to the Redux store while options includes the following:
+
+| Name  | Description                                                                                     |
+| ----- | ----------------------------------------------------------------------------------------------- |
+| path  | The request path (e.g: `/home`).                                                                |
+| match | The [`PathMatch`](https://reactrouter.com/docs/en/v6/utils/match-path) object for that request. |
+| query | Query string params.                                                                            |
+| url   | Request URL string. (e.g: `/home?a=b`).                                                         |
+| route | The matching route as stored in the `AppRouter` reducer.                                        |
+
+```js
+const getHomeSSR = (store, { path }) =>
+  store.dispatch(
+    getHomePage({
+      path,
+    })
+  );
+```
+
+This allows you to populate the Redux store with data for that specific route.
+
+```js
+case "mypage":
+  return {
+    Component: MyPage,
+    fetchData: [getHeaderSSR, getNavigationMenuSSR, getBannerSSR, getMyPageSSR],
+  };
+```
+
+As you are not limited to a single `fetchData` function, you may combine several requests that are needed to render a page.
+
+```js
+[
+  {
+    "key": "/",
+    "value": "home"
+  },
+  {
+    "key": "/about",
+    "value": "about"
+  },
+  {
+    "key": "blog/:path",
+    "value": "blogpage"
+  },
+  {
+    "key": "/:path",
+    "value": "defaultpage"
+  }
+]
+```
+
+Similarly to the `DefaultPage`, you are able to use a wildcard to serve a dynamic number of similar pages, such as the `blogpage` above.
 
 ### Scripts
 
@@ -131,55 +301,6 @@ The naming conventions that are followed throughout the template:
 
 The project allows for Hot Module Reloading using `webpack-hot-middleware` and a helper library developed by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/blob/master/tools/lib/webpackHotDevClient.js). This enables HMR for JSX, S/CSS, and NodeJS.
 
-### Routing
-
-Routing is configured using [`react-router`](https://github.com/remix-run/react-router) v6, which works on both the client and server-side applications. The routing configuration is set up in [`src/js/components/AppRouter/config.js`](./src/js/components/AppRouter/config.js).
-
-The `getRouteConfig` receives the `name` of the route requested and then returns the `Component` and `fetchData` array.
-
-#### fetchData
-
-The `fetchData` array is a list of Promises which are executed and awaited when the route is requested from the server-side application.
-
-As an example, if the user lands on the `"home"` route, the server will execute `getHomeSSR` and await it before rendering the HTML.
-
-Each function in the `fetchData` array, will receive the following arguments:
-
-```js
-fn(store, options)
-```
-
-The `store` refers to the Redux store while options includes the following:
-
-| Name  | Description                                                                                     |
-| ----- | ----------------------------------------------------------------------------------------------- |
-| path  | The request path (e.g: `/home`).                                                                |
-| match | The [`PathMatch`](https://reactrouter.com/docs/en/v6/utils/match-path) object for that request. |
-| query | Query string params.                                                                            |
-| url   | Request URL string. (e.g: `/home?a=b`).                                                         |
-| route | The matching route as stored in the `AppRouter` reducer.                                        |
-
-This allows you to populate the Redux store with data for that route.
-
-```js
-const getHomeSSR = (store, { path }) =>
-  store.dispatch(
-    getHomePage({
-      path,
-    })
-  );
-```
-
-As you are not limited to a single `fetchData` function, you may combine several requests that are needed to render a page. E.g.
-
-```js
-case "mypage":
-  return {
-    Component: MyPage,
-    fetchData: [getHeaderSSR, getNavigationMenuSSR, getBannerSSR, getMyPageSSR],
-  };
-```
-
 ### Loadable Components
 
 [Loadable Components](https://loadable-components.com/) are the de-facto standard for lazy loading on a SSR React application. Loadable Components reads the stats files generated by Webpack and `@loadable/webpack-plugin` to split your bundle into sizeable chunks.
@@ -220,7 +341,7 @@ The store is configured on both the server application and the client applicatio
 
 ### Templates
 
-Performance-First Template generates all HTML using the server-side rendered data by passing it to the HTML through Handlebars templates.
+Performance-First template generates all HTML using the server-side rendered data by passing it to the HTML through Handlebars templates.
 
 | Name           | Description                                                                                                                                                                     |
 | -------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
@@ -261,14 +382,6 @@ The output HTML should include both `.mjs` and `.js` files. A modern browser wil
 [Redux](https://redux.js.org/) is a state container used together with React. The template includes `redux`, `reselect`, and `redux-thunk` by default.
 
 There are plans to update the template to support [Redux Toolkit](https://redux-toolkit.js.org/).
-
-## Add a new page
-
-// ... TODO:
-// ... routing API
-// ... standard page
-// ... extended page
-// ...
 
 ## Suggested guidelines
 
@@ -333,11 +446,11 @@ The project was inspired by [React Starter Kit](https://github.com/kriasoft/reac
 
 ## Contributing
 
-Anyone and everyone are welcome to contribute to this project and leave feedback. Please take a moment to review the [guidelines for contributing](contributing.md).
+Anyone and everyone are welcome to contribute to this project and leave feedback. Please take a moment to review the [guidelines for contributing](./contributing.md).
 
 ## License
 
-Copyright © 2020-present Spiffing Ltd. This source code is licensed under the MIT license found in the [LICENSE](LICENSE) file.
+Copyright © 2020-present Spiffing Ltd. This source code is licensed under the MIT license found in the [LICENSE](./LICENSE) file.
 
 ---
 

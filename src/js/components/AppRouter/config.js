@@ -26,10 +26,10 @@ const getRouteConfig = (name) => {
         fetchData: [getDefaultPageSSR],
       };
     default:
+      // return a 404 page
       console.error(`Route ${name} does not have a component.`);
       return {
         Component: null,
-        fetchData: [],
       };
   }
 };
