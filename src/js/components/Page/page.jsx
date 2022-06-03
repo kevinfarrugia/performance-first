@@ -17,8 +17,10 @@ function Page({
   scrollToTop,
 }) {
   React.useEffect(() => {
-    onGetPage({ path, ...params });
-  }, [onGetPage, params, path]);
+    if (!isReady) {
+      onGetPage({ path, ...params });
+    }
+  }, [onGetPage, params, path, isReady]);
 
   if (typeof onGetPage === "undefined") {
     console.warn("<Page /> requires 'onGetPage' prop to be defined");

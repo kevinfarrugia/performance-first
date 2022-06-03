@@ -3,7 +3,7 @@ import fetch from "node-fetch";
 const getPage = async ({ path }) =>
   fetch(
     new URL(
-      `${CMS_URL}/kevinfarrugia/performance-first/main/api/Page/${path}.json`
+      `${CMS_URL}/kevinfarrugia/performance-first/main/api/Page${path}.json`
     )
   );
 

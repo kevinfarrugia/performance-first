@@ -73,8 +73,16 @@ app.use(async (req, _res, next) => {
   return next(error);
 });
 
-// middleware to render server side HTML
-app.use(handleRender);
+app.use((req, res, next) => {
+  // exclude static files not found from being served using handeRender
+  if (path.extname(req.path).match(/\.(?:js|css|json|map)$/)) {
+    const error = new Error(`${req.path} not found`);
+    error.status = 404;
+    return next(error);
+  }
+  // middleware to render server side HTML
+  return handleRender(req, res, next);
+});
 
 const prettyError = new PrettyError();
 prettyError.skipNodeFiles();
