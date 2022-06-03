@@ -9,7 +9,7 @@ const fetchPage = async (data) => {
     return toPage(response);
   }
 
-  throw new Error(res.statusText);
+  throw new Error(`${res.statusText}: ${res.url}`);
 };
 
 // eslint-disable-next-line import/prefer-default-export
