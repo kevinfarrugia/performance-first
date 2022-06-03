@@ -22,4 +22,4 @@ function bundle() {
   });
 }
 
-module.exports = { default: bundle };
+module.exports = bundle;

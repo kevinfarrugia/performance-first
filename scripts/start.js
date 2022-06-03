@@ -9,7 +9,8 @@ const webpackHotMiddleware = require("webpack-hot-middleware");
 
 const clean = require("./clean");
 const copy = require("./copy");
-const { default: run, format } = require("./run");
+const run = require("./run");
+const format = require("./lib/time");
 const webpackConfig = require("./webpack.config");
 
 const isDebug = !process.argv.includes("--release");
@@ -228,4 +229,4 @@ async function start() {
   return server;
 }
 
-module.exports = { default: start };
+module.exports = start;

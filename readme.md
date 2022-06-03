@@ -264,7 +264,7 @@ There are plans to update the template to support [Redux Toolkit](https://redux-
 
 ## Creating a new page
 
-// ...
+// ... TODO:
 // ... routing API
 // ... standard page
 // ... extended page

@@ -2,7 +2,7 @@ const path = require("path");
 const chokidar = require("chokidar");
 
 const { cleanDir, copyDir, copyFile, makeDir, writeFile } = require("./lib/fs");
-const { format } = require("./run");
+const format = require("./lib/time");
 
 const pkg = require("../package.json");
 
@@ -64,4 +64,4 @@ async function copy() {
   }
 }
 
-module.exports = { default: copy };
+module.exports = copy;

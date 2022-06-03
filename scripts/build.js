@@ -22,4 +22,4 @@ async function build() {
   }
 }
 
-module.exports = { default: build };
+module.exports = build;

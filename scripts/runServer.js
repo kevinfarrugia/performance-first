@@ -63,4 +63,4 @@ process.on("exit", () => {
   }
 });
 
-module.exports = { default: runServer };
+module.exports = runServer;

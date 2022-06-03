@@ -13,4 +13,4 @@ function clean() {
   ]);
 }
 
-module.exports = { default: clean };
+module.exports = clean;
