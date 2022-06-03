@@ -48,15 +48,11 @@ app.use(
   })
 );
 
-app.use(
-  "/fonts",
-  express.static(path.join(__dirname, "/public/fonts"), {
-    maxAge: 31536000000, // in milliseconds
-  })
-);
-
 app.use("/", (req, res, next) => {
-  res.set("Cache-Control", "no-cache");
+  res.set(
+    "Cache-Control",
+    "public, max-age=30, stale-while-revalidate=30, stale-if-error=600"
+  );
   next();
 });
 

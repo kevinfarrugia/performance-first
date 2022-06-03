@@ -5,7 +5,7 @@ import Page from "../Page";
 import ResponsivePicture from "../ResponsivePicture";
 import styles from "./styles.scss";
 
-function About({ onGetPage }) {
+function DefaultPage({ onGetPage }) {
   const { pathname } = useLocation();
   const getPage = React.useCallback(onGetPage, [onGetPage]);
 
@@ -42,4 +42,4 @@ function About({ onGetPage }) {
   );
 }
 
-export default About;
+export default DefaultPage;

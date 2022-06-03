@@ -39,14 +39,14 @@ function Header() {
           style={({ isActive }) => (isActive ? activeStyle : undefined)}
           to="/page-a"
         >
-          Page A
+          A
         </NavLink>
         <NavLink
           className={styles.navLink}
           style={({ isActive }) => (isActive ? activeStyle : undefined)}
           to="/page-b"
         >
-          Page B
+          B
         </NavLink>
       </nav>
     </header>

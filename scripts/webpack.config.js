@@ -2,22 +2,22 @@
  * Webpack Configuration inspired by React Starter Kit (https://www.reactstarterkit.com/)
  */
 
-import crypto from "crypto";
-import path from "path";
+const crypto = require("crypto");
+const path = require("path");
 
-import LoadablePlugin from "@loadable/webpack-plugin";
-import CssMinimizerPlugin from "css-minimizer-webpack-plugin";
-import ESLintPlugin from "eslint-webpack-plugin";
-import MiniCssExtractPlugin from "mini-css-extract-plugin";
-import svgToMiniDataURI from "mini-svg-data-uri";
-import StyleLintPlugin from "stylelint-webpack-plugin";
-import TerserJSPlugin from "terser-webpack-plugin";
-import webpack from "webpack";
-import { BundleAnalyzerPlugin } from "webpack-bundle-analyzer";
-import nodeExternals from "webpack-node-externals";
-import WorkboxPlugin from "workbox-webpack-plugin";
+const LoadablePlugin = require("@loadable/webpack-plugin");
+const CssMinimizerPlugin = require("css-minimizer-webpack-plugin");
+const ESLintPlugin = require("eslint-webpack-plugin");
+const MiniCssExtractPlugin = require("mini-css-extract-plugin");
+const svgToMiniDataURI = require("mini-svg-data-uri");
+const StyleLintPlugin = require("stylelint-webpack-plugin");
+const TerserJSPlugin = require("terser-webpack-plugin");
+const webpack = require("webpack");
+const { BundleAnalyzerPlugin } = require("webpack-bundle-analyzer");
+const nodeExternals = require("webpack-node-externals");
+const WorkboxPlugin = require("workbox-webpack-plugin");
 
-import pkg from "../package.json";
+const pkg = require("../package.json");
 
 const isDevelopment = !process.argv.includes("--release");
 
@@ -32,7 +32,7 @@ const ROOT_DIR = path.resolve(__dirname, "..");
 const SRC_DIR = path.resolve(ROOT_DIR, "src");
 const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
 
-const CMS_URL = "https://example.com";
+const CMS_URL = "https://raw.githubusercontent.com";
 
 // the total number of entrypoints (including async chunks)
 const ENTRYPOINTS_COUNT = 4;
@@ -140,39 +140,44 @@ const configureStyleLoaders = () => ({
   ],
 });
 
-const configureBabelLoader = (browserslist) => ({
-  test: /\.(js|jsx)$/,
-  include: [SRC_DIR, path.resolve(ROOT_DIR, "scripts")],
-  loader: "babel-loader",
-  options: {
-    cacheDirectory: isDevelopment,
-    babelrc: false,
-    configFile: false,
-    presets: [
-      [
-        "@babel/preset-env",
-        {
-          targets: {
-            browsers: browserslist,
+const configureBabelLoader = (browserslist) => {
+  if (!browserslist) {
+    throw new Error("Please provide a browserslist configuration.");
+  }
+  return {
+    test: /\.(js|jsx)$/,
+    include: [SRC_DIR],
+    loader: "babel-loader",
+    options: {
+      cacheDirectory: isDevelopment,
+      babelrc: false,
+      configFile: false,
+      presets: [
+        [
+          "@babel/preset-env",
+          {
+            targets: {
+              browsers: browserslist,
+            },
+            bugfixes: true,
+            modules: false,
+            useBuiltIns: "usage",
+            corejs: "3.21",
+            debug: false,
           },
-          bugfixes: true,
-          modules: false,
-          useBuiltIns: "usage",
-          corejs: "3.21",
-          debug: false,
-        },
+        ],
+        ["@babel/preset-react", { development: isDevelopment }],
       ],
-      ["@babel/preset-react", { development: isDevelopment }],
-    ],
-    plugins: [
-      "@loadable/babel-plugin",
-      "@babel/plugin-proposal-class-properties",
-      "@babel/plugin-syntax-dynamic-import",
-      ...(isDevelopment ? [] : ["@babel/transform-react-constant-elements"]),
-      ...(isDevelopment ? [] : ["@babel/transform-react-inline-elements"]),
-    ],
-  },
-});
+      plugins: [
+        "@loadable/babel-plugin",
+        "@babel/plugin-proposal-class-properties",
+        "@babel/plugin-syntax-dynamic-import",
+        ...(isDevelopment ? [] : ["@babel/transform-react-constant-elements"]),
+        ...(isDevelopment ? [] : ["@babel/transform-react-inline-elements"]),
+      ],
+    },
+  };
+};
 
 // returns true if module is CSS
 const isModuleCSS = (module) =>
@@ -520,7 +525,7 @@ const serverConfig = {
       },
       {
         test: /\.(js|jsx)$/,
-        include: [SRC_DIR, path.resolve(ROOT_DIR, "scripts")],
+        include: [SRC_DIR],
         loader: "babel-loader",
         options: {
           cacheDirectory: isDevelopment,
@@ -544,7 +549,6 @@ const serverConfig = {
           plugins: [
             "@loadable/babel-plugin",
             "@babel/plugin-proposal-class-properties",
-            "@babel/plugin-syntax-dynamic-import",
             ...(isDevelopment
               ? []
               : ["@babel/transform-react-constant-elements"]),
@@ -630,4 +634,4 @@ const serverConfig = {
   },
 };
 
-export default [legacyClientConfig, clientConfig, serverConfig];
+module.exports = [clientConfig, serverConfig, legacyClientConfig];

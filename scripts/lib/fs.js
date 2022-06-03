@@ -1,9 +1,9 @@
-import fs from "fs";
-import path from "path";
+const fs = require("fs");
+const path = require("path");
 
-import glob from "glob";
-import mkdirp from "mkdirp";
-import rimraf from "rimraf";
+const glob = require("glob");
+const mkdirp = require("mkdirp");
+const rimraf = require("rimraf");
 
 const readFile = (file) =>
   new Promise((resolve, reject) => {
@@ -94,7 +94,7 @@ const cleanDir = (pattern, options) =>
     );
   });
 
-export {
+module.exports = {
   readFile,
   writeFile,
   renameFile,

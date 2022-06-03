@@ -1,7 +1,7 @@
 {
-  "name": "performance-first-react-template",
+  "name": "performance-first-template",
   "description": "Universal React boilerplate prioritising performance and core web vitals.",
-  "version": "1.1.1",
+  "version": "2.0.1",
   "private": false,
   "license": "MIT",
   "author": {
@@ -33,6 +33,7 @@
     "helmet": "^5.0.2",
     "nanoid": "^3.3.2",
     "node-cache": "^5.1.2",
+    "node-fetch": "^2.6.7",
     "normalize.css": "^8.0.1",
     "path-to-regexp": "^6.2.0",
     "pretty-error": "^4.0.0",
@@ -150,13 +151,13 @@
     "fix-js": "npm run lint-js -- --fix",
     "fix-css": "npm run lint-css -- --fix",
     "fix": "npm run fix-js && npm run fix-css",
-    "clean": "babel-node scripts/run clean",
-    "copy": "babel-node scripts/run copy",
-    "bundle": "babel-node scripts/run bundle",
-    "build": "babel-node scripts/run build",
+    "clean": "node scripts/run clean",
+    "copy": "node scripts/run copy",
+    "bundle": "node scripts/run bundle",
+    "build": "node scripts/run build",
     "build-stats": "npm run build -- --release --analyse",
-    "serve": "babel-node scripts/run runServer",
-    "start": "babel-node scripts/run start",
+    "serve": "node scripts/run runServer",
+    "start": "node scripts/run start",
     "prepare": "husky install"
   },
   "husky": {

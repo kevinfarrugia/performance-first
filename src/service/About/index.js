@@ -1,13 +1,16 @@
 import { toAbout } from "./adapter";
 import { getPage } from "./pageService";
 
-const fetchAbout = (data) =>
-  getPage(data)
-    .then((response) => toAbout(response))
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
+const fetchAbout = async (data) => {
+  const res = await getPage(data);
+
+  if (res.ok) {
+    const response = await res.json();
+    return toAbout(response);
+  }
+
+  throw new Error(res.statusText);
+};
 
 // eslint-disable-next-line import/prefer-default-export
 export { fetchAbout };

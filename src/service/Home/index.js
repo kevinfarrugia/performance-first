@@ -1,13 +1,16 @@
 import { toHome } from "./adapter";
 import { getPage } from "./pageService";
 
-const fetchHome = (data) =>
-  getPage(data)
-    .then((response) => toHome(response))
-    .catch((error) => {
-      console.error(error);
-      throw error;
-    });
+const fetchHome = async (data) => {
+  const res = await getPage(data);
+
+  if (res.ok) {
+    const response = await res.json();
+    return toHome(response);
+  }
+
+  throw new Error(res.statusText);
+};
 
 // eslint-disable-next-line import/prefer-default-export
 export { fetchHome };

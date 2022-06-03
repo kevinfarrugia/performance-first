@@ -1,14 +1,13 @@
-/* eslint-disable import/no-import-module-exports */
-import formatWebpackMessages from "react-dev-utils/formatWebpackMessages";
-import launchEditorEndpoint from "react-dev-utils/launchEditorEndpoint";
-import {
+const formatWebpackMessages = require("react-dev-utils/formatWebpackMessages");
+const launchEditorEndpoint = require("react-dev-utils/launchEditorEndpoint");
+const {
   dismissBuildError,
   reportBuildError,
   setEditorHandler,
   startReportingRuntimeErrors,
   stopReportingRuntimeErrors,
-} from "react-error-overlay";
-import hotClient from "webpack-hot-middleware/client";
+} = require("react-error-overlay");
+const hotClient = require("webpack-hot-middleware/client");
 
 setEditorHandler((errorLocation) => {
   const fileName = encodeURIComponent(errorLocation.fileName);
