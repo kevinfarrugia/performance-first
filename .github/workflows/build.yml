@@ -39,7 +39,7 @@ jobs:
       - run: npm ci
 
       - name: Build
-        run: npm run build -- --release --docker
+        run: npm run build -- --release
         env:
           NODE_ENV: production
 

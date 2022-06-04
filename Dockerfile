@@ -4,14 +4,15 @@ FROM node:16-alpine AS build
 # Set a working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json files
-COPY ./package.json .
-COPY ./package-lock.json .
+# Copy the entire source
+COPY . .
 
 # Install Node.js dependencies
-RUN npm set-script prepare ""
-RUN npm ci --only=production
- 
+RUN npm ci
+
+# Build the application
+RUN npm run build -- --release
+
 
 # -- Production Image --
 FROM node:16-alpine
@@ -24,11 +25,11 @@ ENV NODE_ENV production
 USER node
 
 # Set a working directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/app/build
 
 # Copy application files
 COPY --chown=node:node --from=build /usr/src/app/node_modules /usr/src/app/node_modules
-COPY --chown=node:node ./build /usr/src/app
+COPY --chown=node:node --from=build /usr/src/app/build /usr/src/app/build
 
 # Expose port
 EXPOSE 3000

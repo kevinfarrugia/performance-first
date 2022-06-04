@@ -213,7 +213,7 @@ Similarly to the `DefaultPage`, you are able to use a wildcard to serve a dynami
 
 | Flag          | Description                                                                                                                                                                                                           |
 | ------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `build`       | Builds the project. Accepts `--release`, `--analyze`, `--docker` flags                                                                                                                                                |
+| `build`       | Builds the project. Accepts `--release`, `--analyze` flags                                                                                                                                                            |
 | `build-stats` | Build the project with production configuration and launches [Webpack Bundle Analyzer](https://github.com/th0r/webpack-bundle-analyzer)                                                                               |
 | `serve`       | Runs the Express server and serves the output from the build folder                                                                                                                                                   |
 | `start`       | Launches Webpack compiler in watch mode (via [webpack-middleware](https://github.com/kriasoft/webpack-middleware)) and runs the development server, including HMR and BrowserSync. Accepts `--release`, `--hot` flags |
@@ -243,13 +243,7 @@ node server.js
 
 ### Docker
 
-If you are using [Docker](https://www.docker.com/), then you can use the [`Dockerfile`](./Dockerfile) which is included in the template. The `Dockerfile` compiles and runs a production build on a lightweight [Alpine Linux](https://www.alpinelinux.org/) environment.
-
-There is a script to run the `Dockerfile` and prepare the Docker image:
-
-```
-npm run build -- --release --docker
-```
+If you are using [Docker](https://www.docker.com/), the template includes a default [`Dockerfile`](./Dockerfile). The `Dockerfile` compiles and runs a production build on a lightweight [Alpine Linux](https://www.alpinelinux.org/) environment using Node 16.
 
 ## Folder Structure
 
