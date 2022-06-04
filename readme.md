@@ -2,6 +2,8 @@
 
 Performance-First template is a template for server-side rendering React web apps prioritizing performance best practices. The template includes [critical CSS](https://imkev.dev/inlining-critical-css), [module/nomodule](https://philipwalton.com/articles/deploying-es2015-code-in-production-today/), code-splitting, service workers, server-side rendering, partial hydration, [granular chunking](https://web.dev/granular-chunking-nextjs/), resource hints, CSS modules, [async CSS](https://www.filamentgroup.com/lab/load-css-simpler/), and much more.
 
+[View Demo](https://performance-first.herokuapp.com/)
+
 ## Technologies
 
 - [Node.js](https://nodejs.org/)
