@@ -30,7 +30,7 @@ const staticAssetName = isDevelopment
 
 const ROOT_DIR = path.resolve(__dirname, "..");
 const SRC_DIR = path.resolve(ROOT_DIR, "src");
-const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
+const OUTPUT_DIR = path.join(ROOT_DIR, "build");
 
 const CMS_URL = "https://raw.githubusercontent.com";
 
@@ -329,7 +329,7 @@ const legacyClientConfig = {
   name: "legacy",
   target: "web",
   output: {
-    path: path.resolve(OUTPUT_DIR, "public"),
+    path: path.join(OUTPUT_DIR, "public"),
     publicPath: "/",
     filename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
     chunkFilename: isDevelopment ? "[name].js" : "[name].[chunkhash:8].js",
@@ -387,7 +387,7 @@ const clientConfig = {
   name: "client",
   target: "web",
   output: {
-    path: path.resolve(OUTPUT_DIR, "public"),
+    path: path.join(OUTPUT_DIR, "public"),
     publicPath: "/",
     filename: isDevelopment ? "[name].mjs" : "[name].[chunkhash:8].mjs",
     chunkFilename: isDevelopment ? "[name].mjs" : "[name].[chunkhash:8].mjs",
