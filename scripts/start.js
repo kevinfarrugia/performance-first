@@ -69,7 +69,7 @@ async function start() {
     clientConfig.entry.client
   );
   clientConfig.output.filename = clientConfig.output.filename.replace(
-    "chunkhash",
+    "contenthash",
     "fullhash"
   );
   clientConfig.output.chunkFilename = clientConfig.output.chunkFilename.replace(
