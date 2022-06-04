@@ -1,6 +1,3 @@
-const cp = require("child_process");
-
-const pkg = require("../package.json");
 const bundle = require("./bundle");
 const clean = require("./clean");
 const copy = require("./copy");
@@ -14,12 +11,6 @@ async function build() {
   await run(clean);
   await run(copy);
   await run(bundle);
-
-  if (process.argv.includes("--docker")) {
-    cp.spawnSync("docker", ["build", "-t", pkg.name, "."], {
-      stdio: "inherit",
-    });
-  }
 }
 
 module.exports = build;
