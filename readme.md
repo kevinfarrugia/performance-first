@@ -17,6 +17,14 @@ Performance-First template is a template for server-side rendering React web app
 
 The goal of this project is to create a reference or starting point for a fast-performing website configuration using ReactJS. I will try to keep this updated with the latest findings and research. All feedback is welcome.
 
+### [100 on Lighthouse for the home page](https://pagespeed.web.dev/report?url=https%3A%2F%2Fperformance-first.herokuapp.com%2F)
+
+![lighthouse-score-home](https://user-images.githubusercontent.com/8075326/172028560-3443ad55-133e-4d15-8e59-c631c27cd64f.png)
+
+### [100 on Lighthouse for a banner page](https://pagespeed.web.dev/report?url=https%3A%2F%2Fperformance-first.herokuapp.com%2Fpage-a)
+
+![lighthouse-score-banner-page](https://user-images.githubusercontent.com/8075326/172028559-164cfabc-44a8-4158-9094-4cd06c5a34cc.png)
+
 ## Getting Started
 
 If you don't already have Node.js, download and install [Node.js](https://nodejs.org/en/) >= 16.
