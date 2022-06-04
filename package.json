@@ -155,6 +155,7 @@
     "copy": "node scripts/run copy",
     "bundle": "node scripts/run bundle",
     "build": "node scripts/run build",
+    "heroku-postbuild": "npm run build -- --release --analyse",
     "build-stats": "npm run build -- --release --analyse",
     "serve": "node scripts/run runServer",
     "start": "node scripts/run start",
