@@ -1,0 +1,77 @@
+$skeleton-color: rgba(0, 0, 0, 0.05);
+
+.content {
+  position: relative;
+  width: 100%;
+  max-width: $max-width;
+  align-self: center;
+  padding: 1em;
+  background-color: #fff;
+  box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+}
+
+.banner {
+  z-index: -1;
+  display: block;
+  width: 100%;
+  max-width: calc($max-width + 6em);
+  height: auto;
+  margin: 0 auto 0.5em;
+
+  @include breakpoint {
+    margin-bottom: -12em;
+  }
+}
+
+@keyframes bannerSkeletonLoading {
+  to {
+    background-position: 200% 0;
+  }
+}
+
+.bannerSkeleton {
+  @extend .banner;
+
+  min-height: 12em;
+  animation: bannerSkeletonLoading 2s infinite ease-in-out;
+  background-color: $skeleton-color;
+  background-image: linear-gradient(
+    90deg,
+    rgba($background-color, 0) 0,
+    rgba($background-color, 0.5) 50%,
+    rgba($background-color, 0) 100%
+  );
+  background-position: -100% 0;
+  background-repeat: no-repeat;
+  background-size: 200px 100%;
+
+  @include breakpoint {
+    min-height: 36em;
+  }
+}
+
+@keyframes contentSkeletonLoading {
+  to {
+    background-position: 200% 0, 1em 2.125em, 1em 6em, 1em 7.5em, 1em 9em;
+  }
+}
+
+.contentSkeleton {
+  @extend .content;
+
+  min-height: 24em;
+  animation: contentSkeletonLoading 2s infinite ease-in-out;
+  background-image: linear-gradient(
+    90deg,
+    rgba($color-white, 0) 0,
+    rgba($color-white, 0.8) 50%,
+    rgba($color-white, 0) 100%
+  ),
+    linear-gradient($skeleton-color 100%, transparent 0),
+    linear-gradient($skeleton-color 100%, transparent 0),
+    linear-gradient($skeleton-color 100%, transparent 0),
+    linear-gradient($skeleton-color 100%, transparent 0);
+  background-position: -100% 0, 1em 2.125em, 1em 6em, 1em 7.5em, 1em 9em;
+  background-repeat: no-repeat;
+  background-size: 200px 100%, 180px 36px, 300px 16px, 240px 16px, 200px 16px;
+}

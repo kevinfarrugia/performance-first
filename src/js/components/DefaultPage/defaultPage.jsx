@@ -1,6 +1,7 @@
 import * as React from "react";
 import { useLocation } from "react-router-dom";
 
+import DefaultPageSkeleton from "../DefaultPageSkeleton";
 import Page from "../Page";
 import ResponsivePicture from "../ResponsivePicture";
 import styles from "./styles.scss";
@@ -13,7 +14,7 @@ function DefaultPage({ onGetPage }) {
     <Page path={pathname} onGetPage={getPage} scrollToTop>
       {({ page: { title, html, banner }, isReady: isPageReady }) => {
         if (!isPageReady) {
-          return null;
+          return <DefaultPageSkeleton />;
         }
 
         return (

@@ -7,9 +7,15 @@ function AppRouter({ routes }) {
   return (
     <Routes>
       {routes.map((route) => {
-        const { Component } = getRouteConfig(route.name);
+        const { Component, Fallback } = getRouteConfig(route.name);
         return (
-          <Route key={route.path} path={route.path} element={<Component />} />
+          <Route
+            key={route.path}
+            path={route.path}
+            element={
+              <Component fallback={Fallback ? <Fallback /> : undefined} />
+            }
+          />
         );
       })}
     </Routes>

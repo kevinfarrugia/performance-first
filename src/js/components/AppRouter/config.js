@@ -2,6 +2,7 @@ import loadable from "@loadable/component";
 
 import getAboutSSR from "../About/server";
 import getDefaultPageSSR from "../DefaultPage/server";
+import DefaultPageSkeleton from "../DefaultPageSkeleton";
 import getHomeSSR from "../Home/server";
 
 const Home = loadable(() => import("../Home"));
@@ -23,6 +24,7 @@ const getRouteConfig = (name) => {
     case "defaultpage":
       return {
         Component: DefaultPage,
+        Fallback: DefaultPageSkeleton,
         fetchData: [getDefaultPageSSR],
       };
     default:

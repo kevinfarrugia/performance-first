@@ -33,11 +33,11 @@ const renderRoutesData = async ({
     );
 
     if (match) {
-      const routeComponent = getRouteConfig(route.name);
+      const routeConfig = getRouteConfig(route.name);
 
-      if (routeComponent && routeComponent.fetchData) {
+      if (routeConfig && routeConfig.fetchData) {
         // add the promise to fetch the route data
-        routeComponent.fetchData.forEach((fn) => {
+        routeConfig.fetchData.forEach((fn) => {
           promises.push(
             fn(store, {
               path: pathname,
