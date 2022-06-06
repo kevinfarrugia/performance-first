@@ -9,7 +9,7 @@ import { create } from "express-handlebars";
 import helmet from "helmet";
 import PrettyError from "pretty-error";
 
-import Main from "./main";
+import Main from "./js/components/Main";
 import handleRender from "./render";
 import { isValidPath } from "./service/Router";
 

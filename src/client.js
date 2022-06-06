@@ -4,8 +4,8 @@ import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 
 import { selectRoutes } from "./js/components/AppRouter";
+import Main from "./js/components/Main";
 import configureStore from "./js/store";
-import Main from "./main";
 
 // grab the state from a global variable injected into the server-generated HTML
 // eslint-disable-next-line no-underscore-dangle
