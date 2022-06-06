@@ -336,13 +336,13 @@ Read more about [inlining critical CSS](https://imkev.dev/inlining-critical-css)
 
 The [ReducerRegistry](./src/js/reducerRegistry.js) is a singleton class which exposes a `register` method, allowing consumers to dynamically attach reducers to the store.
 
-The `register` method may be called using the following syntax:
-
 ```js
 import reducerRegistry from "../../reducerRegistry";
 
 reducerRegistry.register(REDUCER_NAME, reducer);
 ```
+
+The `register` method may be called using the above syntax and should be called before calling any actions for that reducer, including server-side requests. As a rule-of-thumb, I recommend placing it in the `index.js` file for that compoonent.
 
 The [`configureStore`](./src/js/store.js#L:19) function combines the Redux `createStore` with a change listener to automatically update the reducers in the store.
 
