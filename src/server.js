@@ -26,18 +26,18 @@ app.set("views", path.resolve(__dirname, "templates"));
 app.engine("hbs", hbs.engine);
 app.set("view engine", "hbs");
 
-app.use(helmet());
-
 // https://helmetjs.github.io/
 app.use(
-  helmet.contentSecurityPolicy({
-    directives: {
-      defaultSrc: ["'self'"],
-      styleSrc: ["'self'", "'unsafe-inline'"],
-      scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
-      scriptSrcAttr: "'unsafe-inline'",
-      connectSrc: ["'self'", CMS_URL],
-      frameSrc: ["'self'"],
+  helmet({
+    contentSecurityPolicy: {
+      directives: {
+        defaultSrc: ["'self'"],
+        styleSrc: ["'self'", "'unsafe-inline'"],
+        scriptSrc: ["'self'", "'unsafe-inline'", "'unsafe-eval'"],
+        scriptSrcAttr: "'unsafe-inline'",
+        connectSrc: ["'self'", CMS_URL],
+        frameSrc: ["'self'"],
+      },
     },
   })
 );

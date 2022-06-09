@@ -140,6 +140,7 @@ const getRouteConfig = (name) => {
     case "defaultpage":
       return {
         Component: DefaultPage,
+        Fallback: DefaultPageSkeleton,
         fetchData: [getDefaultPageSSR],
       };
     case "blogpage":
@@ -151,7 +152,7 @@ const getRouteConfig = (name) => {
 };
 ```
 
-The `getRouteConfig` receives the `name` of the route as defined in the `toRoutes` adapter and returns an object containting the `Component` and a `fetchData` array.
+The `getRouteConfig` receives the `name` of the route as defined in the `toRoutes` adapter and returns an object containing the `Component` to render, the `Fallback` component until the `Component` is fetched (if using `loadable`) and a `fetchData` array.
 
 #### fetchData
 
