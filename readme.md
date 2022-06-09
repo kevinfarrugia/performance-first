@@ -411,7 +411,7 @@ Below are some recommendations I like to follow when working on a website. These
 ### Images
 
 - Optimize images using [Squoosh](https://squoosh.app) or Squoosh CLI.
-- Use the `picture` element with `srcset`, `sizes` and `media`.
+- Use the `picture` element with `srcset`, `sizes` and `media`. There is a React component [`ResponsivePicture`](./src/js/components/ResponsivePicture/responsivePicture.jsx) that receives the image `formats` and `availableWidths` to help you create the HTML element.
 - Recommended reading: [Halve the size of images by optimising for high density displays](https://jakearchibald.com/2021/serving-sharp-images-to-high-density-screens/)
 
 ## FAQs
