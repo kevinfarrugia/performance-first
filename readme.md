@@ -27,6 +27,8 @@ The goal of this project is to create a reference or starting point for a fast-p
 
 ![lighthouse-score-banner-page](https://user-images.githubusercontent.com/8075326/172028559-164cfabc-44a8-4158-9094-4cd06c5a34cc.png)
 
+_Disclaimer: Lighthouse scores only serve as an indication of performance best practices. Performance is much more complex than a simple 0-100 score. If you want to monitor performance properly, I recommend that you look at RUM tools such as [SpeedCurve](https://www.speedcurve.com/), [Akamai mPulse](https://www.akamai.com/products/mpulse-real-user-monitoring), or the [web-vitals](https://github.com/GoogleChrome/web-vitals) library._
+
 ## Getting Started
 
 If you don't already have Node.js, download and install [Node.js](https://nodejs.org/en/) >= 16.
