@@ -1,18 +1,3 @@
-// Removes the domain and TLD, returning just the path requested
-// http://www.example.com/foo/bar becomes '/foo/bar'
-const extractUrlPath = (url) => {
-  let urlSections = url.split("/");
-  urlSections = urlSections.filter((sectionString) => sectionString.length > 0);
-
-  let urlPath = null;
-  if (urlSections.length === 0) {
-    urlPath = "/";
-  } else {
-    urlPath = `/${urlSections.join("/")}`;
-  }
-  return urlPath;
-};
-
 const toRoutes = (routes) => {
   if (routes) {
     return routes.map((n) => ({
@@ -24,4 +9,5 @@ const toRoutes = (routes) => {
   return [];
 };
 
-export { toRoutes, extractUrlPath };
+// eslint-disable-next-line import/prefer-default-export
+export { toRoutes };
