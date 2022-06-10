@@ -41,7 +41,7 @@ export const toPage = (data) => {
       banner: toBanner(data.banner),
       meta: toMeta({
         ...data.meta,
-        thumbnail: data.thumbnail ? data.thumbnail.imageUrl : "",
+        image: data.thumbnail ? data.thumbnail.imageUrl : "",
       }),
     };
   }

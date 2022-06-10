@@ -19,8 +19,8 @@ function Meta({ title, description, keywords, path, image }) {
       <meta property="og:image" content={image || defaultImage} />
       {/* Twitter Meta */}
       <meta name="twitter:card" content="summary_large_image" />
-      <meta name="twitter:site" content="@maltafa1900" />
-      <meta name="twitter:creator" content="@maltafa1900" />
+      <meta name="twitter:site" content="@imkevdev" />
+      <meta name="twitter:creator" content="@imkevdev" />
       <meta name="twitter:title" content={title} />
       <meta name="twitter:description" content={description} />
       <meta name="twitter:image" content={image || defaultImage} />

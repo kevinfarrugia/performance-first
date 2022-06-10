@@ -1,7 +1,3 @@
-/**
- * Webpack Configuration inspired by React Starter Kit (https://www.reactstarterkit.com/)
- */
-
 const crypto = require("crypto");
 const path = require("path");
 
