@@ -3,7 +3,7 @@ import { compose } from "redux";
 import { createStructuredSelector } from "reselect";
 
 import reducerRegistry from "../../reducerRegistry";
-import { getHome, getHomePage } from "./actions";
+import { getHomePage } from "./actions";
 import { REDUCER_NAME } from "./constants";
 import Component from "./home";
 import { reducer, selectHome, selectIsReady } from "./reducer";
@@ -14,7 +14,6 @@ const mapStateToProps = createStructuredSelector({
 });
 
 const mapDispatchToProps = (dispatch) => ({
-  onGetHome: (data) => dispatch(getHome(data)),
   onGetHomePage: (data) => dispatch(getHomePage(data)),
 });
 
