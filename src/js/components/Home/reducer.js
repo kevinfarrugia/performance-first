@@ -1,5 +1,6 @@
 import { createSelector } from "reselect";
 
+import reducerRegistry from "../../reducerRegistry";
 import { REDUCER_NAME, SET_HOME } from "./constants";
 
 const initialState = {
@@ -32,3 +33,5 @@ export const selectIsReady = createSelector(getState, (n) => n.isReady);
 export const selectHome = createSelector(getState, (n) => ({
   ...n,
 }));
+
+reducerRegistry.register(REDUCER_NAME, reducer);
