@@ -22,8 +22,10 @@
   <body {{{ bodyattributes }}}>
     <div id="root">{{{ html }}}</div>
     {{{ scripts }}}
+    {{#if IS_SPA}}
     <script>
       window.__PRELOADED_STATE__ = {{{preloadedState}}};
     </script>
+    {{/if}}
   </body>
 </html>

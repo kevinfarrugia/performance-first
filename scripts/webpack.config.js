@@ -17,6 +17,9 @@ const pkg = require("../package.json");
 
 const isDevelopment = !process.argv.includes("--release");
 
+// set to true to enable CSR
+const IS_SPA = false;
+
 const isAnalyze =
   process.argv.includes("--analyze") || process.argv.includes("--analyse");
 
@@ -87,7 +90,8 @@ const configureStyleLoaders = () => ({
   test: /\.(sa|sc|c)ss$/,
   rules: [
     {
-      loader: isDevelopment ? "style-loader" : MiniCssExtractPlugin.loader,
+      loader:
+        isDevelopment && IS_SPA ? "style-loader" : MiniCssExtractPlugin.loader,
     },
     {
       exclude: SRC_DIR,
@@ -303,8 +307,9 @@ const baseConfig = {
   plugins: [
     new webpack.EnvironmentPlugin({
       IS_DEVELOPMENT: isDevelopment,
-      NAME: JSON.stringify(pkg.name),
-      DESCRIPTION: JSON.stringify(pkg.description),
+      IS_SPA,
+      NAME: pkg.name,
+      DESCRIPTION: pkg.description,
       VERSION: JSON.stringify(pkg.version),
     }),
     new webpack.DefinePlugin({
@@ -472,7 +477,7 @@ const serverConfig = {
       {
         test: /\.(sa|sc|c)ss$/,
         rules: [
-          ...(isDevelopment
+          ...(isDevelopment && IS_SPA
             ? []
             : [
                 {
@@ -488,7 +493,7 @@ const serverConfig = {
                 localIdentName: isDevelopment
                   ? "[name]-[local]-[hash:base64:5]"
                   : "[hash:base64:5]",
-                exportOnlyLocals: isDevelopment,
+                exportOnlyLocals: IS_SPA && isDevelopment,
               },
               importLoaders: 1,
             },
@@ -590,8 +595,8 @@ const serverConfig = {
           {
             type: "asset/resource",
             generator: {
-              filename: staticAssetName,
-              emit: false,
+              filename: IS_SPA ? staticAssetName : `public/${staticAssetName}`,
+              emit: !IS_SPA,
             },
           },
         ],
@@ -601,7 +606,7 @@ const serverConfig = {
         type: "asset/resource",
         generator: {
           filename: "fonts/[name][ext]",
-          emit: false,
+          emit: !IS_SPA,
         },
       },
     ],
@@ -612,7 +617,7 @@ const serverConfig = {
     new LoadablePlugin({
       filename: "server-stats.json",
     }),
-    ...(isDevelopment
+    ...(isDevelopment && IS_SPA
       ? []
       : [
           new MiniCssExtractPlugin({
@@ -630,4 +635,7 @@ const serverConfig = {
   },
 };
 
-module.exports = [clientConfig, serverConfig, legacyClientConfig];
+module.exports = [
+  serverConfig,
+  ...(IS_SPA ? [clientConfig, legacyClientConfig] : []),
+];
