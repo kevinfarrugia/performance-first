@@ -13,7 +13,8 @@
     "document": true,
     "window": true,
     "module": true,
-    "CMS_URL": true
+    "CMS_URL": true,
+    "ORIGIN": true
   },
   "parser": "@babel/eslint-parser",
   "parserOptions": {
