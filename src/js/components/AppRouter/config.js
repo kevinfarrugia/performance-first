@@ -9,6 +9,10 @@ const Home = loadable(() => import("../Home"));
 const About = loadable(() => import("../About"));
 const DefaultPage = loadable(() => import("../DefaultPage"));
 
+function Empty() {
+  return null;
+}
+
 const getRouteConfig = (name) => {
   switch (name) {
     case "home":
@@ -31,7 +35,7 @@ const getRouteConfig = (name) => {
       // return a 404 page
       console.error(`Route ${name} does not have a component.`);
       return {
-        Component: null,
+        Component: Empty,
       };
   }
 };
