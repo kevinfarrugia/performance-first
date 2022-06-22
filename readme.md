@@ -349,7 +349,9 @@ The `register` method may be called using the above syntax and should be called 
 
 The [`configureStore`](./src/js/store.js#L:19) function combines the Redux `createStore` with a change listener to automatically update the reducers in the store.
 
-The store is configured on both the server application and the client application. The server does not have an initial state and should resets all reducers between requests, while the client will use the `window.__PRELOADED_STATE__` as the initial state.
+The store is configured on both the server application and the client application. The server does not have an initial state and should reset all reducers between requests, while the client will use the `window.__PRELOADED_STATE__` as the initial state.
+
+_If you find yourself registering multiple reducers in the same component (i.e. calling `reducerRegistry.register` more than once in the same component), then most likely you would benefit from separating the component into two smaller components._
 
 ## Templates
 
