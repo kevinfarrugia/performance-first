@@ -3,7 +3,7 @@ import path from "path";
 
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
 import * as React from "react";
-import { renderToString } from "react-dom/server";
+import { renderToStaticMarkup, renderToString } from "react-dom/server";
 import Helmet from "react-helmet";
 import { matchPath } from "react-router";
 import { StaticRouter } from "react-router-dom/server";
@@ -60,38 +60,117 @@ const renderRoutesData = async ({
   await Promise.all(promises);
 };
 
-const handleRender = async (req, res, next) => {
-  try {
-    const serverChunkExtractor = new ChunkExtractor({
-      statsFile: path.resolve(__dirname, "./server-stats.json"),
-      entrypoints: ["server"],
-    });
-    const { Main } = serverChunkExtractor.requireEntrypoint();
+const renderAsMPA = async ({ url, store, routes }) => {
+  const serverChunkExtractor = new ChunkExtractor({
+    statsFile: path.resolve(__dirname, "./server-stats.json"),
+    entrypoints: ["server"],
+  });
+  const { Main } = serverChunkExtractor.requireEntrypoint();
 
-    const modernChunkExtractor = new ChunkExtractor({
-      statsFile: path.resolve(__dirname, "./public/client-stats.json"),
+  const html = renderToStaticMarkup(
+    <ChunkExtractorManager extractor={serverChunkExtractor}>
+      <StaticRouter location={url}>
+        <Main store={store} routes={routes} />
+      </StaticRouter>
+    </ChunkExtractorManager>
+  );
+
+  const inlineCss = await serverChunkExtractor.getCssString();
+
+  const helmet = Helmet.renderStatic();
+
+  // Send the rendered page back to the client using the server's view engine
+  return {
+    htmlattributes: helmet.htmlAttributes.toString() || "",
+    bodyattributes: helmet.bodyAttributes.toString() || "",
+    title: `${helmet.title}`,
+    head: `${helmet.meta} ${helmet.link}`,
+    html,
+    inlineCss,
+  };
+};
+
+const renderAsSPA = async ({ url, store, routes }) => {
+  const serverChunkExtractor = new ChunkExtractor({
+    statsFile: path.resolve(__dirname, "./server-stats.json"),
+    entrypoints: ["server"],
+  });
+  const { Main } = serverChunkExtractor.requireEntrypoint();
+
+  const modernChunkExtractor = new ChunkExtractor({
+    statsFile: path.resolve(__dirname, "./public/client-stats.json"),
+    entrypoints: ["client"],
+  });
+
+  let legacyChunkExtractor;
+  if (!module.hot) {
+    legacyChunkExtractor = new ChunkExtractor({
+      namespace: "legacy",
+      statsFile: path.resolve(__dirname, "./public/legacy-stats.json"),
       entrypoints: ["client"],
     });
+  }
 
-    let legacyChunkExtractor;
-    if (!module.hot) {
-      legacyChunkExtractor = new ChunkExtractor({
-        namespace: "legacy",
-        statsFile: path.resolve(__dirname, "./public/legacy-stats.json"),
-        entrypoints: ["client"],
-      });
-    }
+  // override the default addChunk method to add the chunk to legacy and modern extractor
+  const clientChunkExtractor = {
+    addChunk(chunk) {
+      modernChunkExtractor.addChunk(chunk);
+      if (legacyChunkExtractor) {
+        legacyChunkExtractor.addChunk(chunk);
+      }
+    },
+  };
 
-    // override the default addChunk method to add the chunk to legacy and modern extractor
-    const clientChunkExtractor = {
-      addChunk(chunk) {
-        modernChunkExtractor.addChunk(chunk);
-        if (legacyChunkExtractor) {
-          legacyChunkExtractor.addChunk(chunk);
-        }
-      },
-    };
+  const html = renderToString(
+    <ChunkExtractorManager extractor={clientChunkExtractor}>
+      <StaticRouter location={url}>
+        <Main store={store} routes={routes} />
+      </StaticRouter>
+    </ChunkExtractorManager>
+  );
 
+  const scriptElements = modernChunkExtractor.getScriptElements();
+
+  let legacyScriptElements;
+  if (legacyChunkExtractor) {
+    legacyScriptElements = legacyChunkExtractor.getScriptElements();
+  }
+
+  const scripts = renderToString(
+    <Scripts scripts={scriptElements} legacyScripts={legacyScriptElements} />
+  );
+
+  let inlineCss = "";
+  let css = "";
+
+  if (!module.hot) {
+    inlineCss = await modernChunkExtractor.getCssString();
+  } else {
+    css = modernChunkExtractor.getStyleTags();
+  }
+
+  const helmet = Helmet.renderStatic();
+
+  // Grab the state from our Redux store
+  const preloadedState = store.getState();
+
+  // Send the rendered page back to the client using the server's view engine
+  return {
+    htmlattributes: helmet.htmlAttributes.toString() || "",
+    bodyattributes: helmet.bodyAttributes.toString() || "",
+    title: `${helmet.title}`,
+    head: `${helmet.meta} ${helmet.link}`,
+    html,
+    inlineCss,
+    css,
+    scripts,
+    preloadedState: JSON.stringify(preloadedState),
+    IS_SPA: true,
+  };
+};
+
+const handleRender = async (req, res, next) => {
+  try {
     // create a new Redux store instance and clear all dynamic reducers
     const store = configureDynamicStore(
       {},
@@ -111,50 +190,19 @@ const handleRender = async (req, res, next) => {
       store,
     });
 
-    const html = renderToString(
-      <ChunkExtractorManager extractor={clientChunkExtractor}>
-        <StaticRouter location={req.url}>
-          <Main store={store} routes={routes} />
-        </StaticRouter>
-      </ChunkExtractorManager>
-    );
-
-    const scriptElements = modernChunkExtractor.getScriptElements();
-
-    let legacyScriptElements;
-    if (legacyChunkExtractor) {
-      legacyScriptElements = legacyChunkExtractor.getScriptElements();
-    }
-
-    const scripts = renderToString(
-      <Scripts scripts={scriptElements} legacyScripts={legacyScriptElements} />
-    );
-
-    let inlineCss = "";
-    let css = "";
-
-    if (!module.hot) {
-      inlineCss = await modernChunkExtractor.getCssString();
+    if (process.env.IS_SPA) {
+      // Send the rendered page back to the client using the server's view engine
+      res.render("index", await renderAsSPA({ url: req.url, store, routes }));
     } else {
-      css = modernChunkExtractor.getStyleTags();
+      res.render(
+        "index",
+        await renderAsMPA({
+          url: req.url,
+          store,
+          routes,
+        })
+      );
     }
-    const helmet = Helmet.renderStatic();
-
-    // Grab the state from our Redux store
-    const preloadedState = store.getState();
-
-    // Send the rendered page back to the client using the server's view engine
-    res.render("index", {
-      htmlattributes: helmet.htmlAttributes.toString() || "",
-      bodyattributes: helmet.bodyAttributes.toString() || "",
-      title: `${helmet.title}`,
-      head: `${helmet.meta} ${helmet.link}`,
-      html,
-      inlineCss,
-      css,
-      scripts,
-      preloadedState: JSON.stringify(preloadedState),
-    });
   } catch (err) {
     next(err);
   }

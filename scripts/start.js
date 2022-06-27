@@ -65,21 +65,21 @@ async function start() {
 
   // Configure client-side hot module replacement
   const clientConfig = webpackConfig.find((config) => config.name === "client");
-  clientConfig.entry.client = ["./scripts/lib/webpackHotDevClient"].concat(
-    clientConfig.entry.client
-  );
-  clientConfig.output.filename = clientConfig.output.filename.replace(
-    "contenthash",
-    "fullhash"
-  );
-  clientConfig.output.chunkFilename = clientConfig.output.chunkFilename.replace(
-    "chunkhash",
-    "fullhash"
-  );
-  clientConfig.module.rules = clientConfig.module.rules.filter(
-    (x) => x.loader !== "null-loader"
-  );
-  clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  if (clientConfig) {
+    clientConfig.entry.client = ["./scripts/lib/webpackHotDevClient"].concat(
+      clientConfig.entry.client
+    );
+    clientConfig.output.filename = clientConfig.output.filename.replace(
+      "contenthash",
+      "fullhash"
+    );
+    clientConfig.output.chunkFilename =
+      clientConfig.output.chunkFilename.replace("chunkhash", "fullhash");
+    clientConfig.module.rules = clientConfig.module.rules.filter(
+      (x) => x.loader !== "null-loader"
+    );
+    clientConfig.plugins.push(new webpack.HotModuleReplacementPlugin());
+  }
 
   // Configure server-side hot module replacement
   const serverConfig = webpackConfig.find((config) => config.name === "server");
@@ -102,11 +102,19 @@ async function start() {
   const serverCompiler = multiCompiler.compilers.find(
     (compiler) => compiler.name === "server"
   );
-  const clientPromise = createCompilationPromise(
-    "client",
-    clientCompiler,
-    clientConfig
-  );
+
+  let clientPromise;
+
+  if (clientConfig) {
+    clientPromise = createCompilationPromise(
+      "client",
+      clientCompiler,
+      clientConfig
+    );
+  } else {
+    clientPromise = Promise.resolve();
+  }
+
   const serverPromise = createCompilationPromise(
     "server",
     serverCompiler,
@@ -114,15 +122,17 @@ async function start() {
   );
 
   // https://github.com/webpack/webpack-dev-middleware
-  server.use(
-    webpackDevMiddleware(clientCompiler, {
-      publicPath: clientConfig.output.publicPath,
-      writeToDisk: (filePath) => /stats.json$/.test(filePath),
-    })
-  );
+  if (clientConfig) {
+    server.use(
+      webpackDevMiddleware(clientCompiler, {
+        publicPath: clientConfig.output.publicPath,
+        writeToDisk: (filePath) => /stats.json$/.test(filePath),
+      })
+    );
+    server.use(webpackHotMiddleware(clientCompiler, { log: false }));
+  }
 
   // https://github.com/glenjamin/webpack-hot-middleware
-  server.use(webpackHotMiddleware(clientCompiler, { log: false }));
 
   let appPromise;
   let appPromiseResolve;

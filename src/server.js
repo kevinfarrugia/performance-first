@@ -48,6 +48,22 @@ app.use(
   })
 );
 
+// in case of server-generated fonts
+app.use(
+  "/fonts",
+  express.static(path.join(__dirname, "/fonts"), {
+    maxAge: 31536000000, // in milliseconds
+  })
+);
+
+// in case of server-generated images
+app.use(
+  "/public",
+  express.static(path.join(__dirname, "/public"), {
+    maxAge: 31536000000, // in milliseconds
+  })
+);
+
 app.use("/", (req, res, next) => {
   res.set(
     "Cache-Control",
