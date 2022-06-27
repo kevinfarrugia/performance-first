@@ -3,7 +3,7 @@ import { compose } from "redux";
 
 import Component from "./about";
 import { selectAbout, selectIsReady } from "./selectors";
-import { getAboutPage } from "./thunks";
+import { getAboutPage } from "./slice";
 
 const mapStateToProps = (state, ownProps) => ({
   about: selectAbout(state, ownProps),

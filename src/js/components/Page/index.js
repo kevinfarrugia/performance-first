@@ -1,8 +1,8 @@
 import { connect } from "react-redux";
 
+import { setMeta, setPath } from "../App/slice";
 import Component from "./page";
 import { makeSelectIsReady, makeSelectPage } from "./selectors";
-import { resetPage } from "./slice";
 
 const makeMapStateToProps = () => {
   const selectPage = makeSelectPage();
@@ -16,7 +16,8 @@ const makeMapStateToProps = () => {
 };
 
 const mapDispatchToProps = (dispatch) => ({
-  onResetPage: (data) => dispatch(resetPage(data)),
+  onSetPath: (data) => dispatch(setPath(data)),
+  onSetMeta: (data) => dispatch(setMeta(data)),
 });
 
 const Page = connect(makeMapStateToProps, mapDispatchToProps)(Component);

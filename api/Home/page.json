@@ -1,6 +1,6 @@
 {
   "name": "en",
-  "title": "Home",
+  "title": "Performance First",
   "summary": "",
   "path": "/",
   "meta": {
@@ -10,6 +10,6 @@
     "creator": "Kevin Farrugia",
     "date": "2022-05-21T10:00:00.000Z"
   },
-  "html": "<p>Performance-First template is a template for server-side rendering React web apps prioritizing performance best practices. The template includes <a href='https://imkev.dev/inlining-critical-css' rel='nofollow'>critical CSS</a>, <a href='https://philipwalton.com/articles/deploying-es2015-code-in-production-today/' rel='nofollow'>module/nomodule</a>, code-splitting, service workers, server-side rendering, partial hydration, <a href='https://web.dev/granular-chunking-nextjs/' rel='nofollow'>granular chunking</a>, resource hints, CSS modules, <a href='https://www.filamentgroup.com/lab/load-css-simpler/' rel='nofollow'>async CSS</a>, and much more.</p><p><h2>Technologies</h2><ul><li><a href='https://nodejs.org/' rel='nofollow'>Node.js</a></li><li><a href='http://expressjs.com/' rel='nofollow'>Express</a></li><li><a href='https://facebook.github.io/react/' rel='nofollow'>React</a></li><li><a href='https://redux.js.org/' rel='nofollow'>Redux</a></li><li><a href='https://redux-toolkit.js.org/' rel='nofollow'>Redux Toolkit</a></li><li><a href='http://webpack.github.io/' rel='nofollow'>Webpack v5</a></li><li><a href='http://babeljs.io/' rel='nofollow'>Babel</a></li><li><a href='https://loadable-components.com/' rel='nofollow'>Loadable Components</a></li><li><a href='https://developer.chrome.com/docs/workbox/' rel='nofollow'>Workbox</a></li></ul></p>",
+  "html": "<p style='text-align:justify'>Performance-First template is a template for server-side rendering React web apps prioritizing performance best practices. The template includes <a href='https://imkev.dev/inlining-critical-css' rel='nofollow'>critical CSS</a>, <a href='https://philipwalton.com/articles/deploying-es2015-code-in-production-today/' rel='nofollow'>module/nomodule</a>, code-splitting, service workers, server-side rendering, partial hydration, <a href='https://web.dev/granular-chunking-nextjs/' rel='nofollow'>granular chunking</a>, resource hints, CSS modules, <a href='https://www.filamentgroup.com/lab/load-css-simpler/' rel='nofollow'>async CSS</a>, and much more.</p><p><h2>Technologies</h2><ul><li><a href='https://nodejs.org/' rel='nofollow'>Node.js</a></li><li><a href='http://expressjs.com/' rel='nofollow'>Express</a></li><li><a href='https://facebook.github.io/react/' rel='nofollow'>React</a></li><li><a href='https://redux.js.org/' rel='nofollow'>Redux</a></li><li><a href='https://redux-toolkit.js.org/' rel='nofollow'>Redux Toolkit</a></li><li><a href='http://webpack.github.io/' rel='nofollow'>Webpack v5</a></li><li><a href='http://babeljs.io/' rel='nofollow'>Babel</a></li><li><a href='https://loadable-components.com/' rel='nofollow'>Loadable Components</a></li><li><a href='https://developer.chrome.com/docs/workbox/' rel='nofollow'>Workbox</a></li></ul></p>",
   "id": 1001
 }

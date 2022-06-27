@@ -2,7 +2,7 @@ import { connect } from "react-redux";
 import { compose } from "redux";
 
 import Component from "./home";
-import { getHomePage } from "./thunks";
+import { getHomePage } from "./slice";
 
 const mapDispatchToProps = (dispatch) => ({
   onGetHomePage: (data) => dispatch(getHomePage(data)),

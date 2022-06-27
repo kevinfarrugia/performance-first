@@ -1,4 +1,4 @@
-import { getRoutes } from "./thunks";
+import { getRoutes } from "./slice";
 
 const getRoutesSSR = (store) => store.dispatch(getRoutes());
 

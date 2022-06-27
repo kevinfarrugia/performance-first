@@ -1,4 +1,4 @@
-import { getPage } from "../Page/thunks";
+import { getPage } from "../Page/slice";
 
 const getPageSSR = (store, { path }) => store.dispatch(getPage({ path }));
 

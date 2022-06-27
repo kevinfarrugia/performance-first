@@ -15,12 +15,24 @@ function Page({
   onGetPage,
   children,
   scrollToTop,
+  onSetPath,
+  onSetMeta,
 }) {
   React.useEffect(() => {
     if (!isReady) {
       onGetPage({ path, ...params });
     }
-  }, [onGetPage, params, path, isReady]);
+  }, [isReady, onGetPage, params, path]);
+
+  React.useEffect(() => {
+    onSetPath({ path });
+  }, [onSetPath, path]);
+
+  React.useEffect(() => {
+    if (page) {
+      onSetMeta({ meta: page.meta });
+    }
+  }, [onSetMeta, page]);
 
   if (typeof onGetPage === "undefined") {
     console.warn("<Page /> requires 'onGetPage' prop to be defined");

@@ -1,7 +1,7 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
 
-import { getPage } from "../Page/thunks";
+import { getPage } from "../Page/slice";
 import Component from "./defaultPage";
 
 const mapDispatchToProps = (dispatch) => ({
