@@ -10,6 +10,7 @@ Performance-First template is a template for server-side rendering React web app
 - [Express](http://expressjs.com/)
 - [React](https://facebook.github.io/react/)
 - [Redux](https://redux.js.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Webpack v5](http://webpack.github.io/)
 - [Babel](http://babeljs.io/)
 - [Loadable Components](https://loadable-components.com/)
@@ -27,7 +28,7 @@ The goal of this project is to create a reference or starting point for a fast-p
 
 ![lighthouse-score-banner-page](https://user-images.githubusercontent.com/8075326/172028559-164cfabc-44a8-4158-9094-4cd06c5a34cc.png)
 
-_Disclaimer: Lighthouse scores only serve as an indication of performance best practices. Performance is much more complex than a simple 0-100 score. If you want to monitor performance properly, I recommend that you look at RUM tools such as [SpeedCurve](https://www.speedcurve.com/), [Akamai mPulse](https://www.akamai.com/products/mpulse-real-user-monitoring), or the [web-vitals](https://github.com/GoogleChrome/web-vitals) library._
+_Disclaimer: Lighthouse scores only serve as an indication of performance best practices, not your user's experience. Performance is much more complex than a simple 0-100 score. If you want to monitor performance properly, I recommend that you look at RUM tools such as [SpeedCurve](https://www.speedcurve.com/), [Akamai mPulse](https://www.akamai.com/products/mpulse-real-user-monitoring), or the [web-vitals](https://github.com/GoogleChrome/web-vitals) library._
 
 ## Getting Started
 
@@ -87,7 +88,7 @@ const toRoutes = (routes) => {
 };
 ```
 
-The `en.json` file is then transformed using [adapter.js](./src/service/Router/adapter.js) to create an array of Route objects that is understood by our router. This means that you could plug the Performance-First template into any API by changing the `toRoutes` method to match your API's response.
+The `en.json` file is then transformed using [adapter.js](./src/service/Router/adapter.js) to create an array of Route objects that are understood by our router. This means that you could plug the Performance-First template into any API by changing the `toRoutes` method to match your API's response.
 
 ### react-router
 
@@ -116,15 +117,15 @@ The application makes a request to `getPage` using the `path` as an argument. Th
 </Page>
 ```
 
-If the user is navigating to the page using a soft-navigation, i.e. within the client-side application, then the [`<Page>`](./src/js/components/Page/) component is responsible for fetching and updating the Redux store.
+If the user is navigating to the page using a soft navigation, i.e. within the client-side router, then the [`<Page>`](./src/js/components/Page/) component is responsible for fetching and updating the Redux store.
 
 #### Customizing the DefaultPage
 
-You are able to fully-customize the appearance & structure of the `DefaultPage` component by modifying the [`defaultPage`](./src/js/components/DefaultPage/defaultPage.jsx) component and the corresponding [`styles.scss`](./src/js/components/DefaultPage/styles.scss).
+You can fully customize the appearance & structure of the `DefaultPage` component by modifying the [`defaultPage`](./src/js/components/DefaultPage/defaultPage.jsx) component and the corresponding [`styles.scss`](./src/js/components/DefaultPage/styles.scss).
 
 ### Custom page
 
-If you want to create a route which serves a custom page - meaning a page which has a different structure to the other pages - then you are able to create a new component and configure that page using the `AppRouter` [`config`](./src/js/components/AppRouter/config.js).
+If you want to create a route that serves a custom page - meaning a page that has a different structure from the other pages - then you can create a new component and configure that page using the `AppRouter` [`config`](./src/js/components/AppRouter/config.js).
 
 ```js
 const getRouteConfig = (name) => {
@@ -162,13 +163,13 @@ The `fetchData` array is a list of Promises which are executed and awaited when 
 
 As an example, if the user lands on the `"home"` route, the server will execute `getHomeSSR` and await it before rendering the HTML.
 
-Each function in the `fetchData` array, will receive the following arguments:
+Each function in the `fetchData` array will receive the following arguments:
 
 ```js
 fn(store, options)
 ```
 
-The `store` refers to the Redux store while options includes the following:
+The `store` refers to the Redux store while `options` include the following:
 
 | Name  | Description                                                                                     |
 | ----- | ----------------------------------------------------------------------------------------------- |
@@ -220,7 +221,7 @@ As you are not limited to a single `fetchData` function, you may combine several
 ]
 ```
 
-Similarly to the `DefaultPage`, you are able to use a wildcard to serve a dynamic number of similar pages, such as the `blogpage` above.
+Similar to the `DefaultPage`, you can use a wildcard to serve a dynamic number of similar pages, such as the `blogpage` above.
 
 ## Scripts
 
@@ -315,9 +316,9 @@ The project allows for Hot Module Reloading using `webpack-hot-middleware` and a
 
 ## Loadable Components
 
-[Loadable Components](https://loadable-components.com/) are the de-facto standard for lazy loading on a SSR React application. Loadable Components reads the stats files generated by Webpack and `@loadable/webpack-plugin` to split your bundle into sizeable chunks.
+[Loadable Components](https://loadable-components.com/) are the de-facto standard for lazy loading on an SSR React application. Loadable Components reads the stats files generated by Webpack and `@loadable/webpack-plugin` to split your bundle into sizeable chunks.
 
-The Performance-First template uses component-based code-splitting by default, however you may override this by using `webpackChunkName`.
+The Performance-First template uses component-based code-splitting by default, however, you may override this by using `webpackChunkName`.
 
 ```js
 import(/* webpackChunkName: "commonFeature" */ './featureA')
@@ -325,7 +326,7 @@ import(/* webpackChunkName: "commonFeature" */ './featureB')
 import(/* webpackChunkName: "featureC" */ './featureC')
 ```
 
-The above example will result into two chunks, one containing `./featureA` and `./featureB` and the other containing `./featureC`.
+The above example will result in two chunks, one containing `./featureA` and `./featureB` and the other containing `./featureC`.
 
 ## Critical CSS
 
@@ -337,7 +338,7 @@ Read more about [inlining critical CSS](https://imkev.dev/inlining-critical-css)
 
 ## ReducerRegistry
 
-The [ReducerRegistry](./src/js/reducerRegistry.js) is a singleton class which exposes a `register` method, allowing consumers to dynamically attach reducers to the store.
+The [ReducerRegistry](./src/js/reducerRegistry.js) is a singleton class that exposes a `register` method, allowing consumers to dynamically attach reducers to the store and improve code-splitting.
 
 ```js
 import reducerRegistry from "../../reducerRegistry";
@@ -345,11 +346,13 @@ import reducerRegistry from "../../reducerRegistry";
 reducerRegistry.register(REDUCER_NAME, reducer);
 ```
 
-The `register` method may be called using the above syntax and should be called before calling any actions for that reducer, including server-side requests. As a rule-of-thumb, I recommend placing it in the `reducer.js` file and in the `fetchData` SSR methods for server-side requests.
+The `register` method may be called using the above syntax and should be called before calling any actions for that reducer, including server-side requests. As a rule-of-thumb, I recommend placing it in the `reducer.js` file and the `fetchData` SSR methods for server-side requests.
 
-The [`configureStore`](./src/js/store.js#L:19) function combines the Redux `createStore` with a change listener to automatically update the reducers in the store.
+The [`configureDynamicStore`](./src/js/store.js#L:18) function combines the Redux Toolkit's `configureDynamicStore` with a change listener to automatically update the reducers in the store.
 
-The store is configured on both the server application and the client application. The server does not have an initial state and should resets all reducers between requests, while the client will use the `window.__PRELOADED_STATE__` as the initial state.
+The store is configured on both the server application and the client application. The server does not have an initial state and should reset all reducers between requests, while the client will use the `window.__PRELOADED_STATE__` as the initial state.
+
+_Tip: If you find yourself registering multiple reducers in the same component (i.e. calling `reducerRegistry.register` more than once in the same component), then most likely you would benefit from separating the component into two smaller components._
 
 ## Templates
 
@@ -387,13 +390,11 @@ The HTML for the scripts is generated using the `<Scripts>` component, which rec
 <script type="nomodule" src="/Home.js" defer></script>
 ```
 
-The output HTML should include both `.mjs` and `.js` files. A modern browser will only download the `.mjs` files, while a legacy browser would only downlad the `.js` files.
+The output HTML should include both `.mjs` and `.js` files. A modern browser will only download the `.mjs` files, while a legacy browser would only download the `.js` files.
 
 ## State Management
 
-[Redux](https://redux.js.org/) is a state container used together with React. The template includes `redux`, `reselect`, and `redux-thunk` by default.
-
-There are plans to update the template to support [Redux Toolkit](https://redux-toolkit.js.org/).
+[Redux](https://redux.js.org/) is a state container used together with React. The template uses [Redux Toolkit](https://redux-toolkit.js.org/) and follows the standards and practices documented by Redux Toolkit.
 
 ## Suggested guidelines
 
@@ -423,7 +424,7 @@ Below are some recommendations I like to follow when working on a website. These
 
 The FOUC originates from `style-loader` which adds the CSS files to the DOM using JavaScript. This is not the case on a production build as `style-loader` is replaced by `mini-css-extract-plugin`.
 
-### During development I cannot see legacy bundles.
+### During development, I cannot see legacy bundles.
 
 Legacy bundles are only compiled when serving a production build so as not to slow down the Webpack compile-time and feedback loop.
 
@@ -431,7 +432,7 @@ Legacy bundles are only compiled when serving a production build so as not to sl
 
 This error occurs when you have added a new dynamically imported bundle but have not yet compiled. If the issue doesn't resolve itself automatically, try re-running `npm start`.
 
-### Can I use the mock API on production?
+### Can I use the mock API in production?
 
 The API could be a simple hard-coded JSON file, so as long as the data is publicly accessible you can continue using the mock API.
 

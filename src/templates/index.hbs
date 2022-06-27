@@ -4,10 +4,13 @@
     <meta charset="utf-8" />
     <meta httpEquiv="X-UA-Compatible" content="IE=edge,chrome=1" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="preload" href="/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin />
-		<link rel="preload" href="/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    {{{ title }}}
+    <!-- TODO: Add any <link rel="preconnect"> here -->
     <style>{{{ inlineCss }}}</style>
     {{{ css }}}
+    <link rel="preload" href="/fonts/Montserrat-Regular.woff2" as="font" type="font/woff2" crossorigin />
+		<link rel="preload" href="/fonts/Montserrat-Bold.woff2" as="font" type="font/woff2" crossorigin />
+    {{{ head }}}
     <link rel="icon" type="image/png" sizes="32x32" href="/favicon-32.png">
 		<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16.png">
 		<link rel="icon" type="image/png" sizes="192x192" href="/icon-192.png" />
@@ -17,7 +20,6 @@
     <meta name="theme-color" content="#ffffff">
 		<link rel="manifest" href="/site.webmanifest" />
 		<meta property="og:image" content="/img/logo.jpg" />
-    {{{ head }}}
   </head>
   <body {{{ bodyattributes }}}>
     <div id="root">{{{ html }}}</div>

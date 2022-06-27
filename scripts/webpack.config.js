@@ -32,6 +32,7 @@ const SRC_DIR = path.resolve(ROOT_DIR, "src");
 const OUTPUT_DIR = path.resolve(ROOT_DIR, "build");
 
 const CMS_URL = "https://raw.githubusercontent.com";
+const ORIGIN = isDevelopment ? "" : "https://performance-first.herokuapp.com";
 
 // the total number of entrypoints (including async chunks)
 const ENTRYPOINTS_COUNT = 4;
@@ -313,6 +314,7 @@ const baseConfig = {
       VERSION: JSON.stringify(pkg.version),
     }),
     new webpack.DefinePlugin({
+      ORIGIN: JSON.stringify(ORIGIN),
       CMS_URL: JSON.stringify(CMS_URL),
     }),
     new ESLintPlugin({

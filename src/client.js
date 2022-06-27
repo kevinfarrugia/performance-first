@@ -3,14 +3,20 @@ import * as React from "react";
 import ReactDOM from "react-dom";
 import { BrowserRouter } from "react-router-dom";
 
-import { selectRoutes } from "./js/components/AppRouter";
+import { selectRoutes } from "./js/components/AppRouter/selectors";
 import Main from "./js/components/Main";
-import configureStore from "./js/store";
+import initialReducers from "./js/reducers";
+import configureDynamicStore from "./js/store";
 
 if (process.env.IS_SPA) {
   // grab the state from a global variable injected into the server-generated HTML
-  // eslint-disable-next-line no-underscore-dangle
-  const store = configureStore(window.__PRELOADED_STATE__);
+  const store = configureDynamicStore(
+    // eslint-disable-next-line no-underscore-dangle
+    window.__PRELOADED_STATE__,
+    false,
+    initialReducers,
+    process.env.NODE_ENV !== "production"
+  );
 
   loadableReady(() => {
     const routes = selectRoutes(store.getState());

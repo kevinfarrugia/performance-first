@@ -1,7 +1,2 @@
+/* eslint-disable import/prefer-default-export */
 export const REDUCER_NAME = "app";
-export const APP_LOADING = `${REDUCER_NAME}/APP_LOADING`;
-export const APP_ERROR = `${REDUCER_NAME}/APP_ERROR`;
-export const SET_BOUNDARY_ERROR = `${REDUCER_NAME}/SET_BOUNDARY_ERROR`;
-export const SET_DEFERRED_PROMPT = `${REDUCER_NAME}/SET_DEFERRED_PROMPT`;
-export const SET_META = `${REDUCER_NAME}/SET_META`;
-export const SET_PATH = `${REDUCER_NAME}/SET_PATH`;

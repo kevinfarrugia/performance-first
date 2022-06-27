@@ -13,7 +13,8 @@
     "document": true,
     "window": true,
     "module": true,
-    "CMS_URL": true
+    "CMS_URL": true,
+    "ORIGIN": true
   },
   "parser": "@babel/eslint-parser",
   "parserOptions": {
@@ -68,6 +69,10 @@
       "error",
       { "extensions": [".js", ".jsx"] }
     ],
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsFor": ["state"] }
+    ]
   }
 }

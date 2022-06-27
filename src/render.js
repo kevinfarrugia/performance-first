@@ -9,9 +9,11 @@ import { matchPath } from "react-router";
 import { StaticRouter } from "react-router-dom/server";
 
 import getRouteConfig from "./js/components/AppRouter/config";
+import { selectRoutes } from "./js/components/AppRouter/selectors";
 import getRoutesSSR from "./js/components/AppRouter/server";
 import Scripts from "./js/components/Scripts";
-import configureStore from "./js/store";
+import initialReducers from "./js/reducers";
+import configureDynamicStore from "./js/store";
 
 const renderRoutesData = async ({
   path: pathname,
@@ -81,7 +83,8 @@ const renderAsMPA = async ({ url, store, routes }) => {
   return {
     htmlattributes: helmet.htmlAttributes.toString() || "",
     bodyattributes: helmet.bodyAttributes.toString() || "",
-    head: `${helmet.title} ${helmet.meta} ${helmet.link}`,
+    title: `${helmet.title}`,
+    head: `${helmet.meta} ${helmet.link}`,
     html,
     inlineCss,
   };
@@ -155,7 +158,8 @@ const renderAsSPA = async ({ url, store, routes }) => {
   return {
     htmlattributes: helmet.htmlAttributes.toString() || "",
     bodyattributes: helmet.bodyAttributes.toString() || "",
-    head: `${helmet.title} ${helmet.meta} ${helmet.link}`,
+    title: `${helmet.title}`,
+    head: `${helmet.meta} ${helmet.link}`,
     html,
     inlineCss,
     css,
@@ -168,9 +172,15 @@ const renderAsSPA = async ({ url, store, routes }) => {
 const handleRender = async (req, res, next) => {
   try {
     // create a new Redux store instance and clear all dynamic reducers
-    const store = configureStore({}, true);
+    const store = configureDynamicStore(
+      {},
+      true,
+      initialReducers,
+      process.env.NODE_ENV !== "production"
+    );
 
-    const routes = await getRoutesSSR(store);
+    await getRoutesSSR(store);
+    const routes = selectRoutes(store.getState());
 
     await renderRoutesData({
       path: req.path,
