@@ -69,6 +69,10 @@
       "error",
       { "extensions": [".js", ".jsx"] }
     ],
-    "prettier/prettier": "error"
+    "prettier/prettier": "error",
+    "no-param-reassign": [
+      "error",
+      { "props": true, "ignorePropertyModificationsFor": ["state"] }
+    ]
   }
 }

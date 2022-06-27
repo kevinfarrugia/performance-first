@@ -1,12 +1,11 @@
 import { connect } from "react-redux";
-import { createStructuredSelector } from "reselect";
 
-import { selectMeta, selectPath } from "../App/reducer";
+import { selectMeta, selectPath } from "../App/selectors";
 import Component from "./layout";
 
-const mapStateToProps = createStructuredSelector({
-  meta: selectMeta,
-  path: selectPath,
+const mapStateToProps = (state, ownProps) => ({
+  meta: selectMeta(state, ownProps),
+  path: selectPath(state, ownProps),
 });
 
 const Layout = connect(mapStateToProps, null)(Component);
