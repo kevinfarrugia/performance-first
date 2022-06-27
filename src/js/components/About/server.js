@@ -1,7 +1,7 @@
 import reducerRegistry from "../../reducerRegistry";
-import { getAboutPage } from "./actions";
 import { REDUCER_NAME } from "./constants";
-import reducer from "./reducer";
+import reducer from "./slice";
+import { getAboutPage } from "./thunks";
 
 const getAboutSSR = (store, { path }) => {
   reducerRegistry.register(REDUCER_NAME, reducer);

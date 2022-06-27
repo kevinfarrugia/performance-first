@@ -9,7 +9,6 @@ function Meta({ title, description, keywords, path, image }) {
       <title>{title}</title>
       <meta name="description" content={description} />
       <meta name="keywords" content={keywords} />
-      <link rel="canonical" content={`${ORIGIN}${path}`} />
       {/* Facebook Meta */}
       <meta property="og:title" content={title} />
       <meta property="og:description" content={description} />
@@ -26,6 +25,7 @@ function Meta({ title, description, keywords, path, image }) {
         name="twitter:image"
         content={`${ORIGIN}${image || defaultImage}`}
       />
+      <link rel="canonical" content={`${ORIGIN}${path}`} />
     </Helmet>
   );
 }

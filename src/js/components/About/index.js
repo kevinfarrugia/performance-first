@@ -1,14 +1,13 @@
 import { connect } from "react-redux";
 import { compose } from "redux";
-import { createStructuredSelector } from "reselect";
 
 import Component from "./about";
-import { getAboutPage } from "./actions";
-import { selectAbout, selectIsReady } from "./reducer";
+import { selectAbout, selectIsReady } from "./selectors";
+import { getAboutPage } from "./thunks";
 
-const mapStateToProps = createStructuredSelector({
-  about: selectAbout,
-  isReady: selectIsReady,
+const mapStateToProps = (state, ownProps) => ({
+  about: selectAbout(state, ownProps),
+  isReady: selectIsReady(state, ownProps),
 });
 
 const mapDispatchToProps = (dispatch) => ({

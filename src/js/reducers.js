@@ -1,12 +1,12 @@
 /* Reducers available by default */
-import AppReducer from "./components/App/reducer";
-import AppRouterReducer from "./components/AppRouter/reducer";
-import PageReducer from "./components/Page/reducer";
+import App from "./components/App/slice";
+import AppRouter from "./components/AppRouter/slice";
+import Page from "./components/Page/slice";
 
-const staticReducers = {
-  app: AppReducer,
-  routes: AppRouterReducer,
-  page: PageReducer,
+const initialReducers = {
+  app: App,
+  routes: AppRouter,
+  page: Page,
 };
 
-export default staticReducers;
+export default initialReducers;

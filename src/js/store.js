@@ -3,20 +3,25 @@
  * Based on: https://nicolasgallagher.com/redux-modules-and-code-splitting/
  */
 
-import { applyMiddleware, combineReducers, createStore } from "redux";
-import { composeWithDevTools } from "redux-devtools-extension";
-import thunk from "redux-thunk";
+import { configureStore } from "@reduxjs/toolkit";
+import { combineReducers } from "redux";
 
 import reducerRegistry from "./reducerRegistry";
-import staticReducers from "./reducers";
 
 /**
  * Create a new Redux store and connect the reducerRegistry change listener to dynamically append reducers.
  * @param {Object} initialState
  * @param {Boolean} resetReducers
+ * @param {Object} initialReducers
+ * @param {Boolean} devtools
  * @returns The initialized Redux store
  */
-const configureStore = (initialState = {}, resetReducers = false) => {
+const configureDynamicStore = (
+  initialState = {},
+  resetReducers = false,
+  initialReducers = {},
+  devtools = false
+) => {
   const combine = (reducers) => {
     const updatedReducers = reducers;
     const reducerNames = Object.keys(reducers);
@@ -34,21 +39,21 @@ const configureStore = (initialState = {}, resetReducers = false) => {
   }
 
   const reducer = combine({
-    ...staticReducers,
+    ...initialReducers,
     ...reducerRegistry.getReducers(),
   });
 
-  const store = createStore(
+  const store = configureStore({
     reducer,
-    initialState,
-    composeWithDevTools(applyMiddleware(thunk))
-  );
+    preloadedState: initialState,
+    devtools,
+  });
 
   // Replace the store's reducer whenever a new reducer is registered.
   reducerRegistry.setChangeListener((reducers) => {
     store.replaceReducer(
       combine({
-        ...staticReducers,
+        ...initialReducers,
         ...reducers,
       })
     );
@@ -57,4 +62,4 @@ const configureStore = (initialState = {}, resetReducers = false) => {
   return store;
 };
 
-export default configureStore;
+export default configureDynamicStore;

@@ -10,6 +10,7 @@ Performance-First template is a template for server-side rendering React web app
 - [Express](http://expressjs.com/)
 - [React](https://facebook.github.io/react/)
 - [Redux](https://redux.js.org/)
+- [Redux Toolkit](https://redux-toolkit.js.org/)
 - [Webpack v5](http://webpack.github.io/)
 - [Babel](http://babeljs.io/)
 - [Loadable Components](https://loadable-components.com/)
@@ -27,7 +28,7 @@ The goal of this project is to create a reference or starting point for a fast-p
 
 ![lighthouse-score-banner-page](https://user-images.githubusercontent.com/8075326/172028559-164cfabc-44a8-4158-9094-4cd06c5a34cc.png)
 
-_Disclaimer: Lighthouse scores only serve as an indication of performance best practices. Performance is much more complex than a simple 0-100 score. If you want to monitor performance properly, I recommend that you look at RUM tools such as [SpeedCurve](https://www.speedcurve.com/), [Akamai mPulse](https://www.akamai.com/products/mpulse-real-user-monitoring), or the [web-vitals](https://github.com/GoogleChrome/web-vitals) library._
+_Disclaimer: Lighthouse scores only serve as an indication of performance best practices, not your user's experience. Performance is much more complex than a simple 0-100 score. If you want to monitor performance properly, I recommend that you look at RUM tools such as [SpeedCurve](https://www.speedcurve.com/), [Akamai mPulse](https://www.akamai.com/products/mpulse-real-user-monitoring), or the [web-vitals](https://github.com/GoogleChrome/web-vitals) library._
 
 ## Getting Started
 
@@ -87,7 +88,7 @@ const toRoutes = (routes) => {
 };
 ```
 
-The `en.json` file is then transformed using [adapter.js](./src/service/Router/adapter.js) to create an array of Route objects that is understood by our router. This means that you could plug the Performance-First template into any API by changing the `toRoutes` method to match your API's response.
+The `en.json` file is then transformed using [adapter.js](./src/service/Router/adapter.js) to create an array of Route objects that are understood by our router. This means that you could plug the Performance-First template into any API by changing the `toRoutes` method to match your API's response.
 
 ### react-router
 
@@ -220,7 +221,7 @@ As you are not limited to a single `fetchData` function, you may combine several
 ]
 ```
 
-Similarly to the `DefaultPage`, you can use a wildcard to serve a dynamic number of similar pages, such as the `blogpage` above.
+Similar to the `DefaultPage`, you can use a wildcard to serve a dynamic number of similar pages, such as the `blogpage` above.
 
 ## Scripts
 
@@ -337,7 +338,7 @@ Read more about [inlining critical CSS](https://imkev.dev/inlining-critical-css)
 
 ## ReducerRegistry
 
-The [ReducerRegistry](./src/js/reducerRegistry.js) is a singleton class which exposes a `register` method, allowing consumers to dynamically attach reducers to the store.
+The [ReducerRegistry](./src/js/reducerRegistry.js) is a singleton class that exposes a `register` method, allowing consumers to dynamically attach reducers to the store and improve code-splitting.
 
 ```js
 import reducerRegistry from "../../reducerRegistry";
@@ -345,13 +346,13 @@ import reducerRegistry from "../../reducerRegistry";
 reducerRegistry.register(REDUCER_NAME, reducer);
 ```
 
-The `register` method may be called using the above syntax and should be called before calling any actions for that reducer, including server-side requests. As a rule-of-thumb, I recommend placing it in the `reducer.js` file and in the `fetchData` SSR methods for server-side requests.
+The `register` method may be called using the above syntax and should be called before calling any actions for that reducer, including server-side requests. As a rule-of-thumb, I recommend placing it in the `reducer.js` file and the `fetchData` SSR methods for server-side requests.
 
-The [`configureStore`](./src/js/store.js#L:19) function combines the Redux `createStore` with a change listener to automatically update the reducers in the store.
+The [`configureDynamicStore`](./src/js/store.js#L:18) function combines the Redux Toolkit's `configureDynamicStore` with a change listener to automatically update the reducers in the store.
 
 The store is configured on both the server application and the client application. The server does not have an initial state and should reset all reducers between requests, while the client will use the `window.__PRELOADED_STATE__` as the initial state.
 
-_If you find yourself registering multiple reducers in the same component (i.e. calling `reducerRegistry.register` more than once in the same component), then most likely you would benefit from separating the component into two smaller components._
+_Tip: If you find yourself registering multiple reducers in the same component (i.e. calling `reducerRegistry.register` more than once in the same component), then most likely you would benefit from separating the component into two smaller components._
 
 ## Templates
 
@@ -389,13 +390,11 @@ The HTML for the scripts is generated using the `<Scripts>` component, which rec
 <script type="nomodule" src="/Home.js" defer></script>
 ```
 
-The output HTML should include both `.mjs` and `.js` files. A modern browser will only download the `.mjs` files, while a legacy browser would only downlad the `.js` files.
+The output HTML should include both `.mjs` and `.js` files. A modern browser will only download the `.mjs` files, while a legacy browser would only download the `.js` files.
 
 ## State Management
 
-[Redux](https://redux.js.org/) is a state container used together with React. The template includes `redux`, `reselect`, and `redux-thunk` by default.
-
-There are plans to update the template to support [Redux Toolkit](https://redux-toolkit.js.org/).
+[Redux](https://redux.js.org/) is a state container used together with React. The template uses [Redux Toolkit](https://redux-toolkit.js.org/) and follows the standards and practices documented by Redux Toolkit.
 
 ## Suggested guidelines
 
