@@ -79,7 +79,7 @@ const handleRender = async (req, res, next) => {
       path.resolve(__dirname, "./public/legacy-stats.json"),
       { encoding: "utf-8" }
     );
-  } finally {
+  } catch {
     // do nothing
   }
 
