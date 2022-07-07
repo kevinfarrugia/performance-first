@@ -312,7 +312,7 @@ The naming conventions that are followed throughout the template:
 
 ## Hot Module Reloading
 
-The project allows for Hot Module Reloading using `webpack-hot-middleware` and a helper library developed by [React Starter Kit](https://github.com/kriasoft/react-starter-kit/blob/master/tools/lib/webpackHotDevClient.js). This enables HMR for JSX, S/CSS, and NodeJS.
+The project allows for Hot Module Reloading using `webpack-hot-middleware`. This enables HMR for JSX, S/CSS, and NodeJS.
 
 ## Loadable Components
 

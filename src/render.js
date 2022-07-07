@@ -1,4 +1,5 @@
 /* eslint-disable import/no-import-module-exports */
+import fs from "fs";
 import path from "path";
 
 import { ChunkExtractor, ChunkExtractorManager } from "@loadable/server";
@@ -61,23 +62,44 @@ const renderRoutesData = async ({
 };
 
 const handleRender = async (req, res, next) => {
+  let serverStats;
+  let clientStats;
+  let legacyStats;
+
+  try {
+    serverStats = fs.readFileSync(
+      path.resolve(__dirname, "./server-stats.json"),
+      { encoding: "utf-8" }
+    );
+    clientStats = fs.readFileSync(
+      path.resolve(__dirname, "./public/client-stats.json"),
+      { encoding: "utf-8" }
+    );
+    legacyStats = fs.readFileSync(
+      path.resolve(__dirname, "./public/legacy-stats.json"),
+      { encoding: "utf-8" }
+    );
+  } finally {
+    // do nothing
+  }
+
   try {
     const serverChunkExtractor = new ChunkExtractor({
-      statsFile: path.resolve(__dirname, "./server-stats.json"),
+      stats: JSON.parse(serverStats),
       entrypoints: ["server"],
     });
     const { Main } = serverChunkExtractor.requireEntrypoint();
 
     const modernChunkExtractor = new ChunkExtractor({
-      statsFile: path.resolve(__dirname, "./public/client-stats.json"),
+      stats: JSON.parse(clientStats),
       entrypoints: ["client"],
     });
 
     let legacyChunkExtractor;
-    if (!module.hot) {
+    if (legacyStats) {
       legacyChunkExtractor = new ChunkExtractor({
         namespace: "legacy",
-        statsFile: path.resolve(__dirname, "./public/legacy-stats.json"),
+        stats: JSON.parse(legacyStats),
         entrypoints: ["client"],
       });
     }

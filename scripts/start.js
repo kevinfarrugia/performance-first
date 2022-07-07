@@ -65,9 +65,6 @@ async function start() {
 
   // Configure client-side hot module replacement
   const clientConfig = webpackConfig.find((config) => config.name === "client");
-  clientConfig.entry.client = ["./scripts/lib/webpackHotDevClient"].concat(
-    clientConfig.entry.client
-  );
   clientConfig.output.filename = clientConfig.output.filename.replace(
     "contenthash",
     "fullhash"
