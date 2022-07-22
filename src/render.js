@@ -36,9 +36,12 @@ const renderRoutesData = async ({
     );
 
     if (match) {
-      const { fetchData } = getRouteConfig(route.name);
+      const { fetchData, registerReducer } = getRouteConfig(route.name);
 
       if (fetchData) {
+        if (registerReducer) {
+          registerReducer();
+        }
         // add the promise to fetch the route data
         fetchData.forEach((fn) => {
           promises.push(

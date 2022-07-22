@@ -1,9 +1,14 @@
 import loadable from "@loadable/component";
 
+import reducerRegistry from "../../reducerRegistry";
+import { REDUCER_NAME as ABOUT_REDUCER_NAME } from "../About/constants";
 import getAboutSSR from "../About/server";
+import aboutReducer from "../About/slice";
 import getDefaultPageSSR from "../DefaultPage/server";
 import DefaultPageSkeleton from "../DefaultPageSkeleton";
+import { REDUCER_NAME as HOME_REDUCER_NAME } from "../Home/constants";
 import getHomeSSR from "../Home/server";
+import homeReducer from "../Home/slice";
 
 const Home = loadable(() => import("../Home"));
 const About = loadable(() => import("../About"));
@@ -19,11 +24,15 @@ const getRouteConfig = (name) => {
       return {
         Component: Home,
         fetchData: [getHomeSSR],
+        registerReducer: () =>
+          reducerRegistry.register(HOME_REDUCER_NAME, homeReducer),
       };
     case "about":
       return {
         Component: About,
         fetchData: [getAboutSSR],
+        registerReducer: () =>
+          reducerRegistry.register(ABOUT_REDUCER_NAME, aboutReducer),
       };
     case "defaultpage":
       return {
