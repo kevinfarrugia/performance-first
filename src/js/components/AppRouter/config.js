@@ -24,14 +24,14 @@ const getRouteConfig = (name) => {
       return {
         Component: Home,
         fetchData: [getHomeSSR],
-        registerReducer: () =>
+        registerReducers: () =>
           reducerRegistry.register(HOME_REDUCER_NAME, homeReducer),
       };
     case "about":
       return {
         Component: About,
         fetchData: [getAboutSSR],
-        registerReducer: () =>
+        registerReducers: () =>
           reducerRegistry.register(ABOUT_REDUCER_NAME, aboutReducer),
       };
     case "defaultpage":
