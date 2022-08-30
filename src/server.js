@@ -80,9 +80,11 @@ app.use((req, res, next) => {
     error.status = 404;
     return next(error);
   }
-  // middleware to render server side HTML
-  return handleRender(req, res, next);
+
+  return next();
 });
+
+app.use(handleRender);
 
 const prettyError = new PrettyError();
 prettyError.skipNodeFiles();

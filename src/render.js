@@ -15,6 +15,7 @@ import getRoutesSSR from "./js/components/AppRouter/server";
 import Scripts from "./js/components/Scripts";
 import initialReducers from "./js/reducers";
 import configureDynamicStore from "./js/store";
+import createServerTiming from "./js/util/serverTiming";
 
 const renderRoutesData = async ({
   path: pathname,
@@ -66,6 +67,8 @@ const renderRoutesData = async ({
 };
 
 const handleRender = async (req, res, next) => {
+  const [, renderServerTiming] = createServerTiming("render")(req, res, next);
+
   let serverStats;
   let clientStats;
   let legacyStats;
@@ -126,9 +129,22 @@ const handleRender = async (req, res, next) => {
       process.env.NODE_ENV !== "production"
     );
 
+    const [, getRoutesServerTiming] = createServerTiming("routes")(
+      req,
+      res,
+      next
+    );
     await getRoutesSSR(store);
+    // record the time to fetch the routes
+    getRoutesServerTiming();
+
     const routes = selectRoutes(store.getState());
 
+    const [, routesDataServerTiming] = createServerTiming("routesData")(
+      req,
+      res,
+      next
+    );
     await renderRoutesData({
       path: req.path,
       url: req.url,
@@ -136,6 +152,8 @@ const handleRender = async (req, res, next) => {
       routes,
       store,
     });
+    // record the time to generate the route data
+    routesDataServerTiming();
 
     const html = renderToString(
       <ChunkExtractorManager extractor={clientChunkExtractor}>
@@ -170,17 +188,30 @@ const handleRender = async (req, res, next) => {
     const preloadedState = store.getState();
 
     // Send the rendered page back to the client using the server's view engine
-    res.render("index", {
-      htmlattributes: helmet.htmlAttributes.toString() || "",
-      bodyattributes: helmet.bodyAttributes.toString() || "",
-      title: `${helmet.title}`,
-      head: `${helmet.meta} ${helmet.link}`,
-      html,
-      inlineCss,
-      css,
-      scripts,
-      preloadedState: JSON.stringify(preloadedState),
-    });
+    res.render(
+      "index",
+      {
+        htmlattributes: helmet.htmlAttributes.toString() || "",
+        bodyattributes: helmet.bodyAttributes.toString() || "",
+        title: `${helmet.title}`,
+        head: `${helmet.meta} ${helmet.link}`,
+        html,
+        inlineCss,
+        css,
+        scripts,
+        preloadedState: JSON.stringify(preloadedState),
+      },
+      (err, renderedHtml) => {
+        if (err) {
+          return next(err);
+        }
+
+        // record the time to render the HTML
+        renderServerTiming();
+
+        return res.send(renderedHtml);
+      }
+    );
   } catch (err) {
     next(err);
   }
