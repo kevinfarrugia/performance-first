@@ -21,5 +21,4 @@ const createServerTiming = (name) => (_req, res) => {
   return [start, stop];
 };
 
-// eslint-disable-next-line import/prefer-default-export
 export default createServerTiming;
