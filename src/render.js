@@ -67,7 +67,11 @@ const renderRoutesData = async ({
 };
 
 const handleRender = async (req, res, next) => {
-  const [, renderServerTiming] = createServerTiming("render")(req, res, next);
+  const [, setRenderServerTiming] = createServerTiming("render")(
+    req,
+    res,
+    next
+  );
 
   let serverStats;
   let clientStats;
@@ -129,18 +133,18 @@ const handleRender = async (req, res, next) => {
       process.env.NODE_ENV !== "production"
     );
 
-    const [, getRoutesServerTiming] = createServerTiming("routes")(
+    const [, setRoutesServerTiming] = createServerTiming("routes")(
       req,
       res,
       next
     );
     await getRoutesSSR(store);
     // record the time to fetch the routes
-    getRoutesServerTiming();
+    setRoutesServerTiming();
 
     const routes = selectRoutes(store.getState());
 
-    const [, routesDataServerTiming] = createServerTiming("routesData")(
+    const [, setRoutesDataServerTiming] = createServerTiming("routesData")(
       req,
       res,
       next
@@ -153,7 +157,7 @@ const handleRender = async (req, res, next) => {
       store,
     });
     // record the time to generate the route data
-    routesDataServerTiming();
+    setRoutesDataServerTiming();
 
     const html = renderToString(
       <ChunkExtractorManager extractor={clientChunkExtractor}>
@@ -207,7 +211,7 @@ const handleRender = async (req, res, next) => {
         }
 
         // record the time to render the HTML
-        renderServerTiming();
+        setRenderServerTiming();
 
         return res.send(renderedHtml);
       }
