@@ -1,9 +1,9 @@
 import onHeaders from "on-headers";
 
-// create server-timing entry for duration of server-side rendering
+// create and append server-timing entry to response headers
 const createServerTiming = (name) => (_req, res) => {
-  // eslint-disable-next-line no-param-reassign
   const start = process.hrtime();
+  const startTimeMs = start[0] * 1000 + start[1] / 1000000;
 
   const stop = ({ description, precision } = {}) => {
     const end = process.hrtime(start);
@@ -18,7 +18,7 @@ const createServerTiming = (name) => (_req, res) => {
     });
   };
 
-  return [start, stop];
+  return [startTimeMs, stop];
 };
 
 export default createServerTiming;
