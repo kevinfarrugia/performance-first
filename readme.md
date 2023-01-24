@@ -6,6 +6,8 @@ Performance-First template is a template for server-side rendering React web app
 
 [View Demo](https://performance-first.herokuapp.com/)
 
+*Disclaimer: While this template is production-ready and is used on public websites of varying size, we recommend you also look at the more popular React frameworks such as Remix and NextJS before proceeding.*
+
 ## Technologies
 
 - [Node.js](https://nodejs.org/)
