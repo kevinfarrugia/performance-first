@@ -1,3 +1,5 @@
+**Archived: I am no longer maintaining this repository and archived it as I do not think it reflects the current best-practices and I am unable to keep it updated inline with the these recommendations**
+
 [![Build](https://github.com/kevinfarrugia/performance-first/actions/workflows/build.yml/badge.svg)](https://github.com/kevinfarrugia/performance-first/actions/workflows/build.yml)
 
 # Performance-First template
